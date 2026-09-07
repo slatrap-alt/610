@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Acanlar Mobilya — Plaka Kesim & Fire Depolu V2</title>
+<title>Acanlar Mobilya — Plaka Kesim & Mobil Kartlı V2</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -13,6 +13,7 @@
   --header-bg: #0d1117;
   --muted-color: #66717d;
   --table-th-bg: #f7f9fa;
+  --primary-blue: #0284c7;
 }
 
 body.dark-mode {
@@ -63,6 +64,7 @@ input[type=text],input[type=number],select{width:100%;border:1px solid var(--bor
 
 .btn-shuffle { background: #10b981; color: #fff; padding: 8px 12px; border-radius: 6px; border: none; font-weight: bold; font-size: 11px; cursor: pointer; display: none; margin-top: 6px; width: 100%; text-align: center; }
 
+/* TABLO VE MOBİL KART DÜZENİ */
 .table-wrap{width:100%;overflow-x:auto;border:1px solid var(--border-color);border-radius:8px}
 table{width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed; min-width: 480px;}
 th,td{padding:4px 1px;border-bottom:1px solid var(--border-color);text-align:center;white-space:nowrap}
@@ -75,6 +77,19 @@ th.col-band, td.col-band { width: 28px; }
 th.col-del, td.col-del { width: 26px; }
 
 td input[type=text], td input[type=number] { padding: 5px 2px; text-align: center; font-size: 11px; }
+
+/* MOBİL ÖLÇÜ KARTLARI STİLİ */
+.part-cards-container { display: none; flex-direction: column; gap: 10px; margin-top: 10px; }
+.part-card { background: var(--table-th-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 10px; position: relative; }
+.part-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.part-card-header input[type=text] { font-weight: bold; font-size: 13px; color: var(--primary-blue); }
+.part-card-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 8px; }
+.part-card-field { display: flex; flex-direction: column; }
+.part-card-field label { font-size: 9px; color: var(--muted-color); margin: 0 0 2px 0; }
+.part-card-bands { display: flex; justify-content: space-between; gap: 4px; border-top: 1px dashed var(--border-color); padding-top: 8px; }
+.band-btn { flex: 1; border: 1px solid var(--border-color); background: var(--card-bg); border-radius: 6px; padding: 5px 0; font-size: 10px; font-weight: bold; cursor: pointer; text-align: center; color: var(--text-color); }
+.band-btn.active { background: var(--primary-blue); color: #fff; border-color: var(--primary-blue); }
+.btn-card-del { background: #ef4444; color: #fff; border: none; border-radius: 6px; width: 26px; height: 26px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
 .metrics{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
 .metric{background:var(--table-th-bg);border-radius:8px;padding:8px 12px;min-width:95px;border:1px solid var(--border-color)}
@@ -104,10 +119,13 @@ canvas{width:100%;height:auto;display:block;border:1px solid var(--border-color)
 footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-size: 12px; border-top: 1px solid var(--border-color); margin-top: 15px;}
 .print-header {display: none;}
 
-@media(max-width:1100px){
+/* MOBİL SÜRÜM ÖZEL AYARLARI */
+@media(max-width:768px){
   .layout{grid-template-columns:1fr}
   header { padding: 10px; }
   .brand h1 { font-size: 16px; }
+  .table-wrap { display: none; } /* Tabloyu gizle */
+  .part-cards-container { display: flex; } /* Kartları göster */
 }
 
 @media print{
@@ -211,6 +229,8 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 
 <div class="card">
 <h2>2. Parça Listesi</h2>
+
+<!-- MASAÜSTÜ TABLO GÖRÜNÜMÜ -->
 <div class="table-wrap">
 <table>
 <thead>
@@ -231,8 +251,11 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 </table>
 </div>
 
+<!-- MOBİL KART GÖRÜNÜMÜ -->
+<div class="part-cards-container" id="partCards"></div>
+
 <div class="actions">
-<button class="btn-action add" onclick="addPart()">➕ Satır Ekle</button>
+<button class="btn-action add" onclick="addPart()">➕ Satır / Kart Ekle</button>
 <button class="btn-action save" onclick="exportData()">💾 Ölçüleri Kaydet</button>
 <label class="btn-action load" style="cursor:pointer">
   📂 Ölçü Kaydı Yükle
@@ -414,18 +437,15 @@ function addPart(p) {
   }
   parts.push({...p, id: Date.now() + Math.random()});
   renderParts();
-  
-  setTimeout(()=>{
-    let rows = document.querySelectorAll("#parts tr");
-    let lastInput = rows[rows.length-1]?.querySelector("input[data-k='name']");
-    if(lastInput) {
-      lastInput.focus();
-      lastInput.select();
-    }
-  }, 30);
+}
+
+function toggleBand(i, key) {
+  parts[i][key] = !parts[i][key];
+  renderParts();
 }
 
 function renderParts() {
+  // 1. MASAÜSTÜ TABLO RENDER
   const tb = document.getElementById("parts");
   tb.innerHTML = "";
   parts.forEach((p, i) => {
@@ -443,16 +463,45 @@ function renderParts() {
     </tr>`;
   });
 
-  tb.querySelectorAll("input").forEach(el => {
+  // 2. MOBİL KART RENDER
+  const cardContainer = document.getElementById("partCards");
+  cardContainer.innerHTML = "";
+  parts.forEach((p, i) => {
+    cardContainer.innerHTML += `
+      <div class="part-card">
+        <div class="part-card-header">
+          <input type="text" value="${esc(p.name)}" placeholder="Parça Adı" data-i="${i}" data-k="name">
+          <button class="btn-card-del" onclick="parts.splice(${i},1);renderParts()">×</button>
+        </div>
+        <div class="part-card-grid">
+          <div class="part-card-field">
+            <label>Boy (cm)</label>
+            <input type="number" step="0.1" value="${p.h !== undefined ? p.h : ''}" placeholder="Boy" data-i="${i}" data-k="h">
+          </div>
+          <div class="part-card-field">
+            <label>En (cm)</label>
+            <input type="number" step="0.1" value="${p.w !== undefined ? p.w : ''}" placeholder="En" data-i="${i}" data-k="w">
+          </div>
+          <div class="part-card-field">
+            <label>Adet</label>
+            <input type="number" min="1" value="${p.q || 1}" data-i="${i}" data-k="q">
+          </div>
+        </div>
+        <div class="part-card-bands">
+          <button class="band-btn ${p.u ? 'active' : ''}" onclick="toggleBand(${i}, 'u')">Üst Bant</button>
+          <button class="band-btn ${p.a ? 'active' : ''}" onclick="toggleBand(${i}, 'a')">Alt Bant</button>
+          <button class="band-btn ${p.s ? 'active' : ''}" onclick="toggleBand(${i}, 's')">Sağ Bant</button>
+          <button class="band-btn ${p.i ? 'active' : ''}" onclick="toggleBand(${i}, 'i')">Sol Bant</button>
+        </div>
+      </div>
+    `;
+  });
+
+  // INPUT DİNLEYİCİLERİ
+  document.querySelectorAll("input[data-i]").forEach(el => {
     el.addEventListener("change", () => {
       let i = +el.dataset.i, k = el.dataset.k;
       parts[i][k] = el.type === "checkbox" ? el.checked : (["w","h","q"].includes(k) ? (el.value ? parseNum(el.value) : "") : el.value);
-    });
-    el.addEventListener("keydown", e => {
-      if(e.key === "Enter") { 
-        e.preventDefault(); 
-        addPart(); 
-      }
     });
   });
 }
