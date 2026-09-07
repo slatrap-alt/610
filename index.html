@@ -1,0 +1,960 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Acanlar Mobilya — Plaka Kesim & Fire Depolu V2</title>
+<style>
+:root {
+  --bg-color: #eef1f4;
+  --card-bg: #ffffff;
+  --text-color: #18212b;
+  --border-color: #ccd3da;
+  --header-bg: #0d1117;
+  --muted-color: #66717d;
+  --table-th-bg: #f7f9fa;
+}
+
+body.dark-mode {
+  --bg-color: #0f172a;
+  --card-bg: #1e293b;
+  --text-color: #f8fafc;
+  --border-color: #334155;
+  --header-bg: #020617;
+  --muted-color: #94a3b8;
+  --table-th-bg: #0f172a;
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg-color);color:var(--text-color);font-family:Arial,Helvetica,sans-serif;transition:background 0.3s, color 0.3s; width: 100%; overflow-x: hidden;}
+
+header{background:var(--header-bg);color:#fff;padding:12px 15px;display:flex;align-items:center;justify-content:space-between;gap:10px;position:relative;width:100%;flex-wrap:wrap;}
+.brand{display:flex;align-items:center;gap:10px}
+.brand svg{height:34px;width:auto;display:block}
+.brand-text{display:flex;flex-direction:column}
+.brand h1{margin:0;font-size:18px;letter-spacing:0.5px;color:#fff;font-weight:bold;line-height:1.2}
+.brand .author{font-size:11px;color:#38bdf8;font-weight:bold}
+
+.header-btns { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+.btn-theme { background: #334155; color: #fff; border: none; padding: 8px 12px; font-size: 11px; font-weight: bold; border-radius: 8px; cursor: pointer; }
+.btn-theme:hover { background: #475569; }
+
+.btn-pdf { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #fff; border: none; padding: 8px 14px; font-size: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35); display: inline-flex; align-items: center; gap: 4px; }
+.btn-pdf:hover { background: linear-gradient(135deg, #059669 0%, #047857 100%); }
+
+main{max-width:1600px;margin:15px auto;padding:0 10px; width:100%;}
+.layout{display:grid;grid-template-columns:520px 1fr;gap:15px}
+.card{background:var(--card-bg);border-radius:12px;padding:14px;box-shadow:0 3px 12px #0000000b;margin-bottom:14px;border:1px solid var(--border-color)}
+h2{font-size:15px;margin:0 0 10px}.muted{font-size:11px;color:var(--muted-color)}
+label{font-size:11px;font-weight:700;display:block;margin:6px 0 4px}
+input,select,button{font:inherit}
+input[type=text],input[type=number],select{width:100%;border:1px solid var(--border-color);border-radius:6px;padding:7px 5px;background:var(--card-bg);color:var(--text-color);font-size:12px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+
+.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.btn-action { border: none; border-radius: 8px; padding: 10px 14px; font-size: 11px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+.btn-action.add { background: #1e293b; color: #fff; }
+.btn-action.save { background: #0284c7; color: #fff; }
+.btn-action.load { background: #475569; color: #fff; }
+
+.btn-optimize-main { width: 100%; margin-top: 10px; background: linear-gradient(135deg, #059669 0%, #047857 100%); color: #fff; border: none; padding: 14px 18px; font-size: 15px; font-weight: bold; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 14px rgba(5, 150, 105, 0.4); display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s ease; }
+.btn-optimize-main:hover { background: linear-gradient(135deg, #047857 0%, #065f46 100%); }
+
+.btn-shuffle { background: #10b981; color: #fff; padding: 8px 12px; border-radius: 6px; border: none; font-weight: bold; font-size: 11px; cursor: pointer; display: none; margin-top: 6px; width: 100%; text-align: center; }
+
+.table-wrap{width:100%;overflow-x:auto;border:1px solid var(--border-color);border-radius:8px}
+table{width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed; min-width: 480px;}
+th,td{padding:4px 1px;border-bottom:1px solid var(--border-color);text-align:center;white-space:nowrap}
+th{background:var(--table-th-bg);font-size:10px;font-weight:bold;color:var(--text-color)}
+
+th.col-rot, td.col-rot { width: 36px; }
+th.col-name, td.col-name { width: 95px; }
+th.col-num, td.col-num { width: 60px; }
+th.col-band, td.col-band { width: 28px; }
+th.col-del, td.col-del { width: 26px; }
+
+td input[type=text], td input[type=number] { padding: 5px 2px; text-align: center; font-size: 11px; }
+
+.metrics{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.metric{background:var(--table-th-bg);border-radius:8px;padding:8px 12px;min-width:95px;border:1px solid var(--border-color)}
+.metric b{font-size:16px;display:block;color:var(--text-color)}.metric span{font-size:10px;color:var(--muted-color)}
+.plan{border:1px solid var(--border-color);border-radius:10px;padding:10px;margin-bottom:12px;background:var(--card-bg)}
+.plan h3{margin:0 0 6px;font-size:14px;color:var(--text-color)}
+canvas{width:100%;height:auto;display:block;border:1px solid var(--border-color);border-radius:6px;background:#fff}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;margin:6px 0}.legend span{display:inline-flex;align-items:center;gap:4px}
+.dot{width:12px;height:8px;border:2px solid #111;display:inline-block}
+.band-note{font-size:11px;color:var(--muted-color);margin-top:6px}
+.notice{background:#fff7df;border:1px solid #f0d98c;color:#854d0e;border-radius:8px;padding:8px;font-size:11px;margin-top:8px}
+
+.job-table-wrap { margin-top: 20px; border-top: 2px solid var(--border-color); padding-top: 15px; }
+.job-header-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #cbd5e1; padding-bottom: 8px; flex-wrap: wrap; gap: 5px; }
+.job-header-info h3 { margin: 0; font-size: 15px; }
+.job-header-info div { font-size: 12px; color: var(--text-color); }
+.job-table { width: 100%; border-collapse: collapse; font-size: 11px; text-align: left; }
+.job-table th, .job-table td { border: 1px solid #cbd5e1; padding: 7px; text-align: center; }
+.job-table th { background: #f1f5f9; color: #0f172a; font-weight: bold; }
+
+.stock-waste-list { max-height: 120px; overflow-y: auto; margin-top: 8px; border: 1px solid var(--border-color); border-radius: 6px; padding: 6px; background: var(--table-th-bg); }
+.stock-waste-item { display: flex; justify-content: space-between; align-items: center; font-size: 11px; padding: 4px 6px; border-bottom: 1px solid var(--border-color); }
+.stock-waste-item:last-child { border-bottom: none; }
+.btn-save-wastes { background: #8b5cf6; color: #fff; width: 100%; margin-top: 8px; font-weight: bold; padding: 8px; border-radius: 6px; border: none; cursor: pointer; font-size: 11px; }
+.btn-save-wastes:hover { background: #7c3aed; }
+
+footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-size: 12px; border-top: 1px solid var(--border-color); margin-top: 15px;}
+.print-header {display: none;}
+
+@media(max-width:1100px){
+  .layout{grid-template-columns:1fr}
+  header { padding: 10px; }
+  .brand h1 { font-size: 16px; }
+}
+
+@media print{
+  @page { size: A4 portrait; margin: 8mm; }
+  html, body { background: #fff !important; color: #000 !important; font-family: Arial, sans-serif !important; width: 100%; margin: 0 !important; padding: 0 !important; }
+  header, .no-print, .layout > section:first-child, .notice, footer, .legend { display: none !important; }
+  main { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
+  .layout { display: block !important; }
+  .card { box-shadow: none !important; border: 0 !important; padding: 0 !important; margin: 0 !important; }
+  
+  .print-header {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid #000;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+  }
+  .print-header .brand-print { display: flex; align-items: center; gap: 10px; }
+  .print-header svg { height: 36px; width: auto; }
+  .print-header h1 { margin: 0; font-size: 17px; color: #000; font-weight: bold; }
+  .print-header .author { font-size: 11px; font-weight: bold; color: #333; }
+  .print-info { text-align: right; font-size: 11px; }
+
+  .plan { break-inside: avoid; page-break-after: always; border: 0 !important; padding: 0 !important; margin-bottom: 0 !important; }
+  .plan:last-child { page-break-after: auto; }
+  .plan h3 { font-size: 13px; margin: 0 0 4px 0; text-align: center; }
+  .plan canvas { border: 2px solid #000 !important; width: 100% !important; max-height: 80vh !important; object-fit: contain; }
+  .metrics { justify-content: center !important; margin-bottom: 8px !important; gap: 8px !important; }
+  .metric { border: 1px solid #000 !important; padding: 3px 10px !important; background: #fff !important; min-width: 80px !important; text-align: center; }
+  .metric b { font-size: 13px !important; color: #000 !important; }
+  .job-table-wrap { break-before: page; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="160,40 270,200 230,200 160,95 90,200 40,200" fill="#C01018"/>
+      <polygon points="160,95 200,155 145,155" fill="#C01018"/>
+      <polygon points="250,40 360,200 320,200 250,95 210,155 225,178 240,155" fill="#282C37"/>
+    </svg>
+    <div class="brand-text">
+      <h1>ACANLAR MOBİLYA</h1>
+      <div class="author">Mesut ACAN — Plaka Kesim V2</div>
+    </div>
+  </div>
+  <div class="header-btns no-print">
+    <button class="btn-theme" onclick="toggleTheme()">🌙 Gece / ☀️ Gündüz</button>
+    <button class="btn-pdf" onclick="window.print()">🖨️ PDF YAZDIR / İNDİR</button>
+  </div>
+</header>
+
+<main>
+<div class="layout">
+<section>
+<div class="card">
+<h2>1. Plaka ve Proje Ayarları</h2>
+<div>
+  <label>Müşteri / Proje Adı (Çıktıda Görünür)</label>
+  <input id="projName" type="text" placeholder="Örn: Mutfak Dolabı Kesim Listesi">
+</div>
+<div class="row">
+<div><label>En (cm)</label><input id="sw" type="number" step="0.1" value="210"></div>
+<div><label>Boy (cm)</label><input id="sh" type="number" step="0.1" value="280"></div>
+</div>
+<div class="row">
+<div><label>Bıçak payı / Kerf (cm)</label><input id="kerf" type="number" step="0.1" value="0.4"></div>
+<div><label>Kenar fire (cm)</label><input id="edge" type="number" step="0.1" value="1.0"></div>
+</div>
+<label>Genel İlk Kesim Yönü Tercihi</label>
+<select id="globalDir" onchange="checkShuffleBtn()">
+<option value="boyuna" selected>Boyuna (Dikey İlk Kesim)</option>
+<option value="enine">Enine (Yatay İlk Kesim)</option>
+<option value="otomatik">Otomatik (En Az Fire & Alternatif Dene)</option>
+</select>
+<button id="btnShuffle" class="btn-shuffle" onclick="shuffleAndOptimize()">🎲 FARKLI YERLEŞİM DENE (ALTERNATİF ŞABLON)</button>
+</div>
+
+<!-- FİRE PLAKA DEPOSU KART ALANI -->
+<div class="card">
+<h2>♻️ Atölye Fire Plaka Deposu</h2>
+<div class="row">
+  <div><input id="stockW" type="number" step="0.1" placeholder="En (cm)"></div>
+  <div><input id="stockH" type="number" step="0.1" placeholder="Boy (cm)"></div>
+</div>
+<div style="margin-top:5px;">
+  <input id="stockName" type="text" placeholder="Malzeme Adı / Not (Örn: Sis Gri MDF)">
+</div>
+<button class="btn-action add" style="width:100%;margin-top:6px;justify-content:center" onclick="addManualStock()">➕ Depoya Fire Plaka Ekle</button>
+
+<label style="margin-top:10px;display:flex;align-items:center;gap:6px;cursor:pointer">
+  <input type="checkbox" id="useStockWastes" checked>
+  <span><b>Depodaki Fireleri Öncelikli Kullan</b></span>
+</label>
+
+<div class="stock-waste-list" id="stockWasteContainer"></div>
+</div>
+
+<div class="card">
+<h2>2. Parça Listesi</h2>
+<div class="table-wrap">
+<table>
+<thead>
+  <tr>
+    <th class="col-rot" title="Döndürülebilir">Dönd</th>
+    <th class="col-name">Parça No</th>
+    <th class="col-num">Boy(cm)</th>
+    <th class="col-num">En(cm)</th>
+    <th class="col-num">Adet</th>
+    <th class="col-band" title="Üst">Ü</th>
+    <th class="col-band" title="Alt">A</th>
+    <th class="col-band" title="Sağ">S</th>
+    <th class="col-band" title="Sol/İç">İ</th>
+    <th class="col-del"></th>
+  </tr>
+</thead>
+<tbody id="parts"></tbody>
+</table>
+</div>
+
+<div class="actions">
+<button class="btn-action add" onclick="addPart()">➕ Satır Ekle</button>
+<button class="btn-action save" onclick="exportData()">💾 Ölçüleri Kaydet</button>
+<label class="btn-action load" style="cursor:pointer">
+  📂 Ölçü Kaydı Yükle
+  <input id="uploadData" type="file" accept=".json" style="display:none" onchange="importData(event)">
+</label>
+</div>
+
+<button class="btn-optimize-main" onclick="optimize()">🚀 HESAPLA VE OPTİMİZE ET</button>
+</div>
+
+<div class="card">
+<h2>3. CSV / Metin İle Toplu Veri (cm Cinsinden)</h2>
+<div class="muted">Format: Parça, Boy(cm), En(cm), Adet, Döndür(1/0), Ü, A, S, İ</div>
+<textarea id="csv" rows="3" style="width:100%;margin-top:6px;border:1px solid var(--border-color);border-radius:6px;padding:6px;background:var(--card-bg);color:var(--text-color)" placeholder="1,72.0,58.0,4,1,1,1,0,0"></textarea>
+<div class="actions">
+  <button class="btn-action load" onclick="importCSV()">Metinden Aktar</button>
+  <button class="btn-action save" onclick="optimize()" style="background:#059669">🚀 OPTİMİZE ET</button>
+</div>
+</div>
+</section>
+
+<section>
+<div class="print-header">
+  <div class="brand-print">
+    <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="160,40 270,200 230,200 160,95 90,200 40,200" fill="#C01018"/>
+      <polygon points="160,95 200,155 145,155" fill="#C01018"/>
+      <polygon points="250,40 360,200 320,200 250,95 210,155 225,178 240,155" fill="#282C37"/>
+    </svg>
+    <div>
+      <h1>ACANLAR MOBİLYA</h1>
+      <div class="author">Mesut ACAN</div>
+    </div>
+  </div>
+  <div class="print-info">
+    <div id="printProjName"><b>Proje:</b> -</div>
+    <div id="printDate"><b>Tarih:</b> </div>
+  </div>
+</div>
+
+<div class="card">
+<h2 class="no-print">Kesim Haritası ve Detaylar</h2>
+<div class="metrics">
+<div class="metric"><b id="sheetCount">0</b><span>PLAKA</span></div>
+<div class="metric"><b id="used">0%</b><span>DOLULUK</span></div>
+<div class="metric"><b id="waste">0%</b><span>FİRE</span></div>
+<div class="metric"><b id="pieceCount">0</b><span>TOPLAM PARÇA</span></div>
+<div class="metric" style="background:#e0f2fe; border-color:#38bdf8;"><b id="bandMeters" style="color:#0369a1;">0 m</b><span style="color:#0369a1; font-weight:bold;">PVC BANT</span></div>
+</div>
+<div class="legend no-print">
+<span><i class="dot"></i> Parça</span>
+<span style="color:#0284c7; font-weight:bold;">━ Kalın Mavi Kenar Bandı</span>
+<span style="color:#d32f2f">--- Ana Giyotin Kesim</span>
+</div>
+<div id="plans"></div>
+
+<button id="btnSaveCurrentWastes" class="btn-save-wastes no-print" onclick="saveCurrentWastesToDepot()" style="display:none">
+  ♻️ Bu Kesimden Kalan Büyük Fireleri Depoma Kaydet
+</button>
+
+<div class="job-table-wrap">
+  <div class="job-header-info">
+    <h3>📋 ATÖLYE KESİM VE PARÇA İŞ EMRİ LİSTESİ</h3>
+    <div>
+      <span id="jobProjName"><b>Proje / Müşteri:</b> -</span> | 
+      <span id="jobDate"><b>Tarih:</b> -</span>
+    </div>
+  </div>
+  <table class="job-table">
+    <thead>
+      <tr>
+        <th>No / Adı</th>
+        <th>Boy (cm)</th>
+        <th>En (cm)</th>
+        <th>Adet</th>
+        <th>PVC Kenar Bandı Detayı</th>
+      </tr>
+    </thead>
+    <tbody id="jobTableBody"></tbody>
+  </table>
+</div>
+
+<div class="notice no-print">Çıktı alındığında kesim şablonları ve parça iş emri listesi net okunacak boyutta basılır.</div>
+</div>
+</section>
+</div>
+</main>
+
+<footer class="no-print">
+  Acanlar Mobilya — Mesut ACAN | Plaka Optimizasyon & Kesim Modülü
+</footer>
+
+<script>
+let parts = [];
+let shuffleSeed = 0;
+let stockWastes = [];
+let currentDetectedWastes = [];
+
+function parseNum(val) {
+  if(!val) return 0;
+  return parseFloat(String(val).replace(',', '.'));
+}
+
+function loadStockWastesFromStorage() {
+  try {
+    let saved = localStorage.getItem("acanlar_stock_wastes");
+    if(saved) stockWastes = JSON.parse(saved);
+  } catch(e){}
+  renderStockWasteList();
+}
+
+function saveStockWastesToStorage() {
+  localStorage.setItem("acanlar_stock_wastes", JSON.stringify(stockWastes));
+  renderStockWasteList();
+}
+
+function addManualStock() {
+  let w = parseNum(document.getElementById("stockW").value);
+  let h = parseNum(document.getElementById("stockH").value);
+  let label = document.getElementById("stockName").value || "Fire Plaka";
+  if(w && h) {
+    stockWastes.push({ w, h, label, id: Date.now() });
+    document.getElementById("stockW").value = "";
+    document.getElementById("stockH").value = "";
+    document.getElementById("stockName").value = "";
+    saveStockWastesToStorage();
+  }
+}
+
+function removeStockWaste(id) {
+  stockWastes = stockWastes.filter(item => item.id !== id);
+  saveStockWastesToStorage();
+}
+
+function renderStockWasteList() {
+  const container = document.getElementById("stockWasteContainer");
+  if(stockWastes.length === 0) {
+    container.innerHTML = `<div class="muted" style="text-align:center;padding:5px">Depoda kayıtlı fire yok.</div>`;
+    return;
+  }
+  container.innerHTML = "";
+  stockWastes.forEach(item => {
+    container.innerHTML += `
+      <div class="stock-waste-item">
+        <span><b>${item.w} x ${item.h} cm</b> (${item.label})</span>
+        <button style="background:#ef4444;color:#fff;border:none;border-radius:4px;padding:2px 6px;cursor:pointer;font-size:10px" onclick="removeStockWaste(${item.id})">Sil</button>
+      </div>
+    `;
+  });
+}
+
+function toggleTheme() {
+  document.body.classList.toggle("dark-mode");
+}
+
+function checkShuffleBtn() {
+  let dir = document.getElementById("globalDir").value;
+  document.getElementById("btnShuffle").style.display = (dir === "otomatik") ? "block" : "none";
+}
+
+function shuffleAndOptimize() {
+  shuffleSeed++;
+  optimize();
+}
+
+function addPart(p) {
+  if(!p) {
+    p = {
+      name: String(parts.length + 1),
+      h: "",
+      w: "",
+      q: 1,
+      rot: true,
+      u: false,
+      a: false,
+      s: false,
+      i: false
+    };
+  }
+  parts.push({...p, id: Date.now() + Math.random()});
+  renderParts();
+  
+  setTimeout(()=>{
+    let rows = document.querySelectorAll("#parts tr");
+    let lastInput = rows[rows.length-1]?.querySelector("input[data-k='name']");
+    if(lastInput) {
+      lastInput.focus();
+      lastInput.select();
+    }
+  }, 30);
+}
+
+function renderParts() {
+  const tb = document.getElementById("parts");
+  tb.innerHTML = "";
+  parts.forEach((p, i) => {
+    tb.innerHTML += `<tr>
+    <td class="col-rot"><input type="checkbox" ${p.rot ? "checked" : ""} data-i="${i}" data-k="rot"></td>
+    <td class="col-name"><input type="text" value="${esc(p.name)}" placeholder="No" data-i="${i}" data-k="name"></td>
+    <td class="col-num"><input type="number" step="0.1" value="${p.h !== undefined ? p.h : ''}" placeholder="Boy" data-i="${i}" data-k="h"></td>
+    <td class="col-num"><input type="number" step="0.1" value="${p.w !== undefined ? p.w : ''}" placeholder="En" data-i="${i}" data-k="w"></td>
+    <td class="col-num"><input type="number" min="1" value="${p.q || 1}" data-i="${i}" data-k="q"></td>
+    <td class="col-band"><input type="checkbox" ${p.u ? "checked" : ""} data-i="${i}" data-k="u" title="Üst"></td>
+    <td class="col-band"><input type="checkbox" ${p.a ? "checked" : ""} data-i="${i}" data-k="a" title="Alt"></td>
+    <td class="col-band"><input type="checkbox" ${p.s ? "checked" : ""} data-i="${i}" data-k="s" title="Sağ"></td>
+    <td class="col-band"><input type="checkbox" ${p.i ? "checked" : ""} data-i="${i}" data-k="i" title="İç/Sol"></td>
+    <td class="col-del"><button class="secondary" style="padding:2px 4px;font-size:10px;cursor:pointer" onclick="parts.splice(${i},1);renderParts()">×</button></td>
+    </tr>`;
+  });
+
+  tb.querySelectorAll("input").forEach(el => {
+    el.addEventListener("change", () => {
+      let i = +el.dataset.i, k = el.dataset.k;
+      parts[i][k] = el.type === "checkbox" ? el.checked : (["w","h","q"].includes(k) ? (el.value ? parseNum(el.value) : "") : el.value);
+    });
+    el.addEventListener("keydown", e => {
+      if(e.key === "Enter") { 
+        e.preventDefault(); 
+        addPart(); 
+      }
+    });
+  });
+}
+
+function esc(s) { return String(s ?? "").replace(/"/g, "&quot;").replace(/</g, "&lt;"); }
+
+function exportData() {
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(parts, null, 2));
+  const dlAnchor = document.createElement('a');
+  const projName = document.getElementById("projName").value || "Kesim_Listesi";
+  dlAnchor.setAttribute("href", dataStr);
+  dlAnchor.setAttribute("download", `${projName}_Acanlar.json`);
+  document.body.appendChild(dlAnchor);
+  dlAnchor.click();
+  dlAnchor.remove();
+}
+
+function importData(ev) {
+  const f = ev.target.files[0];
+  if(!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const loadedParts = JSON.parse(r.result);
+      if(Array.isArray(loadedParts)) {
+        parts = loadedParts;
+        renderParts();
+        optimize();
+      }
+    } catch(e) {
+      alert("Hatalı dosya biçimi!");
+    }
+  };
+  r.readAsText(f);
+}
+
+function parseLine(line) {
+  let a = line.includes(";") ? line.split(";") : line.split(",");
+  return a.map(x => x.trim().replace(/^"|"$/g, ""));
+}
+
+function importCSV() {
+  const text = document.getElementById("csv").value.trim();
+  if(!text) return;
+  let lines = text.split(/\r?\n/).filter(Boolean), arr = [];
+  lines.forEach((line, idx) => {
+    let a = parseLine(line);
+    if(idx === 0 && /parça|boy|en/i.test(a[0])) return;
+    if(a.length >= 4 && !isNaN(parseNum(a[1]))) {
+      arr.push({
+        name: a[0],
+        h: parseNum(a[1]),
+        w: parseNum(a[2]),
+        q: parseNum(a[3]) || 1,
+        rot: a[4] !== "0",
+        u: a[5] === "1",
+        a: a[6] === "1",
+        s: a[7] === "1",
+        i: a[8] === "1"
+      });
+    }
+  });
+  if(arr.length > 0) {
+    parts = arr;
+    renderParts();
+    optimize();
+  }
+}
+
+function expand() {
+  let a = [];
+  parts.forEach(p => {
+    if(p.w && p.h) {
+      for(let n = 0; n < (p.q || 1); n++) a.push({...p});
+    }
+  });
+  return a;
+}
+
+const groupColors = ["#ffffff", "#fef3c7", "#e0e7ff", "#dcfce7", "#ffe4e6", "#f3e8ff", "#e0f2fe"];
+
+function getGroupColor(h, w) {
+  let key = `${Math.max(h, w)}x${Math.min(h, w)}`;
+  let hash = 0;
+  for (let i = 0; i < key.length; i++) hash = key.charCodeAt(i) + ((hash << 5) - hash);
+  let index = Math.abs(hash) % groupColors.length;
+  return groupColors[index];
+}
+
+function renderJobTable(proj, dateStr) {
+  const jb = document.getElementById("jobTableBody");
+  document.getElementById("jobProjName").innerHTML = `<b>Proje / Müşteri:</b> ${esc(proj)}`;
+  document.getElementById("jobDate").innerHTML = `<b>Tarih:</b> ${dateStr}`;
+
+  jb.innerHTML = "";
+  parts.forEach(p => {
+    if(p.w && p.h) {
+      let bandStr = [];
+      if(p.u) bandStr.push("Üst");
+      if(p.a) bandStr.push("Alt");
+      if(p.s) bandStr.push("Sağ");
+      if(p.i) bandStr.push("Sol");
+      
+      jb.innerHTML += `<tr>
+        <td><b>[ ${esc(p.name)} ]</b></td>
+        <td>${p.h} cm</td>
+        <td>${p.w} cm</td>
+        <td><b>${p.q || 1} Adet</b></td>
+        <td>${bandStr.length > 0 ? bandStr.join(" - ") + " (Bantlı)" : "Bantsız / Ham"}</td>
+      </tr>`;
+    }
+  });
+}
+
+function saveCurrentWastesToDepot() {
+  if(currentDetectedWastes.length === 0) return;
+  currentDetectedWastes.forEach(w => {
+    stockWastes.push({
+      w: parseFloat(w.w.toFixed(1)),
+      h: parseFloat(w.h.toFixed(1)),
+      label: "Artan Fire Plaka",
+      id: Date.now() + Math.random()
+    });
+  });
+  saveStockWastesToStorage();
+  alert(`${currentDetectedWastes.length} adet büyük fire plaka depoya başarıyla eklendi!`);
+  document.getElementById("btnSaveCurrentWastes").style.display = "none";
+}
+
+function optimize() {
+  const SW0 = parseNum(document.getElementById("sw").value);
+  const SH0 = parseNum(document.getElementById("sh").value);
+  const edge = parseNum(document.getElementById("edge").value);
+  const K = parseNum(document.getElementById("kerf").value);
+  const SW = SW0 - 2 * edge, SH = SH0 - 2 * edge;
+  const globalDir = document.getElementById("globalDir").value;
+  const useStock = document.getElementById("useStockWastes").checked;
+
+  checkShuffleBtn();
+  currentDetectedWastes = [];
+
+  const proj = document.getElementById("projName").value || "Plaka Kesim Projesi";
+  const dateStr = new Date().toLocaleDateString('tr-TR');
+  document.getElementById("printProjName").innerHTML = `<b>Proje:</b> ${esc(proj)}`;
+  document.getElementById("printDate").innerHTML = `<b>Tarih:</b> ${dateStr}`;
+
+  let totalBandCm = 0;
+  parts.forEach(p => {
+    let q = p.q || 1;
+    if(p.u) totalBandCm += p.w * q;
+    if(p.a) totalBandCm += p.w * q;
+    if(p.s) totalBandCm += p.h * q;
+    if(p.i) totalBandCm += p.h * q;
+  });
+  document.getElementById("bandMeters").textContent = Math.ceil(totalBandCm / 100) + " m";
+
+  renderJobTable(proj, dateStr);
+
+  let rawItems = expand();
+
+  let groups = {};
+  rawItems.forEach(item => {
+    let key = `${Math.max(item.w, item.h)}x${Math.min(item.w, item.h)}`;
+    if(!groups[key]) groups[key] = [];
+    groups[key].push(item);
+  });
+
+  let sortedGroupKeys = Object.keys(groups).sort((a, b) => {
+    let [aMax, aMin] = a.split('x').map(Number);
+    let [bMax, bMin] = b.split('x').map(Number);
+    return (bMax * bMin) - (aMax * aMin);
+  });
+
+  if(globalDir === "otomatik" && shuffleSeed > 0) {
+    sortedGroupKeys.sort(() => (Math.sin(shuffleSeed++) > 0 ? 1 : -1));
+  }
+
+  let sheets = [];
+
+  if(useStock && stockWastes.length > 0) {
+    stockWastes.forEach(st => {
+      sheets.push({
+        freeRects: [{ x: 0, y: 0, w: st.w, h: st.h }],
+        placed: [],
+        cuts: [],
+        isStock: true,
+        stockLabel: st.label,
+        customW0: st.w,
+        customH0: st.h
+      });
+    });
+  }
+
+  sortedGroupKeys.forEach(key => {
+    let groupItems = groups[key];
+    
+    groupItems.forEach(item => {
+      let placed = false;
+
+      for(let s of sheets) {
+        if(tryPlaceNearSameGroup(s, item, SW, SH, K, globalDir)) {
+          placed = true;
+          break;
+        }
+      }
+
+      if(!placed) {
+        for(let s of sheets) {
+          if(tryPlaceInSheet(s, item, SW, SH, K, globalDir)) {
+            placed = true;
+            break;
+          }
+        }
+      }
+
+      if(!placed) {
+        let newSheet = { 
+          freeRects: [{ x: 0, y: 0, w: SW, h: SH }], 
+          placed: [],
+          cuts: []
+        };
+        tryPlaceInSheet(newSheet, item, SW, SH, K, globalDir);
+        sheets.push(newSheet);
+      }
+    });
+  });
+
+  sheets = sheets.filter(s => s.placed.length > 0);
+
+  drawPlans(sheets, SW, SH, SW0, SH0, edge, K);
+}
+
+function tryPlaceNearSameGroup(sheet, item, SW, SH, K, globalDir) {
+  let samePlaced = sheet.placed.filter(p => 
+    (Math.max(p.w, p.h) === Math.max(item.w, item.h)) && 
+    (Math.min(p.w, p.h) === Math.min(item.w, item.h))
+  );
+
+  if(samePlaced.length === 0) return false;
+
+  return tryPlaceInSheet(sheet, item, SW, SH, K, globalDir);
+}
+
+function tryPlaceInSheet(sheet, item, SW, SH, K, globalDir) {
+  let bestIdx = -1;
+  let bestRot = false;
+  let bestScore = Infinity;
+
+  for(let i = 0; i < sheet.freeRects.length; i++) {
+    let r = sheet.freeRects[i];
+
+    let options = [
+      { w: item.w, h: item.h, rot: false },
+      { w: item.h, h: item.w, rot: true }
+    ];
+
+    for(let opt of options) {
+      if(opt.rot && !item.rot) continue;
+
+      let effectiveDir = globalDir;
+      if(globalDir === "otomatik") {
+        effectiveDir = (shuffleSeed % 2 === 0) ? "boyuna" : "enine";
+      }
+
+      if(effectiveDir === "boyuna" && opt.h < opt.w && item.rot) continue;
+      if(effectiveDir === "enine" && opt.w < opt.h && item.rot) continue;
+
+      if(opt.w <= r.w && opt.h <= r.h) {
+        let leftoverX = r.w - opt.w;
+        let leftoverY = r.h - opt.h;
+        let score = Math.min(leftoverX, leftoverY);
+
+        if(score < bestScore) {
+          bestScore = score;
+          bestIdx = i;
+          bestRot = opt.rot;
+        }
+      }
+    }
+  }
+
+  if(bestIdx !== -1) {
+    let r = sheet.freeRects[bestIdx];
+    let pw = bestRot ? item.h : item.w;
+    let ph = bestRot ? item.w : item.h;
+
+    let effectiveDir = globalDir;
+    if(globalDir === "otomatik") {
+      effectiveDir = (shuffleSeed % 2 === 0) ? "boyuna" : "enine";
+    }
+
+    sheet.placed.push({
+      ...item,
+      x: r.x,
+      y: r.y,
+      w: pw,
+      h: ph,
+      rot: bestRot,
+      cutDir: effectiveDir
+    });
+
+    sheet.freeRects.splice(bestIdx, 1);
+
+    if(effectiveDir === "enine") {
+      if(r.w - pw > 0) sheet.freeRects.push({ x: r.x + pw + K, y: r.y, w: r.w - pw - K, h: ph });
+      if(r.h - ph > 0) sheet.freeRects.push({ x: r.x, y: r.y + ph + K, w: r.w, h: r.h - ph - K });
+      sheet.cuts.push({ x1: r.x, y1: r.y + ph, x2: r.x + r.w, y2: r.y + ph, type: "main" });
+      if(r.w - pw > 0) sheet.cuts.push({ x1: r.x + pw, y1: r.y, x2: r.x + pw, y2: r.y + ph, type: "sub" });
+    } else {
+      if(r.h - ph > 0) sheet.freeRects.push({ x: r.x, y: r.y + ph + K, w: pw, h: r.h - ph - K });
+      if(r.w - pw > 0) sheet.freeRects.push({ x: r.x + pw + K, y: r.y, w: r.w - pw - K, h: r.h });
+      sheet.cuts.push({ x1: r.x + pw, y1: r.y, x2: r.x + pw, y2: r.y + r.h, type: "main" });
+      if(r.h - ph > 0) sheet.freeRects.push({ x: r.x, y: r.y + ph, x2: r.x + pw, y2: r.y + ph, type: "sub" });
+    }
+
+    sheet.freeRects = sheet.freeRects.filter(fr => fr.w > 0.5 && fr.h > 0.5);
+    return true;
+  }
+
+  return false;
+}
+
+function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
+  let totalArea = 0, count = 0;
+  sheets.forEach(s => s.placed.forEach(p => { totalArea += p.w * p.h; count++; }));
+  
+  document.getElementById("sheetCount").textContent = sheets.length;
+  document.getElementById("pieceCount").textContent = count;
+  let cap = SW * SH * sheets.length, pct = cap ? Math.round(totalArea / cap * 100) : 0;
+  document.getElementById("used").textContent = pct + "%";
+  document.getElementById("waste").textContent = (100 - pct) + "%";
+
+  const box = document.getElementById("plans");
+  box.innerHTML = "";
+
+  sheets.forEach((s, si) => {
+    let curW0 = s.isStock ? s.customW0 : SW0;
+    let curH0 = s.isStock ? s.customH0 : SH0;
+    let curEdge = s.isStock ? 0 : edge;
+
+    let div = document.createElement("div");
+    div.className = "plan";
+    div.innerHTML = `<h3>${s.isStock ? '♻️ DEPODAN HARCANAN FİRE PLAKA' : 'PLAKA ' + (si + 1)} — ${curW0} × ${curH0} cm ${s.isStock ? '('+s.stockLabel+')' : ''}</h3>`;
+    let c = document.createElement("canvas");
+    c.width = 1400;
+    c.height = Math.round(1400 * curH0 / curW0);
+    div.appendChild(c);
+    box.appendChild(div);
+
+    let ctx = c.getContext("2d"), sx = (c.width - 36) / curW0, sy = (c.height - 36) / curH0, OX = 18, OY = 18;
+    
+    // Plaka Dış Çerçevesi
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = s.isStock ? "#8b5cf6" : "#111";
+    ctx.strokeRect(OX, OY, curW0 * sx, curH0 * sy);
+
+    // Kenar Fire Çizgisi
+    if(!s.isStock) {
+      ctx.setLineDash([6, 4]);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = "#888";
+      ctx.strokeRect(OX + curEdge * sx, OY + curEdge * sy, (curW0 - 2 * curEdge) * sx, (curH0 - 2 * curEdge) * sy);
+      ctx.setLineDash([]);
+    }
+
+    // 1. KULLANILABİLİR BÜYÜK FİRE ALANLARININ ÜZERİNE YAZI YAZ (cm Cinsinden)
+    s.freeRects.forEach(fr => {
+      if(fr.w >= 30 && fr.h >= 20) {
+        let fx = OX + (curEdge + fr.x) * sx;
+        let fy = OY + (curEdge + fr.y) * sy;
+        let fw = fr.w * sx;
+        let fh = fr.h * sy;
+
+        ctx.fillStyle = "#f1f5f9";
+        ctx.fillRect(fx, fy, fw, fh);
+        ctx.strokeStyle = "#cbd5e1";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(fx, fy, fw, fh);
+
+        ctx.font = "bold 16px Arial";
+        ctx.fillStyle = "#64748b";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(`Kalan Fire: ${fr.w.toFixed(1)} x ${fr.h.toFixed(1)} cm`, fx + fw / 2, fy + fh / 2);
+
+        if(!s.isStock) {
+          currentDetectedWastes.push({ w: fr.w, h: fr.h });
+        }
+      }
+    });
+
+    // 2. SADE KESİM KILAVUZ ÇİZGİLERİ
+    s.cuts.forEach(ct => {
+      ctx.beginPath();
+      ctx.setLineDash(ct.type === "main" ? [10, 5] : [4, 4]);
+      ctx.lineWidth = ct.type === "main" ? 2.5 : 1.5;
+      ctx.strokeStyle = ct.type === "main" ? "#d32f2f" : "#0284c7";
+      let cx1 = OX + (curEdge + ct.x1) * sx;
+      let cy1 = OY + (curEdge + ct.y1) * sy;
+      let cx2 = OX + (curEdge + ct.x2) * sx;
+      let cy2 = OY + (curEdge + ct.y2) * sy;
+      ctx.moveTo(cx1, cy1);
+      ctx.lineTo(cx2, cy2);
+      ctx.stroke();
+    });
+    ctx.setLineDash([]);
+
+    // 3. PARÇALAR
+    s.placed.forEach((p, idx) => {
+      let pad = 7;
+      let x = OX + (curEdge + p.x) * sx + pad, 
+          y = OY + (curEdge + p.y) * sy + pad, 
+          w = p.w * sx - (pad * 2), 
+          h = p.h * sy - (pad * 2);
+      
+      ctx.fillStyle = getGroupColor(p.h, p.w);
+      ctx.fillRect(x, y, w, h);
+
+      ctx.strokeStyle = "#0f172a";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(x, y, w, h);
+
+      // MAVİ BANT ÇİZGİLERİ
+      ctx.font = "bold 15px Arial";
+      ctx.fillStyle = "#0284c7";
+      if(p.u) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x, y + 4); ctx.lineTo(x + w, y + 4); ctx.stroke(); ctx.fillText("Ü", x + 10, y + 24); }
+      if(p.a) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x, y + h - 4); ctx.lineTo(x + w, y + h - 4); ctx.stroke(); ctx.fillText("A", x + 10, y + h - 10); }
+      if(p.s) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + w - 4, y); ctx.lineTo(x + w - 4, y + h); ctx.stroke(); ctx.fillText("S", x + w - 22, y + 24); }
+      if(p.i) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + 4, y); ctx.lineTo(x + 4, y + h); ctx.stroke(); ctx.fillText("İ", x + 10, y + 24); }
+
+      // KENAR ÖLÇÜLERİ (cm)
+      let dimFont = Math.max(16, Math.min(30, Math.min(w, h) / 3.5));
+      ctx.font = `bold ${dimFont}px Arial`;
+      ctx.fillStyle = "#000000";
+
+      if (w > 30) {
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        ctx.fillText(`${p.w}`, x + w / 2, y + 8);
+        ctx.textBaseline = "bottom";
+        ctx.fillText(`${p.w}`, x + w / 2, y + h - 8);
+      }
+
+      if (h > 30) {
+        ctx.save();
+        ctx.translate(x + 18, y + h / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(`${p.h}`, 0, 0);
+        ctx.restore();
+
+        ctx.save();
+        ctx.translate(x + w - 18, y + h / 2);
+        ctx.rotate(Math.PI / 2);
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(`${p.h}`, 0, 0);
+        ctx.restore();
+      }
+
+      if (p.h > 35 && p.w > 35) {
+        let nameFont = Math.max(16, Math.min(34, Math.min(w, h) / 3));
+        ctx.font = `bold ${nameFont}px Arial`;
+        ctx.fillStyle = "#0f172a";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(`[ ${p.name} ]`, x + w / 2, y + h / 2);
+      }
+
+      ctx.beginPath();
+      ctx.arc(x + 22, y + 22, 13, 0, Math.PI * 2);
+      ctx.fillStyle = "#0f172a";
+      ctx.fill();
+      ctx.fillStyle = "#ffffff";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.font = "bold 11px Arial";
+      ctx.fillText(idx + 1, x + 22, y + 22);
+
+      ctx.textAlign = "left";
+      ctx.textBaseline = "alphabetic";
+    });
+
+    let note = document.createElement("div");
+    note.className = "band-note no-print";
+    note.textContent = "Bant işareti: Ü=üst, A=alt, S=sağ, İ=sol (Mavi Çizgi). Kırmızı kırık çizgiler ana kesim yollarıdır.";
+    div.appendChild(note);
+  });
+
+  let btnSave = document.getElementById("btnSaveCurrentWastes");
+  if(currentDetectedWastes.length > 0) {
+    btnSave.style.display = "block";
+    btnSave.textContent = `♻️ Bu Kesimden Kalan ${currentDetectedWastes.length} Adet Büyük Fireyi Depoma Kaydet`;
+  } else {
+    btnSave.style.display = "none";
+  }
+}
+
+// YÜKLEME VE İLK BAŞLANGIÇ
+loadStockWastesFromStorage();
+addPart();
+</script>
+</body>
+</html>
