@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Acanlar Mobilya — Firesiz Plaka Kesim & Fire Depolu V.1.61</title>
+<title>Acanlar Mobilya — Firesiz Plaka Kesim & Fire Depolu V.1.62</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -73,7 +73,7 @@ th{background:var(--table-th-bg);font-size:10px;font-weight:bold;color:var(--tex
 th.col-rot, td.col-rot { width: 36px; }
 th.col-name, td.col-name { width: 95px; }
 th.col-num, td.col-num { width: 60px; }
-th.col-band, td.col-band { width: 28px; }
+th.col-band, td.col-band { width: 32px; }
 th.col-del, td.col-del { width: 26px; }
 
 td input[type=text], td input[type=number] { padding: 5px 2px; text-align: center; font-size: 11px; }
@@ -170,7 +170,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA DEKORASYON</h1>
-      <div class="author">Mesut ACAN — Firesiz Plaka Kesim Programı v1.61 </div>
+      <div class="author">Mesut ACAN — Firesiz Plaka Kesim Programı v1.62</div>
     </div>
   </div>
   <div class="header-btns no-print">
@@ -238,10 +238,10 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     <th class="col-num">Boy(cm)</th>
     <th class="col-num">En(cm)</th>
     <th class="col-num">Adet</th>
-    <th class="col-band" title="Üst">Ü</th>
-    <th class="col-band" title="Alt">A</th>
-    <th class="col-band" title="Sağ">S</th>
-    <th class="col-band" title="Sol/İç">İ</th>
+    <th class="col-band" title="Sağ Bant (Boy 1)">Boy1</th>
+    <th class="col-band" title="Sol Bant (Boy 2)">Boy2</th>
+    <th class="col-band" title="Üst Bant (En 1)">En1</th>
+    <th class="col-band" title="Alt Bant (En 2)">En2</th>
     <th class="col-del"></th>
   </tr>
 </thead>
@@ -266,7 +266,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 
 <div class="card">
 <h2>3. CSV / Metin İle Toplu Veri (cm Cinsinden)</h2>
-<div class="muted">Format: Parça, Boy(cm), En(cm), Adet, Döndür(1/0), Ü, A, S, İ</div>
+<div class="muted">Format: Parça, Boy(cm), En(cm), Adet, Döndür(1/0), Boy1, Boy2, En1, En2</div>
 <textarea id="csv" rows="3" style="width:100%;margin-top:6px;border:1px solid var(--border-color);border-radius:6px;padding:6px;background:var(--card-bg);color:var(--text-color)" placeholder="1,72.0,58.0,4,1,1,1,0,0"></textarea>
 <div class="actions">
   <button class="btn-action load" onclick="importCSV()">Metinden Aktar</button>
@@ -427,10 +427,10 @@ function addPart(p) {
       w: "",
       q: 1,
       rot: true,
-      u: false,
-      a: false,
-      s: false,
-      i: false
+      s: false, // Boy1 (Sağ)
+      i: false, // Boy2 (Sol)
+      u: false, // En1 (Üst)
+      a: false  // En2 (Alt)
     };
   }
   parts.push({...p, id: Date.now() + Math.random()});
@@ -457,7 +457,7 @@ function toggleBand(i, key) {
 }
 
 function renderParts() {
-  // 1. MASAÜSTÜ TABLO RENDER
+  // 1. MASAÜSTÜ TABLO RENDER (TAB SIRA DÜZENİ: Boy1 -> Boy2 -> En1 -> En2)
   const tb = document.getElementById("parts");
   tb.innerHTML = "";
   parts.forEach((p, i) => {
@@ -467,10 +467,10 @@ function renderParts() {
     <td class="col-num"><input type="number" step="0.1" value="${p.h !== undefined ? p.h : ''}" placeholder="Boy" data-i="${i}" data-k="h"></td>
     <td class="col-num"><input type="number" step="0.1" value="${p.w !== undefined ? p.w : ''}" placeholder="En" data-i="${i}" data-k="w"></td>
     <td class="col-num"><input type="number" min="1" value="${p.q || 1}" data-i="${i}" data-k="q"></td>
-    <td class="col-band"><input type="checkbox" ${p.u ? "checked" : ""} data-i="${i}" data-k="u" title="Üst"></td>
-    <td class="col-band"><input type="checkbox" ${p.a ? "checked" : ""} data-i="${i}" data-k="a" title="Alt"></td>
-    <td class="col-band"><input type="checkbox" ${p.s ? "checked" : ""} data-i="${i}" data-k="s" title="Sağ"></td>
-    <td class="col-band"><input type="checkbox" ${p.i ? "checked" : ""} data-i="${i}" data-k="i" title="İç/Sol"></td>
+    <td class="col-band"><input type="checkbox" ${p.s ? "checked" : ""} data-i="${i}" data-k="s" title="Boy 1 (Sağ)"></td>
+    <td class="col-band"><input type="checkbox" ${p.i ? "checked" : ""} data-i="${i}" data-k="i" title="Boy 2 (Sol)"></td>
+    <td class="col-band"><input type="checkbox" ${p.u ? "checked" : ""} data-i="${i}" data-k="u" title="En 1 (Üst)"></td>
+    <td class="col-band"><input type="checkbox" ${p.a ? "checked" : ""} data-i="${i}" data-k="a" title="En 2 (Alt)"></td>
     <td class="col-del"><button class="secondary" style="padding:2px 4px;font-size:10px;cursor:pointer" onclick="parts.splice(${i},1);renderParts()">×</button></td>
     </tr>`;
   });
@@ -500,16 +500,16 @@ function renderParts() {
           </div>
         </div>
         <div class="part-card-bands">
-          <button class="band-btn ${p.u ? 'active' : ''}" onclick="toggleBand(${i}, 'u')">Üst Bant</button>
-          <button class="band-btn ${p.a ? 'active' : ''}" onclick="toggleBand(${i}, 'a')">Alt Bant</button>
-          <button class="band-btn ${p.s ? 'active' : ''}" onclick="toggleBand(${i}, 's')">Sağ Bant</button>
-          <button class="band-btn ${p.i ? 'active' : ''}" onclick="toggleBand(${i}, 'i')">Sol Bant</button>
+          <button class="band-btn ${p.s ? 'active' : ''}" onclick="toggleBand(${i}, 's')">Boy 1</button>
+          <button class="band-btn ${p.i ? 'active' : ''}" onclick="toggleBand(${i}, 'i')">Boy 2</button>
+          <button class="band-btn ${p.u ? 'active' : ''}" onclick="toggleBand(${i}, 'u')">En 1</button>
+          <button class="band-btn ${p.a ? 'active' : ''}" onclick="toggleBand(${i}, 'a')">En 2</button>
         </div>
       </div>
     `;
   });
 
-  // INPUT DİNLEYİCİLERİ & ENTER TUSUYLA YENİ SATIR EKLEME
+  // INPUT DİNLEYİCİLERİ & ENTER TUŞUYLA YENİ SATIR EKLEME
   document.querySelectorAll("input[data-i]").forEach(el => {
     el.addEventListener("change", () => {
       let i = +el.dataset.i, k = el.dataset.k;
@@ -577,10 +577,10 @@ function importCSV() {
         w: parseNum(a[2]),
         q: parseNum(a[3]) || 1,
         rot: a[4] !== "0",
-        u: a[5] === "1",
-        a: a[6] === "1",
-        s: a[7] === "1",
-        i: a[8] === "1"
+        s: a[5] === "1", // Boy1
+        i: a[6] === "1", // Boy2
+        u: a[7] === "1", // En1
+        a: a[8] === "1"  // En2
       });
     }
   });
@@ -620,10 +620,10 @@ function renderJobTable(proj, dateStr) {
   parts.forEach(p => {
     if(p.w && p.h) {
       let bandStr = [];
-      if(p.u) bandStr.push("Üst");
-      if(p.a) bandStr.push("Alt");
-      if(p.s) bandStr.push("Sağ");
-      if(p.i) bandStr.push("Sol");
+      if(p.s) bandStr.push("Boy 1");
+      if(p.i) bandStr.push("Boy 2");
+      if(p.u) bandStr.push("En 1");
+      if(p.a) bandStr.push("En 2");
       
       jb.innerHTML += `<tr>
         <td><b>[ ${esc(p.name)} ]</b></td>
@@ -944,13 +944,13 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
       ctx.lineWidth = 2;
       ctx.strokeRect(x, y, w, h);
 
-      // MAVİ BANT ÇİZGİLERİ
-      ctx.font = "bold 15px Arial";
+      // MAVİ BANT ÇİZGİLERİ VE ETIKETLERI (B1, B2, E1, E2)
+      ctx.font = "bold 13px Arial";
       ctx.fillStyle = "#0284c7";
-      if(p.u) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x, y + 4); ctx.lineTo(x + w, y + 4); ctx.stroke(); ctx.fillText("Ü", x + 10, y + 24); }
-      if(p.a) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x, y + h - 4); ctx.lineTo(x + w, y + h - 4); ctx.stroke(); ctx.fillText("A", x + 10, y + h - 10); }
-      if(p.s) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + w - 4, y); ctx.lineTo(x + w - 4, y + h); ctx.stroke(); ctx.fillText("S", x + w - 22, y + 24); }
-      if(p.i) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + 4, y); ctx.lineTo(x + 4, y + h); ctx.stroke(); ctx.fillText("İ", x + 10, y + 24); }
+      if(p.u) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x, y + 4); ctx.lineTo(x + w, y + 4); ctx.stroke(); ctx.fillText("E1", x + 10, y + 24); }
+      if(p.a) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x, y + h - 4); ctx.lineTo(x + w, y + h - 4); ctx.stroke(); ctx.fillText("E2", x + 10, y + h - 10); }
+      if(p.s) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + w - 4, y); ctx.lineTo(x + w - 4, y + h); ctx.stroke(); ctx.fillText("B1", x + w - 26, y + 24); }
+      if(p.i) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + 4, y); ctx.lineTo(x + 4, y + h); ctx.stroke(); ctx.fillText("B2", x + 10, y + 24); }
 
       // KENAR ÖLÇÜLERİ (cm)
       let dimFont = Math.max(16, Math.min(30, Math.min(w, h) / 3.5));
@@ -1008,7 +1008,7 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
 
     let note = document.createElement("div");
     note.className = "band-note no-print";
-    note.textContent = "Bant işareti: Ü=üst, A=alt, S=sağ, İ=sol (Mavi Çizgi). Kırmızı kırık çizgiler ana kesim yollarıdır.";
+    note.textContent = "Bant işareti: B1=Boy1, B2=Boy2, E1=En1, E2=En2 (Mavi Çizgi). Kırmızı kırık çizgiler ana kesim yollarıdır.";
     div.appendChild(note);
   });
 
