@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Acanlar Mobilya — Firesiz Plaka Kesim & Fire Depolu V.1.73</title>
+<title>Acanlar Mobilya — Firesiz Plaka Kesim & Fire Depolu V.1.74</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -240,7 +240,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA DEKORASYON</h1>
-      <div class="author">Mesut ACAN — Firesiz Plaka Kesim Programı v1.73</div>
+      <div class="author">Mesut ACAN — Firesiz Plaka Kesim Programı v1.74</div>
     </div>
   </div>
   <div class="header-btns no-print">
@@ -266,6 +266,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 <div><label>Bıçak payı / Kerf (cm)</label><input id="kerf" type="number" step="0.1" value="0.4"></div>
 <div><label>Kenar fire (cm)</label><input id="edge" type="number" step="0.1" value="1.0"></div>
 </div>
+
 <label>Yerleşim Algoritması / Motoru Seçimi</label>
 <select id="globalDir" onchange="checkShuffleBtn()">
 <option value="otomatik_hibrit" selected>🚀 1. Motor: Gelişmiş Hibrit Giyotin (Maksimum Doluluk & Sıfır Fire)</option>
@@ -273,6 +274,17 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 <option value="boyuna">📐 3. Motor: Boyuna (Dikey Kesim Öncelikli)</option>
 <option value="enine">📐 4. Motor: Enine (Yatay Kesim Öncelikli)</option>
 </select>
+
+<!-- YENİ: 1. VE 2. MOTOR İÇİN KESİM YÖNÜ EĞİLİMİ / ÖNCELİĞİ -->
+<div id="dirPreferenceArea" style="margin-top:6px;">
+  <label>📐 Kesim Yönü Eğilimi / Önceliği (1. ve 2. Motor İçin)</label>
+  <select id="subDirPref">
+    <option value="auto" selected>✨ Otomatik / Hibrit (En Yüksek Doluluk Hangisindeyse)</option>
+    <option value="enine">↔️ Enine (Yatay Kesim Öncelikli Alternatif Türet)</option>
+    <option value="boyuna">↕️ Boyuna (Dikey Kesim Öncelikli Alternatif Türet)</option>
+  </select>
+</div>
+
 <button id="btnShuffle" class="btn-shuffle" onclick="shuffleAndOptimize()">🎲 FARKLI YERLEŞİM DENE (ALTERNATİF ŞABLON)</button>
 </div>
 
@@ -482,7 +494,9 @@ function toggleTheme() {
 
 function checkShuffleBtn() {
   let dir = document.getElementById("globalDir").value;
-  document.getElementById("btnShuffle").style.display = (dir.includes("otomatik")) ? "block" : "none";
+  let isAuto = dir.includes("otomatik");
+  document.getElementById("btnShuffle").style.display = isAuto ? "block" : "none";
+  document.getElementById("dirPreferenceArea").style.display = isAuto ? "block" : "none";
 }
 
 function shuffleAndOptimize() {
@@ -737,6 +751,7 @@ function optimize() {
   const K = parseNum(document.getElementById("kerf").value);
   const SW = SW0 - 2 * edge, SH = SH0 - 2 * edge;
   const globalDir = document.getElementById("globalDir").value;
+  const subDirPref = document.getElementById("subDirPref").value;
   const useStock = document.getElementById("useStockWastes").checked;
 
   checkShuffleBtn();
@@ -778,7 +793,7 @@ function optimize() {
 
   // MOTOR SEÇİMİNE GÖRE YERLEŞİM
   if(globalDir === "otomatik_hibrit") {
-    // 1. MOTOR: GELİŞMİŞ HİBRİT GİYOTİN MOTORU (v1.66)
+    // 1. MOTOR: GELİŞMİŞ HİBRİT GİYOTİN MOTORU (v1.74)
     rawItems.sort((a, b) => {
       let areaA = a.w * a.h, areaB = b.w * b.h;
       let maxDimA = Math.max(a.w, a.h), maxDimB = Math.max(b.w, b.h);
@@ -786,7 +801,6 @@ function optimize() {
       return maxDimB - maxDimA;
     });
 
-    // FISHER-YATES SEEDED SHUFFLE (v1.73 - SINIRSIZ ALTERNATİF ÜRETİMİ)
     if(shuffleSeed > 0) {
       for (let i = rawItems.length - 1; i > 0; i--) {
         let j = Math.floor(Math.abs(Math.sin(shuffleSeed * (i + 1))) * (i + 1));
@@ -797,20 +811,20 @@ function optimize() {
     rawItems.forEach(item => {
       let placed = false;
       for(let s of sheets) {
-        if(tryPlaceHybridGuillotine(s, item, K, globalDir)) {
+        if(tryPlaceHybridGuillotine(s, item, K, subDirPref)) {
           placed = true;
           break;
         }
       }
       if(!placed) {
         let newSheet = { freeRects: [{ x: 0, y: 0, w: SW, h: SH }], placed: [], cuts: [] };
-        tryPlaceHybridGuillotine(newSheet, item, K, globalDir);
+        tryPlaceHybridGuillotine(newSheet, item, K, subDirPref);
         sheets.push(newSheet);
       }
     });
 
   } else {
-    // 2, 3 VE 4. MOTORLAR: KLASİK GRUPLAMALI ŞERİT MOTORU (v1.65)
+    // 2, 3 VE 4. MOTORLAR: KLASİK GRUPLAMALI ŞERİT MOTORU (v1.74)
     let groups = {};
     rawItems.forEach(item => {
       let key = `${Math.max(item.w, item.h)}x${Math.min(item.w, item.h)}`;
@@ -836,14 +850,14 @@ function optimize() {
       groupItems.forEach(item => {
         let placed = false;
         for(let s of sheets) {
-          if(tryPlaceNearSameGroup(s, item, SW, SH, K, globalDir)) {
+          if(tryPlaceNearSameGroup(s, item, SW, SH, K, globalDir, subDirPref)) {
             placed = true;
             break;
           }
         }
         if(!placed) {
           for(let s of sheets) {
-            if(tryPlaceInSheet(s, item, SW, SH, K, globalDir)) {
+            if(tryPlaceInSheet(s, item, SW, SH, K, globalDir, subDirPref)) {
               placed = true;
               break;
             }
@@ -851,7 +865,7 @@ function optimize() {
         }
         if(!placed) {
           let newSheet = { freeRects: [{ x: 0, y: 0, w: SW, h: SH }], placed: [], cuts: [] };
-          tryPlaceInSheet(newSheet, item, SW, SH, K, globalDir);
+          tryPlaceInSheet(newSheet, item, SW, SH, K, globalDir, subDirPref);
           sheets.push(newSheet);
         }
       });
@@ -863,8 +877,8 @@ function optimize() {
   drawPlans(sheets, SW, SH, SW0, SH0, edge, K);
 }
 
-// HİBRİT GİYOTİN YERLEŞİM (1. MOTOR)
-function tryPlaceHybridGuillotine(sheet, item, K, globalDir) {
+// HİBRİT GİYOTİN YERLEŞİM (1. MOTOR - YÖN EĞİLİMLİ)
+function tryPlaceHybridGuillotine(sheet, item, K, subDirPref) {
   let bestIdx = -1, bestRot = false, bestScore = Infinity, bestSplitHoriz = true;
 
   for(let i = 0; i < sheet.freeRects.length; i++) {
@@ -876,6 +890,10 @@ function tryPlaceHybridGuillotine(sheet, item, K, globalDir) {
 
     for(let opt of options) {
       if(opt.rot && !item.rot) continue;
+      
+      if(subDirPref === "enine" && opt.w < opt.h && item.rot) continue;
+      if(subDirPref === "boyuna" && opt.h < opt.w && item.rot) continue;
+
       if(opt.w <= r.w && opt.h <= r.h) {
         let leftoverW = r.w - opt.w;
         let leftoverH = r.h - opt.h;
@@ -885,7 +903,7 @@ function tryPlaceHybridGuillotine(sheet, item, K, globalDir) {
           bestScore = score;
           bestIdx = i;
           bestRot = opt.rot;
-          bestSplitHoriz = leftoverW > leftoverH;
+          bestSplitHoriz = (subDirPref === "enine") ? true : ((subDirPref === "boyuna") ? false : leftoverW > leftoverH);
         }
       }
     }
@@ -918,16 +936,16 @@ function tryPlaceHybridGuillotine(sheet, item, K, globalDir) {
 }
 
 // KLASİK ŞERİT YERLEŞİM (2, 3 VE 4. MOTORLAR)
-function tryPlaceNearSameGroup(sheet, item, SW, SH, K, globalDir) {
+function tryPlaceNearSameGroup(sheet, item, SW, SH, K, globalDir, subDirPref) {
   let samePlaced = sheet.placed.filter(p => 
     (Math.max(p.w, p.h) === Math.max(item.w, item.h)) && 
     (Math.min(p.w, p.h) === Math.min(item.w, item.h))
   );
   if(samePlaced.length === 0) return false;
-  return tryPlaceInSheet(sheet, item, SW, SH, K, globalDir);
+  return tryPlaceInSheet(sheet, item, SW, SH, K, globalDir, subDirPref);
 }
 
-function tryPlaceInSheet(sheet, item, SW, SH, K, globalDir) {
+function tryPlaceInSheet(sheet, item, SW, SH, K, globalDir, subDirPref) {
   let bestIdx = -1, bestRot = false, bestScore = Infinity;
 
   for(let i = 0; i < sheet.freeRects.length; i++) {
@@ -942,7 +960,7 @@ function tryPlaceInSheet(sheet, item, SW, SH, K, globalDir) {
 
       let effectiveDir = globalDir;
       if(globalDir === "otomatik_klasik") {
-        effectiveDir = (shuffleSeed % 2 === 0) ? "boyuna" : "enine";
+        effectiveDir = (subDirPref !== "auto") ? subDirPref : ((shuffleSeed % 2 === 0) ? "boyuna" : "enine");
       }
 
       if(effectiveDir === "boyuna" && opt.h < opt.w && item.rot) continue;
@@ -969,7 +987,7 @@ function tryPlaceInSheet(sheet, item, SW, SH, K, globalDir) {
 
     let effectiveDir = globalDir;
     if(globalDir === "otomatik_klasik") {
-      effectiveDir = (shuffleSeed % 2 === 0) ? "boyuna" : "enine";
+      effectiveDir = (subDirPref !== "auto") ? subDirPref : ((shuffleSeed % 2 === 0) ? "boyuna" : "enine");
     }
 
     sheet.placed.push({ ...item, x: r.x, y: r.y, w: pw, h: ph, rot: bestRot });
@@ -1091,7 +1109,7 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
       ctx.font = "bold 13px Arial";
       ctx.fillStyle = "#0284c7";
       if(p.u) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x, y + 4); ctx.lineTo(x + w, y + 4); ctx.stroke(); ctx.fillText("E1", x + 10, y + 24); }
-      if(p.a) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + w, y + h - 4); ctx.lineTo(x + w, y + h - 4); ctx.stroke(); ctx.fillText("E2", x + 10, y + h - 10); }
+      if(p.a) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x, y + h - 4); ctx.lineTo(x + w, y + h - 4); ctx.stroke(); ctx.fillText("E2", x + 10, y + h - 10); }
       if(p.s) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + w - 4, y); ctx.lineTo(x + w - 4, y + h); ctx.stroke(); ctx.fillText("B1", x + w - 26, y + 24); }
       if(p.i) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + 4, y); ctx.lineTo(x + 4, y + h); ctx.stroke(); ctx.fillText("B2", x + 10, y + 24); }
 
@@ -1166,6 +1184,7 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
 // YÜKLEME VE İLK BAŞLANGIÇ
 loadStockWastesFromStorage();
 addPart();
+checkShuffleBtn();
 </script>
 </body>
 </html>
