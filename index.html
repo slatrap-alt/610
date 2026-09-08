@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Acanlar Mobilya — Firesiz Plaka Kesim & Fire Depolu V.1.67</title>
+<title>Acanlar Mobilya — Firesiz Plaka Kesim & Fire Depolu V.1.68</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -83,7 +83,7 @@ input[type=text],input[type=number],select{width:100%;border:1px solid var(--bor
 .btn-optimize-main { width: 100%; margin-top: 10px; background: linear-gradient(135deg, #059669 0%, #047857 100%); color: #fff; border: none; padding: 14px 18px; font-size: 15px; font-weight: bold; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 14px rgba(5, 150, 105, 0.4); display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s ease; }
 .btn-optimize-main:hover { background: linear-gradient(135deg, #047857 0%, #065f46 100%); }
 
-.btn-shuffle { background: #10b981; color: #fff; padding: 8px 12px; border-radius: 6px; border: none; font-weight: bold; font-size: 11px; cursor: pointer; display: none; margin-top: 6px; width: 100%; text-align: center; }
+.btn-shuffle { background: #10b981; color: #fff; padding: 8px 12px; border-radius: 6px; border: none; font-weight: bold; font-size: 11px; cursor: pointer; display: block; margin-top: 6px; width: 100%; text-align: center; }
 
 /* TABLO VE MOBİL KART DÜZENİ */
 .table-wrap{width:100%;overflow-x:auto;border:1px solid var(--border-color);border-radius:8px}
@@ -196,7 +196,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA DEKORASYON</h1>
-      <div class="author">Mesut ACAN — Firesiz Plaka Kesim Programı v1.67</div>
+      <div class="author">Mesut ACAN — Firesiz Plaka Kesim Programı v1.68</div>
     </div>
   </div>
   <div class="header-btns no-print">
@@ -438,7 +438,8 @@ function toggleTheme() {
 
 function checkShuffleBtn() {
   let dir = document.getElementById("globalDir").value;
-  document.getElementById("btnShuffle").style.display = (dir === "otomatik_klasik") ? "block" : "none";
+  // Hem Hibrit hem Klasik Otomatikte Farklı Yerleşim Dene Butonunu Göster
+  document.getElementById("btnShuffle").style.display = (dir.includes("otomatik")) ? "block" : "none";
 }
 
 function shuffleAndOptimize() {
@@ -729,6 +730,10 @@ function optimize() {
       return maxDimB - maxDimA;
     });
 
+    if(shuffleSeed > 0) {
+      rawItems.sort(() => (Math.sin(shuffleSeed) > 0 ? 1 : -1));
+    }
+
     rawItems.forEach(item => {
       let placed = false;
       for(let s of sheets) {
@@ -760,7 +765,7 @@ function optimize() {
     });
 
     if(globalDir === "otomatik_klasik" && shuffleSeed > 0) {
-      sortedGroupKeys.sort(() => (Math.sin(shuffleSeed++) > 0 ? 1 : -1));
+      sortedGroupKeys.sort(() => (Math.sin(shuffleSeed) > 0 ? 1 : -1));
     }
 
     sortedGroupKeys.forEach(key => {
@@ -916,7 +921,7 @@ function tryPlaceInSheet(sheet, item, SW, SH, K, globalDir) {
       if(r.h - ph > 0) sheet.freeRects.push({ x: r.x, y: r.y + ph + K, w: pw, h: r.h - ph - K });
       if(r.w - pw > 0) sheet.freeRects.push({ x: r.x + pw + K, y: r.y, w: r.w - pw - K, h: r.h });
       sheet.cuts.push({ x1: r.x + pw, y1: r.y, x2: r.x + pw, y2: r.y + r.h, type: "main" });
-      if(r.h - ph > 0) sheet.freeRects.push({ x: r.x, y: r.y + ph, x2: r.x + pw, y2: r.y + ph, type: "sub" });
+      if(r.h - ph > 0) sheet.cuts.push({ x1: r.x, y1: r.y + ph, x2: r.x + pw, y2: r.y + ph, type: "sub" });
     }
 
     sheet.freeRects = sheet.freeRects.filter(fr => fr.w > 0.5 && fr.h > 0.5);
