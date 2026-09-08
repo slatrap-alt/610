@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Acanlar Mobilya — Plaka Kesim & Mobil Kartlı V2</title>
+<title>Acanlar Mobilya — Plaka Kesim & Fire Depolu V2</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -78,7 +78,6 @@ th.col-del, td.col-del { width: 26px; }
 
 td input[type=text], td input[type=number] { padding: 5px 2px; text-align: center; font-size: 11px; }
 
-/* MOBİL ÖLÇÜ KARTLARI STİLİ */
 .part-cards-container { display: none; flex-direction: column; gap: 10px; margin-top: 10px; }
 .part-card { background: var(--table-th-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 10px; position: relative; }
 .part-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
@@ -119,13 +118,12 @@ canvas{width:100%;height:auto;display:block;border:1px solid var(--border-color)
 footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-size: 12px; border-top: 1px solid var(--border-color); margin-top: 15px;}
 .print-header {display: none;}
 
-/* MOBİL SÜRÜM ÖZEL AYARLARI */
 @media(max-width:768px){
   .layout{grid-template-columns:1fr}
   header { padding: 10px; }
   .brand h1 { font-size: 16px; }
-  .table-wrap { display: none; } /* Tabloyu gizle */
-  .part-cards-container { display: flex; } /* Kartları göster */
+  .table-wrap { display: none; }
+  .part-cards-container { display: flex; }
 }
 
 @media print{
@@ -437,6 +435,20 @@ function addPart(p) {
   }
   parts.push({...p, id: Date.now() + Math.random()});
   renderParts();
+  
+  // YENİ SATIR EKLENDİĞİNDE OTOMATİK PARÇA ADINA ODAKLAN
+  setTimeout(()=>{
+    let isMobile = window.innerWidth <= 768;
+    if(isMobile) {
+      let cards = document.querySelectorAll("#partCards .part-card");
+      let lastInput = cards[cards.length-1]?.querySelector("input[data-k='name']");
+      if(lastInput) { lastInput.focus(); lastInput.select(); }
+    } else {
+      let rows = document.querySelectorAll("#parts tr");
+      let lastInput = rows[rows.length-1]?.querySelector("input[data-k='name']");
+      if(lastInput) { lastInput.focus(); lastInput.select(); }
+    }
+  }, 30);
 }
 
 function toggleBand(i, key) {
@@ -497,11 +509,19 @@ function renderParts() {
     `;
   });
 
-  // INPUT DİNLEYİCİLERİ
+  // INPUT DİNLEYİCİLERİ & ENTER TUSUYLA YENİ SATIR EKLEME
   document.querySelectorAll("input[data-i]").forEach(el => {
     el.addEventListener("change", () => {
       let i = +el.dataset.i, k = el.dataset.k;
       parts[i][k] = el.type === "checkbox" ? el.checked : (["w","h","q"].includes(k) ? (el.value ? parseNum(el.value) : "") : el.value);
+    });
+    
+    // ENTER TUŞU KONTROLÜ
+    el.addEventListener("keydown", e => {
+      if(e.key === "Enter") { 
+        e.preventDefault(); 
+        addPart(); 
+      }
     });
   });
 }
