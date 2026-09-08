@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Acanlar Mobilya — Firesiz Plaka Kesim & Fire Depolu V.1.69</title>
+<title>Acanlar Mobilya — Firesiz Plaka Kesim & Fire Depolu V.1.73</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -85,15 +85,36 @@ input[type=text],input[type=number],select{width:100%;border:1px solid var(--bor
 
 .btn-shuffle { background: #10b981; color: #fff; padding: 8px 12px; border-radius: 6px; border: none; font-weight: bold; font-size: 11px; cursor: pointer; display: block; margin-top: 6px; width: 100%; text-align: center; }
 
-/* DÖNEN SPINNER ANİMASYONU */
-.spinner {
-  width: 18px;
-  height: 18px;
-  border: 3px solid rgba(255,255,255,0.3);
+/* TAM EKRAN YÜKLEME OVERLAY ALANI */
+#loadingOverlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 99999;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+.loading-box {
+  background: #1e293b;
+  border: 1px solid #38bdf8;
+  padding: 25px 35px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  text-align: center;
+}
+.loading-box h3 { margin: 10px 0 5px 0; font-size: 16px; color: #38bdf8; }
+.loading-box p { margin: 0; font-size: 12px; color: #94a3b8; }
+.big-spinner {
+  width: 44px; height: 44px;
+  border: 4px solid rgba(56, 189, 248, 0.2);
   border-radius: 50%;
-  border-top-color: #fff;
+  border-top-color: #38bdf8;
   animation: spin 0.8s linear infinite;
-  display: inline-block;
+  margin: 0 auto 10px auto;
 }
 @keyframes spin {
   to { transform: rotate(360deg); }
@@ -201,6 +222,15 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 </head>
 <body>
 
+<!-- YÜKLEME OVERLAY PENCERESİ -->
+<div id="loadingOverlay">
+  <div class="loading-box">
+    <div class="big-spinner"></div>
+    <h3>HESAPLANIYOR VE OPTİMİZE EDİLİYOR</h3>
+    <p>Minimum fire ve maksimum doluluk için kombinasyonlar taranıyor...</p>
+  </div>
+</div>
+
 <header>
   <div class="brand">
     <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
@@ -210,7 +240,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA DEKORASYON</h1>
-      <div class="author">Mesut ACAN — Firesiz Plaka Kesim Programı v1.69</div>
+      <div class="author">Mesut ACAN — Firesiz Plaka Kesim Programı v1.73</div>
     </div>
   </div>
   <div class="header-btns no-print">
@@ -461,15 +491,16 @@ function shuffleAndOptimize() {
 }
 
 function startOptimization() {
-  const btn = document.getElementById("btnOptimizeMain");
-  btn.disabled = true;
-  btn.innerHTML = `<span class="spinner"></span> HESAPLANIYOR VE OPTİMİZE EDİLİYOR...`;
+  const overlay = document.getElementById("loadingOverlay");
+  overlay.style.display = "flex";
 
   setTimeout(() => {
-    optimize();
-    btn.disabled = false;
-    btn.innerHTML = `🚀 HESAPLA VE OPTİMİZE ET`;
-  }, 50);
+    try {
+      optimize();
+    } finally {
+      overlay.style.display = "none";
+    }
+  }, 120);
 }
 
 function addPart(p) {
@@ -755,8 +786,12 @@ function optimize() {
       return maxDimB - maxDimA;
     });
 
+    // FISHER-YATES SEEDED SHUFFLE (v1.73 - SINIRSIZ ALTERNATİF ÜRETİMİ)
     if(shuffleSeed > 0) {
-      rawItems.sort(() => (Math.sin(shuffleSeed) > 0 ? 1 : -1));
+      for (let i = rawItems.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.abs(Math.sin(shuffleSeed * (i + 1))) * (i + 1));
+        [rawItems[i], rawItems[j]] = [rawItems[j], rawItems[i]];
+      }
     }
 
     rawItems.forEach(item => {
@@ -790,7 +825,10 @@ function optimize() {
     });
 
     if(globalDir === "otomatik_klasik" && shuffleSeed > 0) {
-      sortedGroupKeys.sort(() => (Math.sin(shuffleSeed) > 0 ? 1 : -1));
+      for (let i = sortedGroupKeys.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.abs(Math.sin(shuffleSeed * (i + 1))) * (i + 1));
+        [sortedGroupKeys[i], sortedGroupKeys[j]] = [sortedGroupKeys[j], sortedGroupKeys[i]];
+      }
     }
 
     sortedGroupKeys.forEach(key => {
@@ -946,7 +984,7 @@ function tryPlaceInSheet(sheet, item, SW, SH, K, globalDir) {
       if(r.h - ph > 0) sheet.freeRects.push({ x: r.x, y: r.y + ph + K, w: pw, h: r.h - ph - K });
       if(r.w - pw > 0) sheet.freeRects.push({ x: r.x + pw + K, y: r.y, w: r.w - pw - K, h: r.h });
       sheet.cuts.push({ x1: r.x + pw, y1: r.y, x2: r.x + pw, y2: r.y + r.h, type: "main" });
-      if(r.h - ph > 0) sheet.freeRects.push({ x: r.x, y: r.y + ph, x2: r.x + pw, y2: r.y + ph, type: "sub" });
+      if(r.h - ph > 0) sheet.cuts.push({ x1: r.x, y1: r.y + ph, x2: r.x + pw, y2: r.y + ph, type: "sub" });
     }
 
     sheet.freeRects = sheet.freeRects.filter(fr => fr.w > 0.5 && fr.h > 0.5);
@@ -1053,7 +1091,7 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
       ctx.font = "bold 13px Arial";
       ctx.fillStyle = "#0284c7";
       if(p.u) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x, y + 4); ctx.lineTo(x + w, y + 4); ctx.stroke(); ctx.fillText("E1", x + 10, y + 24); }
-      if(p.a) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x, y + h - 4); ctx.lineTo(x + w, y + h - 4); ctx.stroke(); ctx.fillText("E2", x + 10, y + h - 10); }
+      if(p.a) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + w, y + h - 4); ctx.lineTo(x + w, y + h - 4); ctx.stroke(); ctx.fillText("E2", x + 10, y + h - 10); }
       if(p.s) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + w - 4, y); ctx.lineTo(x + w - 4, y + h); ctx.stroke(); ctx.fillText("B1", x + w - 26, y + 24); }
       if(p.i) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + 4, y); ctx.lineTo(x + 4, y + h); ctx.stroke(); ctx.fillText("B2", x + 10, y + 24); }
 
