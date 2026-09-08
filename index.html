@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Acanlar Mobilya — Firesiz Plaka Kesim & Fire Depolu V.1.68</title>
+<title>Acanlar Mobilya — Firesiz Plaka Kesim & Fire Depolu V.1.69</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -84,6 +84,20 @@ input[type=text],input[type=number],select{width:100%;border:1px solid var(--bor
 .btn-optimize-main:hover { background: linear-gradient(135deg, #047857 0%, #065f46 100%); }
 
 .btn-shuffle { background: #10b981; color: #fff; padding: 8px 12px; border-radius: 6px; border: none; font-weight: bold; font-size: 11px; cursor: pointer; display: block; margin-top: 6px; width: 100%; text-align: center; }
+
+/* DÖNEN SPINNER ANİMASYONU */
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
 
 /* TABLO VE MOBİL KART DÜZENİ */
 .table-wrap{width:100%;overflow-x:auto;border:1px solid var(--border-color);border-radius:8px}
@@ -196,7 +210,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA DEKORASYON</h1>
-      <div class="author">Mesut ACAN — Firesiz Plaka Kesim Programı v1.68</div>
+      <div class="author">Mesut ACAN — Firesiz Plaka Kesim Programı v1.69</div>
     </div>
   </div>
   <div class="header-btns no-print">
@@ -288,7 +302,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 </label>
 </div>
 
-<button class="btn-optimize-main" onclick="optimize()">🚀 HESAPLA VE OPTİMİZE ET</button>
+<button id="btnOptimizeMain" class="btn-optimize-main" onclick="startOptimization()">🚀 HESAPLA VE OPTİMİZE ET</button>
 </div>
 
 <div class="card">
@@ -297,7 +311,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 <textarea id="csv" rows="3" style="width:100%;margin-top:6px;border:1px solid var(--border-color);border-radius:6px;padding:6px;background:var(--card-bg);color:var(--text-color)" placeholder="1,72.0,58.0,4,1,1,1,0,0"></textarea>
 <div class="actions">
   <button class="btn-action load" onclick="importCSV()">Metinden Aktar</button>
-  <button class="btn-action save" onclick="optimize()" style="background:#059669">🚀 OPTİMİZE ET</button>
+  <button class="btn-action save" onclick="startOptimization()" style="background:#059669">🚀 OPTİMİZE ET</button>
 </div>
 </div>
 </section>
@@ -438,13 +452,24 @@ function toggleTheme() {
 
 function checkShuffleBtn() {
   let dir = document.getElementById("globalDir").value;
-  // Hem Hibrit hem Klasik Otomatikte Farklı Yerleşim Dene Butonunu Göster
   document.getElementById("btnShuffle").style.display = (dir.includes("otomatik")) ? "block" : "none";
 }
 
 function shuffleAndOptimize() {
   shuffleSeed++;
-  optimize();
+  startOptimization();
+}
+
+function startOptimization() {
+  const btn = document.getElementById("btnOptimizeMain");
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spinner"></span> HESAPLANIYOR VE OPTİMİZE EDİLİYOR...`;
+
+  setTimeout(() => {
+    optimize();
+    btn.disabled = false;
+    btn.innerHTML = `🚀 HESAPLA VE OPTİMİZE ET`;
+  }, 50);
 }
 
 function addPart(p) {
@@ -572,7 +597,7 @@ function importData(ev) {
       if(Array.isArray(loadedParts)) {
         parts = loadedParts;
         renderParts();
-        optimize();
+        startOptimization();
       }
     } catch(e) {
       alert("Hatalı dosya biçimi!");
@@ -610,7 +635,7 @@ function importCSV() {
   if(arr.length > 0) {
     parts = arr;
     renderParts();
-    optimize();
+    startOptimization();
   }
 }
 
@@ -921,7 +946,7 @@ function tryPlaceInSheet(sheet, item, SW, SH, K, globalDir) {
       if(r.h - ph > 0) sheet.freeRects.push({ x: r.x, y: r.y + ph + K, w: pw, h: r.h - ph - K });
       if(r.w - pw > 0) sheet.freeRects.push({ x: r.x + pw + K, y: r.y, w: r.w - pw - K, h: r.h });
       sheet.cuts.push({ x1: r.x + pw, y1: r.y, x2: r.x + pw, y2: r.y + r.h, type: "main" });
-      if(r.h - ph > 0) sheet.cuts.push({ x1: r.x, y1: r.y + ph, x2: r.x + pw, y2: r.y + ph, type: "sub" });
+      if(r.h - ph > 0) sheet.freeRects.push({ x: r.x, y: r.y + ph, x2: r.x + pw, y2: r.y + ph, type: "sub" });
     }
 
     sheet.freeRects = sheet.freeRects.filter(fr => fr.w > 0.5 && fr.h > 0.5);
