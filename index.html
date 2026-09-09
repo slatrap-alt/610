@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Acanlar Mobilya — Firesiz Plaka Kesim & Fire Depolu V.1.76</title>
+<title>Acanlar Mobilya — Firesiz Plaka Kesim & Fire Depolu V.1.77</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -118,6 +118,25 @@ input[type=text],input[type=number],select{width:100%;border:1px solid var(--bor
 }
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+/* YERLEŞEMEYEN PARÇA BİLDİRİM KUTUSU */
+.unplaced-alert {
+  display: none;
+  background: #fef2f2;
+  border: 2px solid #ef4444;
+  border-radius: 10px;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  color: #991b1b;
+  animation: pulseAlert 2s infinite;
+}
+.unplaced-alert h3 { margin: 0 0 6px 0; font-size: 14px; color: #dc2626; display: flex; align-items: center; gap: 6px; }
+.unplaced-alert ul { margin: 4px 0 0 18px; padding: 0; font-size: 12px; font-weight: bold; }
+@keyframes pulseAlert {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
 }
 
 /* TABLO VE MOBİL KART DÜZENİ */
@@ -240,7 +259,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA DEKORASYON</h1>
-      <div class="author">Mesut ACAN — Firesiz Plaka Kesim Programı v1.76</div>
+      <div class="author">Mesut ACAN — Firesiz Plaka Kesim Programı v1.77</div>
     </div>
   </div>
   <div class="header-btns no-print">
@@ -300,7 +319,8 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 <button class="btn-action add" style="width:100%;margin-top:6px;justify-content:center" onclick="addManualStock()">➕ Depoya Fire Plaka Ekle</button>
 
 <label style="margin-top:10px;display:flex;align-items:center;gap:6px;cursor:pointer">
-  <input type="checkbox" id="useStockWastes" checked>
+  <!-- MADDENİZ 4: DEPOU ÖNCELİKLİ KULLAN ARTIK VARSAYILAN OLARAK SEÇİLİ GELMİYOR (UNCHECKED) -->
+  <input type="checkbox" id="useStockWastes">
   <span><b>Depodaki Fireleri Öncelikli Kullan</b></span>
 </label>
 
@@ -378,6 +398,14 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 
 <div class="card">
 <h2 class="no-print">Kesim Haritası ve Detaylar</h2>
+
+<!-- MADDENİZ 1: YERLEŞTİRİLEMEYEN PARÇA KIRMIZI UYARI KUTUSU -->
+<div id="unplacedAlert" class="unplaced-alert">
+  <h3>⚠️ DİKKAT: YERLEŞTİRİLEMEYEN PARÇALAR VAR!</h3>
+  <div style="font-size:11px;">Aşağıdaki parçalar plaka boyutunu aştığı veya plakada yer kalmadığı için kesim haritasına sığdırılamadı:</div>
+  <ul id="unplacedList"></ul>
+</div>
+
 <div class="metrics">
 <div class="metric"><b id="sheetCount">0</b><span>PLAKA</span></div>
 <div class="metric"><b id="used">0%</b><span>DOLULUK</span></div>
@@ -517,6 +545,7 @@ function startOptimization() {
   }, 120);
 }
 
+// MADDENİZ 3: SATIR EKLENDİĞİNDE VEYA ENTER YAPILDIĞINDA DİREKT "BOY" ALANINA ODAKLANMA
 function addPart(p) {
   if(!p) {
     p = {
@@ -538,11 +567,11 @@ function addPart(p) {
     let isMobile = window.innerWidth <= 768;
     if(isMobile) {
       let cards = document.querySelectorAll("#partCards .part-card");
-      let lastInput = cards[cards.length-1]?.querySelector("input[data-k='name']");
+      let lastInput = cards[cards.length-1]?.querySelector("input[data-k='h']");
       if(lastInput) { lastInput.focus(); lastInput.select(); }
     } else {
       let rows = document.querySelectorAll("#parts tr");
-      let lastInput = rows[rows.length-1]?.querySelector("input[data-k='name']");
+      let lastInput = rows[rows.length-1]?.querySelector("input[data-k='h']");
       if(lastInput) { lastInput.focus(); lastInput.select(); }
     }
   }, 30);
@@ -704,7 +733,6 @@ function getGroupColor(h, w) {
   return groupColors[index];
 }
 
-// İŞ EMRİ TABLOSU - SÜTÜN TAŞMASI ENGELLENDİ ("Depo" OLARAK KISALTILDI) v1.76
 function renderJobTable(proj, dateStr, sheets) {
   const jb = document.getElementById("jobTableBody");
   document.getElementById("jobProjName").innerHTML = `<b>Proje / Müşteri:</b> ${esc(proj)}`;
@@ -727,11 +755,11 @@ function renderJobTable(proj, dateStr, sheets) {
         }
       });
 
-      let sheetText = locatedSheets.length > 0 ? locatedSheets.join(", ") : "Yerleşmedi";
+      let sheetText = locatedSheets.length > 0 ? locatedSheets.join(", ") : "<span style='color:#ef4444;font-weight:bold'>SIĞMADI</span>";
       
       jb.innerHTML += `<tr>
         <td><b>[ ${esc(p.name)} ]</b></td>
-        <td><b style="color:${sheetText.includes('Depo') ? '#8b5cf6' : '#0284c7'}">${sheetText}</b></td>
+        <td><b style="color:${sheetText.includes('Depo') ? '#8b5cf6' : (sheetText.includes('Plaka') ? '#0284c7' : '#ef4444')}">${sheetText}</b></td>
         <td>${p.h} cm</td>
         <td>${p.w} cm</td>
         <td><b>${p.q || 1} Adet</b></td>
@@ -785,6 +813,7 @@ function optimize() {
   document.getElementById("bandMeters").textContent = Math.ceil(totalBandCm / 100) + " m";
 
   let rawItems = expand();
+  let unplacedItems = [];
   let sheets = [];
 
   if(useStock && stockWastes.length > 0) {
@@ -801,9 +830,8 @@ function optimize() {
     });
   }
 
-  // MOTOR SEÇİMİNE GÖRE YERLEŞİM
+  // MOTOR SEÇİMİNE GÖRE YERLEŞİM (KORUNAN KUSURSUZ ALGORİTMA)
   if(globalDir === "otomatik_hibrit") {
-    // 1. MOTOR: GELİŞMİŞ HİBRİT GİYOTİN MOTORU
     rawItems.sort((a, b) => {
       let areaA = a.w * a.h, areaB = b.w * b.h;
       let maxDimA = Math.max(a.w, a.h), maxDimB = Math.max(b.w, b.h);
@@ -827,14 +855,22 @@ function optimize() {
         }
       }
       if(!placed) {
-        let newSheet = { freeRects: [{ x: 0, y: 0, w: SW, h: SH }], placed: [], cuts: [] };
-        tryPlaceHybridGuillotine(newSheet, item, K, subDirPref);
-        sheets.push(newSheet);
+        // Plaka boyutundan büyük mü kontrol et
+        let fitsStandard = (item.w <= SW && item.h <= SH) || (item.rot && item.h <= SW && item.w <= SH);
+        if(!fitsStandard) {
+          unplacedItems.push(item);
+        } else {
+          let newSheet = { freeRects: [{ x: 0, y: 0, w: SW, h: SH }], placed: [], cuts: [] };
+          if(tryPlaceHybridGuillotine(newSheet, item, K, subDirPref)) {
+            sheets.push(newSheet);
+          } else {
+            unplacedItems.push(item);
+          }
+        }
       }
     });
 
   } else {
-    // 2, 3 VE 4. MOTORLAR: KLASİK GRUPLAMALI ŞERİT MOTORU
     let groups = {};
     rawItems.forEach(item => {
       let key = `${Math.max(item.w, item.h)}x${Math.min(item.w, item.h)}`;
@@ -874,23 +910,47 @@ function optimize() {
           }
         }
         if(!placed) {
-          let newSheet = { freeRects: [{ x: 0, y: 0, w: SW, h: SH }], placed: [], cuts: [] };
-          tryPlaceInSheet(newSheet, item, SW, SH, K, globalDir, subDirPref);
-          sheets.push(newSheet);
+          let fitsStandard = (item.w <= SW && item.h <= SH) || (item.rot && item.h <= SW && item.w <= SH);
+          if(!fitsStandard) {
+            unplacedItems.push(item);
+          } else {
+            let newSheet = { freeRects: [{ x: 0, y: 0, w: SW, h: SH }], placed: [], cuts: [] };
+            if(tryPlaceInSheet(newSheet, item, SW, SH, K, globalDir, subDirPref)) {
+              sheets.push(newSheet);
+            } else {
+              unplacedItems.push(item);
+            }
+          }
         }
       });
     });
   }
 
+  // MADDENİZ 1: YERLEŞMEYEN PARÇALAR VARSA KIRMIZI BİLDİRİM KUTUSUNU DOLDUR VE GÖSTER
+  const alertBox = document.getElementById("unplacedAlert");
+  const alertList = document.getElementById("unplacedList");
+  if(unplacedItems.length > 0) {
+    let counts = {};
+    unplacedItems.forEach(u => {
+      let key = `[ ${u.name} ] — ${u.h} x ${u.w} cm`;
+      counts[key] = (counts[key] || 0) + 1;
+    });
+    alertList.innerHTML = "";
+    Object.keys(counts).forEach(k => {
+      alertList.innerHTML += `<li>${k} -> <b>${counts[k]} Adet Sığmadı / Yerleşemedi</b></li>`;
+    });
+    alertBox.style.display = "block";
+  } else {
+    alertBox.style.display = "none";
+  }
+
   sheets = sheets.filter(s => s.placed.length > 0);
 
-  // MÜŞTERİ/İŞ EMRİ TABLOSUNU GELİŞMİŞ PLAKA BİLGİSİ İLE BİRLİKTE OLUŞTUR
   renderJobTable(proj, dateStr, sheets);
-
   drawPlans(sheets, SW, SH, SW0, SH0, edge, K);
 }
 
-// HİBRİT GİYOTİN YERLEŞİM (1. MOTOR - YÖN EĞİLİMLİ)
+// HİBRİT GİYOTİN YERLEŞİM (KORUNAN MOTOR)
 function tryPlaceHybridGuillotine(sheet, item, K, subDirPref) {
   let bestIdx = -1, bestRot = false, bestScore = Infinity, bestSplitHoriz = true;
 
@@ -948,7 +1008,7 @@ function tryPlaceHybridGuillotine(sheet, item, K, subDirPref) {
   return false;
 }
 
-// KLASİK ŞERİT YERLEŞİM (2, 3 VE 4. MOTORLAR)
+// KLASİK ŞERİT YERLEŞİM (KORUNAN MOTOR)
 function tryPlaceNearSameGroup(sheet, item, SW, SH, K, globalDir, subDirPref) {
   let samePlaced = sheet.placed.filter(p => 
     (Math.max(p.w, p.h) === Math.max(item.w, item.h)) && 
@@ -1126,11 +1186,13 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
       if(p.s) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + w - 4, y); ctx.lineTo(x + w - 4, y + h); ctx.stroke(); ctx.fillText("B1", x + w - 26, y + 24); }
       if(p.i) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + 4, y); ctx.lineTo(x + 4, y + h); ctx.stroke(); ctx.fillText("B2", x + 10, y + 24); }
 
-      let dimFont = Math.max(16, Math.min(30, Math.min(w, h) / 3.5));
+      // MADDENİZ 2: DİNAMİK VEYA PARÇA BÜYÜKLÜĞÜYLE ORANTILI YAZI BOYUTU (MOBİLDE NET OKUMA)
+      let minSide = Math.min(w, h);
+      let dimFont = Math.max(16, Math.min(38, Math.round(minSide / 2.8)));
       ctx.font = `bold ${dimFont}px Arial`;
       ctx.fillStyle = "#000000";
 
-      if (w > 30) {
+      if (w > 25) {
         ctx.textAlign = "center";
         ctx.textBaseline = "top";
         ctx.fillText(`${p.w}`, x + w / 2, y + 8);
@@ -1138,9 +1200,9 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
         ctx.fillText(`${p.w}`, x + w / 2, y + h - 8);
       }
 
-      if (h > 30) {
+      if (h > 25) {
         ctx.save();
-        ctx.translate(x + 18, y + h / 2);
+        ctx.translate(x + (dimFont * 0.9), y + h / 2);
         ctx.rotate(-Math.PI / 2);
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
@@ -1148,7 +1210,7 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
         ctx.restore();
 
         ctx.save();
-        ctx.translate(x + w - 18, y + h / 2);
+        ctx.translate(x + w - (dimFont * 0.9), y + h / 2);
         ctx.rotate(Math.PI / 2);
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
@@ -1156,8 +1218,8 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
         ctx.restore();
       }
 
-      if (p.h > 35 && p.w > 35) {
-        let nameFont = Math.max(16, Math.min(34, Math.min(w, h) / 3));
+      if (p.h > 30 && p.w > 30) {
+        let nameFont = Math.max(16, Math.min(40, Math.round(minSide / 2.5)));
         ctx.font = `bold ${nameFont}px Arial`;
         ctx.fillStyle = "#0f172a";
         ctx.textAlign = "center";
@@ -1165,15 +1227,17 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
         ctx.fillText(`[ ${p.name} ]`, x + w / 2, y + h / 2);
       }
 
+      // Parça No Baloncuğu
+      let badgeRadius = Math.max(12, Math.min(20, Math.round(minSide / 6)));
       ctx.beginPath();
-      ctx.arc(x + 22, y + 22, 13, 0, Math.PI * 2);
+      ctx.arc(x + badgeRadius + 8, y + badgeRadius + 8, badgeRadius, 0, Math.PI * 2);
       ctx.fillStyle = "#0f172a";
       ctx.fill();
       ctx.fillStyle = "#ffffff";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.font = "bold 11px Arial";
-      ctx.fillText(idx + 1, x + 22, y + 22);
+      ctx.font = `bold ${Math.round(badgeRadius * 0.9)}px Arial`;
+      ctx.fillText(idx + 1, x + badgeRadius + 8, y + badgeRadius + 8);
 
       ctx.textAlign = "left";
       ctx.textBaseline = "alphabetic";
