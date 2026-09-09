@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Acanlar Mobilya — Firesiz Plaka Kesim & Fire Depolu V.1.77</title>
+<title>Acanlar Mobilya — Firesiz Plaka Kesim & Fire Depolu V.1.79</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -73,6 +73,44 @@ label{font-size:11px;font-weight:700;display:block;margin:6px 0 4px}
 input,select,button{font:inherit}
 input[type=text],input[type=number],select{width:100%;border:1px solid var(--border-color);border-radius:6px;padding:7px 5px;background:var(--card-bg);color:var(--text-color);font-size:12px}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+
+/* SADE, MODERN MAVİ PLAKA SEÇİM KARTLARI */
+.sheet-preset-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 6px;
+  margin-bottom: 8px;
+}
+.sheet-preset-card {
+  background: var(--table-th-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.sheet-preset-card:hover {
+  border-color: #38bdf8;
+}
+.sheet-preset-card.active {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  border-color: #0284c7;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+}
+.sheet-preset-card h4 {
+  margin: 0 0 2px 0;
+  font-size: 13px;
+  font-weight: bold;
+}
+.sheet-preset-card .dim-text {
+  font-size: 10px;
+  opacity: 0.85;
+}
 
 .actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
 .btn-action { border: none; border-radius: 8px; padding: 10px 14px; font-size: 11px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
@@ -259,7 +297,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA DEKORASYON</h1>
-      <div class="author">Mesut ACAN — Firesiz Plaka Kesim Programı v1.77</div>
+      <div class="author">Mesut ACAN — Firesiz Plaka Kesim Programı v1.79</div>
     </div>
   </div>
   <div class="header-btns no-print">
@@ -277,11 +315,35 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
   <label>Müşteri / Proje Adı (Çıktıda Görünür)</label>
   <input id="projName" type="text" placeholder="Örn: Mutfak Dolabı Kesim Listesi">
 </div>
-<div class="row">
-<div><label>En (cm)</label><input id="sw" type="number" step="0.1" value="210"></div>
-<div><label>Boy (cm)</label><input id="sh" type="number" step="0.1" value="280"></div>
+
+<!-- SADE VE ŞIK MAVİ PLAKA TİPİ SEÇİM KARTLARI -->
+<label style="margin-top:8px;">📦 Plaka Tipi Seçin</label>
+<div class="sheet-preset-grid">
+  <div id="card_preset_280" class="sheet-preset-card active" onclick="selectSheetPreset('preset_280', 280, 210)">
+    <h4>Küçük-280</h4>
+    <div class="dim-text">280 × 210 cm</div>
+  </div>
+  <div id="card_preset_366" class="sheet-preset-card" onclick="selectSheetPreset('preset_366', 366, 183)">
+    <h4>Büyük-366</h4>
+    <div class="dim-text">366 × 183 cm</div>
+  </div>
+  <div id="card_preset_arkalik" class="sheet-preset-card" onclick="selectSheetPreset('preset_arkalik', 211, 171)">
+    <h4>Arkalık</h4>
+    <div class="dim-text">211 × 171 cm</div>
+  </div>
+  <div id="card_custom" class="sheet-preset-card" onclick="selectSheetPreset('custom')">
+    <h4>✍️ Özel Ölçü</h4>
+    <div class="dim-text">Manuel Giriş</div>
+  </div>
 </div>
-<div class="row">
+
+<!-- MANUEL ÖLÇÜ GİRİŞİ SEÇİLDİĞİNDE AÇILAN KUTULAR -->
+<div id="manualSheetRow" class="row" style="display:none; margin-top:6px;">
+  <div><label>En (cm)</label><input id="sw" type="number" step="0.1" value="210"></div>
+  <div><label>Boy (cm)</label><input id="sh" type="number" step="0.1" value="280"></div>
+</div>
+
+<div class="row" style="margin-top:6px;">
 <div><label>Bıçak payı / Kerf (cm)</label><input id="kerf" type="number" step="0.1" value="0.4"></div>
 <div><label>Kenar fire (cm)</label><input id="edge" type="number" step="0.1" value="1.0"></div>
 </div>
@@ -306,27 +368,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 <button id="btnShuffle" class="btn-shuffle" onclick="shuffleAndOptimize()">🎲 FARKLI YERLEŞİM DENE (ALTERNATİF ŞABLON)</button>
 </div>
 
-<!-- FİRE PLAKA DEPOSU KART ALANI -->
-<div class="card">
-<h2>♻️ Atölye Fire Plaka Deposu</h2>
-<div class="row">
-  <div><input id="stockW" type="number" step="0.1" placeholder="En (cm)"></div>
-  <div><input id="stockH" type="number" step="0.1" placeholder="Boy (cm)"></div>
-</div>
-<div style="margin-top:5px;">
-  <input id="stockName" type="text" placeholder="Malzeme Adı / Not (Örn: Sis Gri MDF)">
-</div>
-<button class="btn-action add" style="width:100%;margin-top:6px;justify-content:center" onclick="addManualStock()">➕ Depoya Fire Plaka Ekle</button>
-
-<label style="margin-top:10px;display:flex;align-items:center;gap:6px;cursor:pointer">
-  <!-- MADDENİZ 4: DEPOU ÖNCELİKLİ KULLAN ARTIK VARSAYILAN OLARAK SEÇİLİ GELMİYOR (UNCHECKED) -->
-  <input type="checkbox" id="useStockWastes">
-  <span><b>Depodaki Fireleri Öncelikli Kullan</b></span>
-</label>
-
-<div class="stock-waste-list" id="stockWasteContainer"></div>
-</div>
-
+<!-- PARÇA LİSTESİ KART ALANI (İSTEĞİNİZ ÜZERİNE ÜSTE ALINDI) -->
 <div class="card">
 <h2>2. Parça Listesi</h2>
 
@@ -366,6 +408,26 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 <button id="btnOptimizeMain" class="btn-optimize-main" onclick="startOptimization()">🚀 HESAPLA VE OPTİMİZE ET</button>
 </div>
 
+<!-- FİRE PLAKA DEPOSU KART ALANI (İSTEĞİNİZ ÜZERİNE ALTA ALINDI) -->
+<div class="card">
+<h2>♻️ Atölye Fire Plaka Deposu</h2>
+<div class="row">
+  <div><input id="stockW" type="number" step="0.1" placeholder="En (cm)"></div>
+  <div><input id="stockH" type="number" step="0.1" placeholder="Boy (cm)"></div>
+</div>
+<div style="margin-top:5px;">
+  <input id="stockName" type="text" placeholder="Malzeme Adı / Not (Örn: Sis Gri MDF)">
+</div>
+<button class="btn-action add" style="width:100%;margin-top:6px;justify-content:center" onclick="addManualStock()">➕ Depoya Fire Plaka Ekle</button>
+
+<label style="margin-top:10px;display:flex;align-items:center;gap:6px;cursor:pointer">
+  <input type="checkbox" id="useStockWastes">
+  <span><b>Depodaki Fireleri Öncelikli Kullan</b></span>
+</label>
+
+<div class="stock-waste-list" id="stockWasteContainer"></div>
+</div>
+
 <div class="card">
 <h2>3. CSV / Metin İle Toplu Veri (cm Cinsinden)</h2>
 <div class="muted">Format: Parça, Boy(cm), En(cm), Adet, Döndür(1/0), Boy1, Boy2, En1, En2</div>
@@ -399,7 +461,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 <div class="card">
 <h2 class="no-print">Kesim Haritası ve Detaylar</h2>
 
-<!-- MADDENİZ 1: YERLEŞTİRİLEMEYEN PARÇA KIRMIZI UYARI KUTUSU -->
+<!-- YERLEŞTİRİLEMEYEN PARÇA KIRMIZI UYARI KUTUSU -->
 <div id="unplacedAlert" class="unplaced-alert">
   <h3>⚠️ DİKKAT: YERLEŞTİRİLEMEYEN PARÇALAR VAR!</h3>
   <div style="font-size:11px;">Aşağıdaki parçalar plaka boyutunu aştığı veya plakada yer kalmadığı için kesim haritasına sığdırılamadı:</div>
@@ -466,6 +528,23 @@ let currentDetectedWastes = [];
 function parseNum(val) {
   if(!val) return 0;
   return parseFloat(String(val).replace(',', '.'));
+}
+
+// SADE VE ŞIK PLAKA SEÇİM KARTLARI YÖNETİMİ
+function selectSheetPreset(type, h, w) {
+  document.querySelectorAll('.sheet-preset-card').forEach(c => c.classList.remove('active'));
+  const targetCard = document.getElementById(`card_${type}`);
+  if(targetCard) targetCard.classList.add('active');
+
+  const manualRow = document.getElementById("manualSheetRow");
+
+  if(type === 'custom') {
+    manualRow.style.display = "grid";
+  } else {
+    manualRow.style.display = "none";
+    document.getElementById("sh").value = h;
+    document.getElementById("sw").value = w;
+  }
 }
 
 function loadStockWastesFromStorage() {
@@ -545,7 +624,6 @@ function startOptimization() {
   }, 120);
 }
 
-// MADDENİZ 3: SATIR EKLENDİĞİNDE VEYA ENTER YAPILDIĞINDA DİREKT "BOY" ALANINA ODAKLANMA
 function addPart(p) {
   if(!p) {
     p = {
@@ -830,7 +908,7 @@ function optimize() {
     });
   }
 
-  // MOTOR SEÇİMİNE GÖRE YERLEŞİM (KORUNAN KUSURSUZ ALGORİTMA)
+  // MOTOR SEÇİMİNE GÖRE YERLEŞİM (DOKUNULMAYAN KUSURSUZ ALGORİTMA)
   if(globalDir === "otomatik_hibrit") {
     rawItems.sort((a, b) => {
       let areaA = a.w * a.h, areaB = b.w * b.h;
@@ -855,7 +933,6 @@ function optimize() {
         }
       }
       if(!placed) {
-        // Plaka boyutundan büyük mü kontrol et
         let fitsStandard = (item.w <= SW && item.h <= SH) || (item.rot && item.h <= SW && item.w <= SH);
         if(!fitsStandard) {
           unplacedItems.push(item);
@@ -926,7 +1003,7 @@ function optimize() {
     });
   }
 
-  // MADDENİZ 1: YERLEŞMEYEN PARÇALAR VARSA KIRMIZI BİLDİRİM KUTUSUNU DOLDUR VE GÖSTER
+  // YERLEŞMEYEN PARÇALAR KIRMIZI BİLDİRİM KUTUSU
   const alertBox = document.getElementById("unplacedAlert");
   const alertList = document.getElementById("unplacedList");
   if(unplacedItems.length > 0) {
@@ -1186,7 +1263,6 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
       if(p.s) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + w - 4, y); ctx.lineTo(x + w - 4, y + h); ctx.stroke(); ctx.fillText("B1", x + w - 26, y + 24); }
       if(p.i) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + 4, y); ctx.lineTo(x + 4, y + h); ctx.stroke(); ctx.fillText("B2", x + 10, y + 24); }
 
-      // MADDENİZ 2: DİNAMİK VEYA PARÇA BÜYÜKLÜĞÜYLE ORANTILI YAZI BOYUTU (MOBİLDE NET OKUMA)
       let minSide = Math.min(w, h);
       let dimFont = Math.max(16, Math.min(38, Math.round(minSide / 2.8)));
       ctx.font = `bold ${dimFont}px Arial`;
@@ -1227,7 +1303,6 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
         ctx.fillText(`[ ${p.name} ]`, x + w / 2, y + h / 2);
       }
 
-      // Parça No Baloncuğu
       let badgeRadius = Math.max(12, Math.min(20, Math.round(minSide / 6)));
       ctx.beginPath();
       ctx.arc(x + badgeRadius + 8, y + badgeRadius + 8, badgeRadius, 0, Math.PI * 2);
@@ -1260,6 +1335,7 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
 
 // YÜKLEME VE İLK BAŞLANGIÇ
 loadStockWastesFromStorage();
+selectSheetPreset('preset_280', 280, 210);
 addPart();
 checkShuffleBtn();
 </script>
