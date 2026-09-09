@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Acanlar Mobilya — Firesiz Plaka Kesim & Fire Depolu V.1.79</title>
+<title>Acanlar Mobilya — Firesiz Plaka Kesim & Fire Depolu V.1.84</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -93,24 +93,15 @@ input[type=text],input[type=number],select{width:100%;border:1px solid var(--bor
   flex-direction: column;
   justify-content: center;
 }
-.sheet-preset-card:hover {
-  border-color: #38bdf8;
-}
+.sheet-preset-card:hover { border-color: #38bdf8; }
 .sheet-preset-card.active {
   background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
   border-color: #0284c7;
   color: #fff;
   box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
 }
-.sheet-preset-card h4 {
-  margin: 0 0 2px 0;
-  font-size: 13px;
-  font-weight: bold;
-}
-.sheet-preset-card .dim-text {
-  font-size: 10px;
-  opacity: 0.85;
-}
+.sheet-preset-card h4 { margin: 0 0 2px 0; font-size: 13px; font-weight: bold; }
+.sheet-preset-card .dim-text { font-size: 10px; opacity: 0.85; }
 
 .actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
 .btn-action { border: none; border-radius: 8px; padding: 10px 14px; font-size: 11px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
@@ -122,6 +113,15 @@ input[type=text],input[type=number],select{width:100%;border:1px solid var(--bor
 .btn-optimize-main:hover { background: linear-gradient(135deg, #047857 0%, #065f46 100%); }
 
 .btn-shuffle { background: #10b981; color: #fff; padding: 8px 12px; border-radius: 6px; border: none; font-weight: bold; font-size: 11px; cursor: pointer; display: block; margin-top: 6px; width: 100%; text-align: center; }
+
+/* TELEFON YEREL HAFIZA KARTLARI VE LİSTESİ */
+.saved-projects-list { max-height: 150px; overflow-y: auto; margin-top: 8px; border: 1px solid var(--border-color); border-radius: 8px; padding: 6px; background: var(--table-th-bg); }
+.saved-project-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 8px; border-bottom: 1px solid var(--border-color); font-size: 11px; }
+.saved-project-item:last-child { border-bottom: none; }
+.project-btn-group { display: flex; gap: 4px; }
+.btn-mini { padding: 3px 8px; font-size: 10px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; color: #fff; }
+.btn-mini.load-proj { background: #0284c7; }
+.btn-mini.del-proj { background: #ef4444; }
 
 /* TAM EKRAN YÜKLEME OVERLAY ALANI */
 #loadingOverlay {
@@ -154,9 +154,7 @@ input[type=text],input[type=number],select{width:100%;border:1px solid var(--bor
   animation: spin 0.8s linear infinite;
   margin: 0 auto 10px auto;
 }
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* YERLEŞEMEYEN PARÇA BİLDİRİM KUTUSU */
 .unplaced-alert {
@@ -208,7 +206,7 @@ td input[type=text], td input[type=number] { padding: 5px 2px; text-align: cente
 .metric b{font-size:16px;display:block;color:var(--text-color)}.metric span{font-size:10px;color:var(--muted-color)}
 .plan{border:1px solid var(--border-color);border-radius:10px;padding:10px;margin-bottom:12px;background:var(--card-bg); width: 100%;}
 .plan h3{margin:0 0 6px;font-size:14px;color:var(--text-color)}
-canvas{width:100%;height:auto;display:block;border:1px solid var(--border-color);border-radius:6px;background:#fff}
+canvas{width:100%;height:auto;display:block;border:1px solid var(--border-color);border-radius:6px;background:#fff; cursor: pointer;}
 .legend{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;margin:6px 0}.legend span{display:inline-flex;align-items:center;gap:4px}
 .dot{width:12px;height:8px;border:2px solid #111;display:inline-block}
 .band-note{font-size:11px;color:var(--muted-color);margin-top:6px}
@@ -297,7 +295,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA DEKORASYON</h1>
-      <div class="author">Mesut ACAN — Firesiz Plaka Kesim Programı v1.79</div>
+      <div class="author">Mesut ACAN — Firesiz Plaka Kesim Programı v1.84</div>
     </div>
   </div>
   <div class="header-btns no-print">
@@ -368,7 +366,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 <button id="btnShuffle" class="btn-shuffle" onclick="shuffleAndOptimize()">🎲 FARKLI YERLEŞİM DENE (ALTERNATİF ŞABLON)</button>
 </div>
 
-<!-- PARÇA LİSTESİ KART ALANI (İSTEĞİNİZ ÜZERİNE ÜSTE ALINDI) -->
+<!-- PARÇA LİSTESİ KART ALANI -->
 <div class="card">
 <h2>2. Parça Listesi</h2>
 
@@ -398,9 +396,9 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 
 <div class="actions">
 <button class="btn-action add" onclick="addPart()">➕ Satır Ekle</button>
-<button class="btn-action save" onclick="exportData()">💾 Ölçüleri Kaydet</button>
+<button class="btn-action save" onclick="exportData()">💾 Dosya Olarak İndir (JSON)</button>
 <label class="btn-action load" style="cursor:pointer">
-  📂 Ölçü Kaydı Yükle
+  📂 Dosyadan Yükle
   <input id="uploadData" type="file" accept=".json" style="display:none" onchange="importData(event)">
 </label>
 </div>
@@ -408,7 +406,19 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 <button id="btnOptimizeMain" class="btn-optimize-main" onclick="startOptimization()">🚀 HESAPLA VE OPTİMİZE ET</button>
 </div>
 
-<!-- FİRE PLAKA DEPOSU KART ALANI (İSTEĞİNİZ ÜZERİNE ALTA ALINDI) -->
+<!-- TELEFON / CİHAZ YEREL HAFIZA KART ALANI -->
+<div class="card">
+<h2>📁 Telefon & Cihaz Yerel Hafızası (Kayıtlı Projeler)</h2>
+<div class="row">
+  <input id="saveLocalName" type="text" placeholder="Proje Adı Girin (Örn: Mutfak Kapaklar)">
+  <button class="btn-action save" style="justify-content:center" onclick="saveProjectToLocalStorage()">💾 Hafızaya Kaydet</button>
+</div>
+
+<label style="margin-top:10px;">📋 Cihazınızda Kayıtlı Projeler:</label>
+<div class="saved-projects-list" id="savedProjectsContainer"></div>
+</div>
+
+<!-- FİRE PLAKA DEPOSU KART ALANI -->
 <div class="card">
 <h2>♻️ Atölye Fire Plaka Deposu</h2>
 <div class="row">
@@ -426,16 +436,6 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 </label>
 
 <div class="stock-waste-list" id="stockWasteContainer"></div>
-</div>
-
-<div class="card">
-<h2>3. CSV / Metin İle Toplu Veri (cm Cinsinden)</h2>
-<div class="muted">Format: Parça, Boy(cm), En(cm), Adet, Döndür(1/0), Boy1, Boy2, En1, En2</div>
-<textarea id="csv" rows="3" style="width:100%;margin-top:6px;border:1px solid var(--border-color);border-radius:6px;padding:6px;background:var(--card-bg);color:var(--text-color)" placeholder="1,72.0,58.0,4,1,1,1,0,0"></textarea>
-<div class="actions">
-  <button class="btn-action load" onclick="importCSV()">Metinden Aktar</button>
-  <button class="btn-action save" onclick="startOptimization()" style="background:#059669">🚀 OPTİMİZE ET</button>
-</div>
 </div>
 </section>
 
@@ -479,6 +479,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 <span><i class="dot"></i> Parça</span>
 <span style="color:#0284c7; font-weight:bold;">━ Kalın Mavi Kenar Bandı</span>
 <span style="color:#d32f2f">--- Ana Giyotin Kesim</span>
+<span style="color:#10b981; font-weight:bold;">📱 Tıklanan Parça: KESİLDİ</span>
 </div>
 <div id="plans"></div>
 
@@ -502,7 +503,8 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
         <th>Boy (cm)</th>
         <th>En (cm)</th>
         <th>Adet</th>
-        <th>PVC Kenar Bandı Detayı</th>
+        <th>Kenar Bandı</th>
+        <th>Kesim Durumu</th>
       </tr>
     </thead>
     <tbody id="jobTableBody"></tbody>
@@ -525,6 +527,10 @@ let shuffleSeed = 0;
 let stockWastes = [];
 let currentDetectedWastes = [];
 
+// HER FİZİKSEL PARÇANIN KENDİNE ÖZEL TEK TEK İŞARETLENMESİ İÇİN BENZERSİZ SET
+let completedUniquePartIds = new Set(); 
+let activePresetType = 'preset_280';
+
 function parseNum(val) {
   if(!val) return 0;
   return parseFloat(String(val).replace(',', '.'));
@@ -532,6 +538,7 @@ function parseNum(val) {
 
 // SADE VE ŞIK PLAKA SEÇİM KARTLARI YÖNETİMİ
 function selectSheetPreset(type, h, w) {
+  activePresetType = type;
   document.querySelectorAll('.sheet-preset-card').forEach(c => c.classList.remove('active'));
   const targetCard = document.getElementById(`card_${type}`);
   if(targetCard) targetCard.classList.add('active');
@@ -545,6 +552,98 @@ function selectSheetPreset(type, h, w) {
     document.getElementById("sh").value = h;
     document.getElementById("sw").value = w;
   }
+}
+
+// CİHAZ TELEFON YEREL HAFIZA YÖNETİMİ (LOCALSTORAGE)
+function saveProjectToLocalStorage() {
+  let nameInput = document.getElementById("saveLocalName").value.trim() || document.getElementById("projName").value.trim();
+  if(!nameInput) {
+    alert("Lütfen projeye bir isim verin!");
+    return;
+  }
+
+  let projectData = {
+    projName: nameInput,
+    parts: parts,
+    presetType: activePresetType,
+    sh: document.getElementById("sh").value,
+    sw: document.getElementById("sw").value,
+    kerf: document.getElementById("kerf").value,
+    edge: document.getElementById("edge").value,
+    completedParts: Array.from(completedUniquePartIds),
+    savedDate: new Date().toLocaleDateString('tr-TR') + " " + new Date().toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'})
+  };
+
+  let savedProjects = getSavedProjectsFromStorage();
+  savedProjects[nameInput] = projectData;
+  localStorage.setItem("acanlar_local_projects", JSON.stringify(savedProjects));
+  
+  document.getElementById("saveLocalName").value = "";
+  renderSavedProjectsList();
+  alert(`"${nameInput}" projesi cihazınıza kaydedildi!`);
+}
+
+function getSavedProjectsFromStorage() {
+  try {
+    let saved = localStorage.getItem("acanlar_local_projects");
+    return saved ? JSON.parse(saved) : {};
+  } catch(e) { return {}; }
+}
+
+function loadProjectFromLocalStorage(projNameKey) {
+  let savedProjects = getSavedProjectsFromStorage();
+  let projectData = savedProjects[projNameKey];
+  if(!projectData) return;
+
+  document.getElementById("projName").value = projectData.projName || projNameKey;
+  parts = projectData.parts || [];
+  
+  selectSheetPreset(projectData.presetType || 'custom', projectData.sh || 280, projectData.sw || 210);
+  if(projectData.sh) document.getElementById("sh").value = projectData.sh;
+  if(projectData.sw) document.getElementById("sw").value = projectData.sw;
+  if(projectData.kerf) document.getElementById("kerf").value = projectData.kerf;
+  if(projectData.edge) document.getElementById("edge").value = projectData.edge;
+
+  completedUniquePartIds = new Set(projectData.completedParts || []);
+
+  renderParts();
+  startOptimization();
+}
+
+function deleteProjectFromLocalStorage(projNameKey) {
+  if(confirm(`"${projNameKey}" projesini cihazınızdan silmek istediğinize emin misiniz?`)) {
+    let savedProjects = getSavedProjectsFromStorage();
+    delete savedProjects[projNameKey];
+    localStorage.setItem("acanlar_local_projects", JSON.stringify(savedProjects));
+    renderSavedProjectsList();
+  }
+}
+
+function renderSavedProjectsList() {
+  const container = document.getElementById("savedProjectsContainer");
+  let savedProjects = getSavedProjectsFromStorage();
+  let keys = Object.keys(savedProjects);
+
+  if(keys.length === 0) {
+    container.innerHTML = `<div class="muted" style="text-align:center;padding:6px">Cihazınızda henüz kayıtlı proje yok.</div>`;
+    return;
+  }
+
+  container.innerHTML = "";
+  keys.forEach(key => {
+    let item = savedProjects[key];
+    container.innerHTML += `
+      <div class="saved-project-item">
+        <div>
+          <b>${esc(key)}</b> <span class="muted">(${item.parts ? item.parts.length : 0} Kalem — ${item.savedDate || ''})</span>
+        </div>
+        <div class="project-btn-group">
+          <button class="btn-mini load-proj" onclick="loadProjectFromLocalStorage('${esc(key)}')">📂 Yükle</button>
+          <button class="btn-mini del-proj" onclick="deleteProjectFromLocalStorage('${esc(key)}')">Sil</button>
+        </div>
+      </div>
+    `;
+  });
 }
 
 function loadStockWastesFromStorage() {
@@ -729,9 +828,19 @@ function renderParts() {
 function esc(s) { return String(s ?? "").replace(/"/g, "&quot;").replace(/</g, "&lt;"); }
 
 function exportData() {
-  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(parts, null, 2));
-  const dlAnchor = document.createElement('a');
   const projName = document.getElementById("projName").value || "Kesim_Listesi";
+  const exportPayload = {
+    projName: projName,
+    parts: parts,
+    presetType: activePresetType,
+    sh: document.getElementById("sh").value,
+    sw: document.getElementById("sw").value,
+    kerf: document.getElementById("kerf").value,
+    edge: document.getElementById("edge").value
+  };
+
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportPayload, null, 2));
+  const dlAnchor = document.createElement('a');
   dlAnchor.setAttribute("href", dataStr);
   dlAnchor.setAttribute("download", `${projName}_Acanlar.json`);
   document.body.appendChild(dlAnchor);
@@ -745,12 +854,18 @@ function importData(ev) {
   const r = new FileReader();
   r.onload = () => {
     try {
-      const loadedParts = JSON.parse(r.result);
-      if(Array.isArray(loadedParts)) {
-        parts = loadedParts;
-        renderParts();
-        startOptimization();
+      const loaded = JSON.parse(r.result);
+      if(Array.isArray(loaded)) {
+        parts = loaded;
+      } else if(loaded.parts) {
+        parts = loaded.parts;
+        if(loaded.projName) document.getElementById("projName").value = loaded.projName;
+        if(loaded.sh) document.getElementById("sh").value = loaded.sh;
+        if(loaded.sw) document.getElementById("sw").value = loaded.sw;
+        if(loaded.presetType) selectSheetPreset(loaded.presetType, loaded.sh || 280, loaded.sw || 210);
       }
+      renderParts();
+      startOptimization();
     } catch(e) {
       alert("Hatalı dosya biçimi!");
     }
@@ -758,44 +873,19 @@ function importData(ev) {
   r.readAsText(f);
 }
 
-function parseLine(line) {
-  let a = line.includes(";") ? line.split(";") : line.split(",");
-  return a.map(x => x.trim().replace(/^"|"$/g, ""));
-}
-
-function importCSV() {
-  const text = document.getElementById("csv").value.trim();
-  if(!text) return;
-  let lines = text.split(/\r?\n/).filter(Boolean), arr = [];
-  lines.forEach((line, idx) => {
-    let a = parseLine(line);
-    if(idx === 0 && /parça|boy|en/i.test(a[0])) return;
-    if(a.length >= 4 && !isNaN(parseNum(a[1]))) {
-      arr.push({
-        name: a[0],
-        h: parseNum(a[1]),
-        w: parseNum(a[2]),
-        q: parseNum(a[3]) || 1,
-        rot: a[4] !== "0",
-        s: a[5] === "1", // Boy1
-        i: a[6] === "1", // Boy2
-        u: a[7] === "1", // En1
-        a: a[8] === "1"  // En2
-      });
-    }
-  });
-  if(arr.length > 0) {
-    parts = arr;
-    renderParts();
-    startOptimization();
-  }
-}
-
+// HER FİZİKSEL PARÇAYA BENZERSİZ ID (uniqueInstanceId) ATAYALIM
 function expand() {
   let a = [];
+  let instanceCounter = 1;
   parts.forEach(p => {
     if(p.w && p.h) {
-      for(let n = 0; n < (p.q || 1); n++) a.push({...p});
+      let q = p.q || 1;
+      for(let n = 0; n < q; n++) {
+        a.push({
+          ...p, 
+          uniqueInstanceId: `part_${p.name}_${instanceCounter++}` 
+        });
+      }
     }
   });
   return a;
@@ -809,6 +899,38 @@ function getGroupColor(h, w) {
   for (let i = 0; i < key.length; i++) hash = key.charCodeAt(i) + ((hash << 5) - hash);
   let index = Math.abs(hash) % groupColors.length;
   return groupColors[index];
+}
+
+// PLAKA NUMARALARINI SIKIŞTIRMA VE SADELEŞTİRME MANTIĞI (Örn: 1-3. Plakalar)
+function formatSheetNumbers(sheetIndices, hasDepot) {
+  let result = [];
+  
+  if (sheetIndices.length > 0) {
+    sheetIndices.sort((a, b) => a - b);
+    let ranges = [];
+    let start = sheetIndices[0];
+    let end = start;
+
+    for (let i = 1; i < sheetIndices.length; i++) {
+      if (sheetIndices[i] === end + 1) {
+        end = sheetIndices[i];
+      } else {
+        ranges.push(start === end ? `${start}` : `${start}-${end}`);
+        start = sheetIndices[i];
+        end = start;
+      }
+    }
+    ranges.push(start === end ? `${start}` : `${start}-${end}`);
+
+    let plakaText = ranges.join(", ") + ". Plaka" + (sheetIndices.length > 1 ? "lar" : "");
+    result.push(plakaText);
+  }
+
+  if (hasDepot) {
+    result.push("Depo");
+  }
+
+  return result.join(", ");
 }
 
 function renderJobTable(proj, dateStr, sheets) {
@@ -825,23 +947,47 @@ function renderJobTable(proj, dateStr, sheets) {
       if(p.u) bandStr.push("En 1");
       if(p.a) bandStr.push("En 2");
 
-      let locatedSheets = [];
+      let standardSheetIndices = [];
+      let hasDepot = false;
+      let totalCutCount = 0;
+      let totalPlacedCount = 0;
+
       sheets.forEach((s, sIdx) => {
-        let isHere = s.placed.some(item => item.name === p.name);
-        if(isHere) {
-          locatedSheets.push(s.isStock ? `Depo` : `Plaka ${sIdx + 1}`);
-        }
+        s.placed.forEach(item => {
+          if(item.name === p.name) {
+            totalPlacedCount++;
+            if(s.isStock) {
+              hasDepot = true;
+            } else {
+              let pNo = sIdx + 1;
+              if(!standardSheetIndices.includes(pNo)) standardSheetIndices.push(pNo);
+            }
+            if(completedUniquePartIds.has(item.uniqueInstanceId)) {
+              totalCutCount++;
+            }
+          }
+        });
       });
 
-      let sheetText = locatedSheets.length > 0 ? locatedSheets.join(", ") : "<span style='color:#ef4444;font-weight:bold'>SIĞMADI</span>";
+      let sheetText = (standardSheetIndices.length > 0 || hasDepot) ? formatSheetNumbers(standardSheetIndices, hasDepot) : "<span style='color:#ef4444;font-weight:bold'>SIĞMADI</span>";
       
-      jb.innerHTML += `<tr>
+      let cutStatusText = "<span style='color:#64748b'>Bekliyor</span>";
+      if(totalPlacedCount > 0) {
+        if(totalCutCount === totalPlacedCount) {
+          cutStatusText = `<span style='color:#10b981;font-weight:bold'>✓ Tamamı Kesildi (${totalCutCount}/${totalPlacedCount})</span>`;
+        } else if(totalCutCount > 0) {
+          cutStatusText = `<span style='color:#f59e0b;font-weight:bold'>⏳ Kesiliyor (${totalCutCount}/${totalPlacedCount})</span>`;
+        }
+      }
+
+      jb.innerHTML += `<tr style="${totalCutCount === totalPlacedCount && totalPlacedCount > 0 ? 'background:#f0fdf4' : ''}">
         <td><b>[ ${esc(p.name)} ]</b></td>
         <td><b style="color:${sheetText.includes('Depo') ? '#8b5cf6' : (sheetText.includes('Plaka') ? '#0284c7' : '#ef4444')}">${sheetText}</b></td>
         <td>${p.h} cm</td>
         <td>${p.w} cm</td>
         <td><b>${p.q || 1} Adet</b></td>
-        <td>${bandStr.length > 0 ? bandStr.join(" - ") + " (Bantlı)" : "Bantsız / Ham"}</td>
+        <td>${bandStr.length > 0 ? bandStr.join(" - ") : "-"}</td>
+        <td>${cutStatusText}</td>
       </tr>`;
     }
   });
@@ -862,6 +1008,9 @@ function saveCurrentWastesToDepot() {
   document.getElementById("btnSaveCurrentWastes").style.display = "none";
 }
 
+let lastActiveSheets = [];
+let lastSW0 = 0, lastSH0 = 0, lastEdge = 0, lastK = 0;
+
 function optimize() {
   const SW0 = parseNum(document.getElementById("sw").value);
   const SH0 = parseNum(document.getElementById("sh").value);
@@ -871,6 +1020,8 @@ function optimize() {
   const globalDir = document.getElementById("globalDir").value;
   const subDirPref = document.getElementById("subDirPref").value;
   const useStock = document.getElementById("useStockWastes").checked;
+
+  lastSW0 = SW0; lastSH0 = SH0; lastEdge = edge; lastK = K;
 
   checkShuffleBtn();
   currentDetectedWastes = [];
@@ -908,7 +1059,7 @@ function optimize() {
     });
   }
 
-  // MOTOR SEÇİMİNE GÖRE YERLEŞİM (DOKUNULMAYAN KUSURSUZ ALGORİTMA)
+  // MOTOR SEÇİMİNE GÖRE YERLEŞİM
   if(globalDir === "otomatik_hibrit") {
     rawItems.sort((a, b) => {
       let areaA = a.w * a.h, areaB = b.w * b.h;
@@ -1022,6 +1173,7 @@ function optimize() {
   }
 
   sheets = sheets.filter(s => s.placed.length > 0);
+  lastActiveSheets = sheets;
 
   renderJobTable(proj, dateStr, sheets);
   drawPlans(sheets, SW, SH, SW0, SH0, edge, K);
@@ -1161,6 +1313,57 @@ function tryPlaceInSheet(sheet, item, SW, SH, K, globalDir, subDirPref) {
   return false;
 }
 
+// CANVAS ÜZERİNE TIKLAMA
+function handleCanvasClick(e, sheet, canvasElement) {
+  let rect = canvasElement.getBoundingClientRect();
+  let clientX = e.clientX || (e.touches && e.touches[0].clientX);
+  let clientY = e.clientY || (e.touches && e.touches[0].clientY);
+  if(!clientX || !clientY) return;
+
+  let clickX = clientX - rect.left;
+  let clickY = clientY - rect.top;
+
+  let curW0 = sheet.isStock ? sheet.customW0 : lastSW0;
+  let curH0 = sheet.isStock ? sheet.customH0 : lastSH0;
+  let curEdge = sheet.isStock ? 0 : lastEdge;
+
+  let sx = (canvasElement.width - 36) / curW0;
+  let sy = (canvasElement.height - 36) / curH0;
+  let OX = 18, OY = 18;
+
+  let clickedPart = null;
+  sheet.placed.forEach(p => {
+    let px = OX + (curEdge + p.x) * sx;
+    let py = OY + (curEdge + p.y) * sy;
+    let pw = p.w * sx;
+    let ph = p.h * sy;
+
+    let scaleFactor = rect.width / canvasElement.width;
+    let realPx = px * scaleFactor;
+    let realPy = py * scaleFactor;
+    let realPw = pw * scaleFactor;
+    let realPh = ph * scaleFactor;
+
+    if (clickX >= realPx && clickX <= realPx + realPw && clickY >= realPy && clickY <= realPy + realPh) {
+      clickedPart = p;
+    }
+  });
+
+  if (clickedPart) {
+    let uId = clickedPart.uniqueInstanceId;
+    if (completedUniquePartIds.has(uId)) {
+      completedUniquePartIds.delete(uId);
+    } else {
+      completedUniquePartIds.add(uId);
+    }
+    
+    const proj = document.getElementById("projName").value || "Plaka Kesim Projesi";
+    const dateStr = new Date().toLocaleDateString('tr-TR');
+    renderJobTable(proj, dateStr, lastActiveSheets);
+    drawPlans(lastActiveSheets, lastSW0 - 2 * lastEdge, lastSH0 - 2 * lastEdge, lastSW0, lastSH0, lastEdge, lastK);
+  }
+}
+
 function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
   let totalArea = 0, count = 0;
   sheets.forEach(s => s.placed.forEach(p => { totalArea += p.w * p.h; count++; }));
@@ -1185,6 +1388,9 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
     let c = document.createElement("canvas");
     c.width = 1400;
     c.height = Math.round(1400 * curH0 / curW0);
+
+    c.addEventListener("click", (e) => handleCanvasClick(e, s, c));
+
     div.appendChild(c);
     box.appendChild(div);
 
@@ -1249,11 +1455,14 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
           w = p.w * sx - (pad * 2), 
           h = p.h * sy - (pad * 2);
       
-      ctx.fillStyle = getGroupColor(p.h, p.w);
+      let isCompleted = completedUniquePartIds.has(p.uniqueInstanceId);
+
+      // KESİLDİ İSE YEŞİL DOKU
+      ctx.fillStyle = isCompleted ? "#dcfce7" : getGroupColor(p.h, p.w);
       ctx.fillRect(x, y, w, h);
 
-      ctx.strokeStyle = "#0f172a";
-      ctx.lineWidth = 2;
+      ctx.strokeStyle = isCompleted ? "#16a34a" : "#0f172a";
+      ctx.lineWidth = isCompleted ? 3 : 2;
       ctx.strokeRect(x, y, w, h);
 
       ctx.font = "bold 13px Arial";
@@ -1264,21 +1473,21 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
       if(p.i) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + 4, y); ctx.lineTo(x + 4, y + h); ctx.stroke(); ctx.fillText("B2", x + 10, y + 24); }
 
       let minSide = Math.min(w, h);
-      let dimFont = Math.max(16, Math.min(38, Math.round(minSide / 2.8)));
+      let dimFont = Math.max(14, Math.min(32, Math.round(minSide / 3)));
       ctx.font = `bold ${dimFont}px Arial`;
-      ctx.fillStyle = "#000000";
+      ctx.fillStyle = isCompleted ? "#15803d" : "#000000";
 
       if (w > 25) {
         ctx.textAlign = "center";
         ctx.textBaseline = "top";
-        ctx.fillText(`${p.w}`, x + w / 2, y + 8);
+        ctx.fillText(`${p.w}`, x + w / 2, y + 6);
         ctx.textBaseline = "bottom";
-        ctx.fillText(`${p.w}`, x + w / 2, y + h - 8);
+        ctx.fillText(`${p.w}`, x + w / 2, y + h - 6);
       }
 
       if (h > 25) {
         ctx.save();
-        ctx.translate(x + (dimFont * 0.9), y + h / 2);
+        ctx.translate(x + (dimFont * 0.8), y + h / 2);
         ctx.rotate(-Math.PI / 2);
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
@@ -1286,7 +1495,7 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
         ctx.restore();
 
         ctx.save();
-        ctx.translate(x + w - (dimFont * 0.9), y + h / 2);
+        ctx.translate(x + w - (dimFont * 0.8), y + h / 2);
         ctx.rotate(Math.PI / 2);
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
@@ -1294,25 +1503,31 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
         ctx.restore();
       }
 
-      if (p.h > 30 && p.w > 30) {
-        let nameFont = Math.max(16, Math.min(40, Math.round(minSide / 2.5)));
+      // AKILLI VE ESNEK METİN MANTIĞI: DİĞER YAZILARA ÇARPMAMASI İÇİN ALAN BÜYÜKSE ORTADA ADI YAZAR
+      if (p.h > 40 && p.w > 40) {
+        let nameFont = Math.max(14, Math.min(30, Math.round(minSide / 3.5)));
         ctx.font = `bold ${nameFont}px Arial`;
-        ctx.fillStyle = "#0f172a";
+        ctx.fillStyle = isCompleted ? "#166534" : "#0f172a";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText(`[ ${p.name} ]`, x + w / 2, y + h / 2);
+        
+        let labelText = isCompleted ? `✓ [ ${p.name} ]` : `[ ${p.name} ]`;
+        ctx.fillText(labelText, x + w / 2, y + h / 2);
       }
 
-      let badgeRadius = Math.max(12, Math.min(20, Math.round(minSide / 6)));
+      // KÖŞEDEKİ PARÇA NO BALONU (KESİLDİ İSE ÇOK ŞIK YEŞİL TİK '✓ 1' MANTIĞI)
+      let badgeRadius = Math.max(12, Math.min(18, Math.round(minSide / 6)));
       ctx.beginPath();
       ctx.arc(x + badgeRadius + 8, y + badgeRadius + 8, badgeRadius, 0, Math.PI * 2);
-      ctx.fillStyle = "#0f172a";
+      ctx.fillStyle = isCompleted ? "#16a34a" : "#0f172a";
       ctx.fill();
       ctx.fillStyle = "#ffffff";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.font = `bold ${Math.round(badgeRadius * 0.9)}px Arial`;
-      ctx.fillText(idx + 1, x + badgeRadius + 8, y + badgeRadius + 8);
+      ctx.font = `bold ${Math.round(badgeRadius * 0.85)}px Arial`;
+      
+      let badgeText = isCompleted ? `✓${idx + 1}` : `${idx + 1}`;
+      ctx.fillText(badgeText, x + badgeRadius + 8, y + badgeRadius + 8);
 
       ctx.textAlign = "left";
       ctx.textBaseline = "alphabetic";
@@ -1320,7 +1535,7 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
 
     let note = document.createElement("div");
     note.className = "band-note no-print";
-    note.textContent = "Bant işareti: B1=Boy1, B2=Boy2, E1=En1, E2=En2 (Mavi Çizgi). Kırmızı kırık çizgiler ana kesim yollarıdır.";
+    note.textContent = "📱 İPUCU: Kesilen parçaya dokunarak '✓' işareti koyabilirsiniz (Her parça bağımsız seçilir).";
     div.appendChild(note);
   });
 
@@ -1335,6 +1550,7 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
 
 // YÜKLEME VE İLK BAŞLANGIÇ
 loadStockWastesFromStorage();
+renderSavedProjectsList();
 selectSheetPreset('preset_280', 280, 210);
 addPart();
 checkShuffleBtn();
