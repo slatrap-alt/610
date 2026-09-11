@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Acanlar Mobilya — Firesiz Plaka Kesim & Fire Depolu V.1.84</title>
+<title>Acanlar Mobilya — Firesiz Plaka Kesim & Lazer Etiketli V.1.91</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -65,6 +65,9 @@ header{
 .btn-pdf { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #fff; border: none; padding: 8px 14px; font-size: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35); display: inline-flex; align-items: center; gap: 4px; }
 .btn-pdf:hover { background: linear-gradient(135deg, #059669 0%, #047857 100%); }
 
+.btn-label { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: #fff; border: none; padding: 8px 14px; font-size: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35); display: inline-flex; align-items: center; gap: 4px; }
+.btn-label:hover { background: linear-gradient(135deg, #0369a1 0%, #075985 100%); }
+
 main{max-width:1600px;margin:15px auto;padding:0 10px; width:100%;}
 .layout{display:grid;grid-template-columns:520px 1fr;gap:15px; width:100%;}
 .card{background:var(--card-bg);border-radius:12px;padding:14px;box-shadow:0 3px 12px #0000000b;margin-bottom:14px;border:1px solid var(--border-color); width:100%; overflow:hidden;}
@@ -74,32 +77,10 @@ input,select,button{font:inherit}
 input[type=text],input[type=number],select{width:100%;border:1px solid var(--border-color);border-radius:6px;padding:7px 5px;background:var(--card-bg);color:var(--text-color);font-size:12px}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 
-/* SADE, MODERN MAVİ PLAKA SEÇİM KARTLARI */
-.sheet-preset-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  margin-top: 6px;
-  margin-bottom: 8px;
-}
-.sheet-preset-card {
-  background: var(--table-th-bg);
-  border: 2px solid var(--border-color);
-  border-radius: 10px;
-  padding: 8px 10px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
+.sheet-preset-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 6px; margin-bottom: 8px; }
+.sheet-preset-card { background: var(--table-th-bg); border: 2px solid var(--border-color); border-radius: 10px; padding: 8px 10px; cursor: pointer; transition: all 0.2s ease; display: flex; flex-direction: column; justify-content: center; }
 .sheet-preset-card:hover { border-color: #38bdf8; }
-.sheet-preset-card.active {
-  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-  border-color: #0284c7;
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
-}
+.sheet-preset-card.active { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); border-color: #0284c7; color: #fff; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); }
 .sheet-preset-card h4 { margin: 0 0 2px 0; font-size: 13px; font-weight: bold; }
 .sheet-preset-card .dim-text { font-size: 10px; opacity: 0.85; }
 
@@ -114,7 +95,6 @@ input[type=text],input[type=number],select{width:100%;border:1px solid var(--bor
 
 .btn-shuffle { background: #10b981; color: #fff; padding: 8px 12px; border-radius: 6px; border: none; font-weight: bold; font-size: 11px; cursor: pointer; display: block; margin-top: 6px; width: 100%; text-align: center; }
 
-/* TELEFON YEREL HAFIZA KARTLARI VE LİSTESİ */
 .saved-projects-list { max-height: 150px; overflow-y: auto; margin-top: 8px; border: 1px solid var(--border-color); border-radius: 8px; padding: 6px; background: var(--table-th-bg); }
 .saved-project-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 8px; border-bottom: 1px solid var(--border-color); font-size: 11px; }
 .saved-project-item:last-child { border-bottom: none; }
@@ -123,59 +103,18 @@ input[type=text],input[type=number],select{width:100%;border:1px solid var(--bor
 .btn-mini.load-proj { background: #0284c7; }
 .btn-mini.del-proj { background: #ef4444; }
 
-/* TAM EKRAN YÜKLEME OVERLAY ALANI */
-#loadingOverlay {
-  display: none;
-  position: fixed;
-  top: 0; left: 0; width: 100vw; height: 100vh;
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(4px);
-  z-index: 99999;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-}
-.loading-box {
-  background: #1e293b;
-  border: 1px solid #38bdf8;
-  padding: 25px 35px;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  text-align: center;
-}
+#loadingOverlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px); z-index: 99999; flex-direction: column; align-items: center; justify-content: center; color: #fff; }
+.loading-box { background: #1e293b; border: 1px solid #38bdf8; padding: 25px 35px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; }
 .loading-box h3 { margin: 10px 0 5px 0; font-size: 16px; color: #38bdf8; }
 .loading-box p { margin: 0; font-size: 12px; color: #94a3b8; }
-.big-spinner {
-  width: 44px; height: 44px;
-  border: 4px solid rgba(56, 189, 248, 0.2);
-  border-radius: 50%;
-  border-top-color: #38bdf8;
-  animation: spin 0.8s linear infinite;
-  margin: 0 auto 10px auto;
-}
+.big-spinner { width: 44px; height: 44px; border: 4px solid rgba(56, 189, 248, 0.2); border-radius: 50%; border-top-color: #38bdf8; animation: spin 0.8s linear infinite; margin: 0 auto 10px auto; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* YERLEŞEMEYEN PARÇA BİLDİRİM KUTUSU */
-.unplaced-alert {
-  display: none;
-  background: #fef2f2;
-  border: 2px solid #ef4444;
-  border-radius: 10px;
-  padding: 12px 15px;
-  margin-bottom: 15px;
-  color: #991b1b;
-  animation: pulseAlert 2s infinite;
-}
+.unplaced-alert { display: none; background: #fef2f2; border: 2px solid #ef4444; border-radius: 10px; padding: 12px 15px; margin-bottom: 15px; color: #991b1b; animation: pulseAlert 2s infinite; }
 .unplaced-alert h3 { margin: 0 0 6px 0; font-size: 14px; color: #dc2626; display: flex; align-items: center; gap: 6px; }
 .unplaced-alert ul { margin: 4px 0 0 18px; padding: 0; font-size: 12px; font-weight: bold; }
-@keyframes pulseAlert {
-  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-  70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-}
+@keyframes pulseAlert { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
 
-/* TABLO VE MOBİL KART DÜZENİ */
 .table-wrap{width:100%;overflow-x:auto;border:1px solid var(--border-color);border-radius:8px}
 table{width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed; min-width: 100%;}
 th,td{padding:4px 1px;border-bottom:1px solid var(--border-color);text-align:center;white-space:nowrap}
@@ -229,18 +168,52 @@ canvas{width:100%;height:auto;display:block;border:1px solid var(--border-color)
 footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-size: 12px; border-top: 1px solid var(--border-color); margin-top: 15px;}
 .print-header {display: none;}
 
-@media(max-width:768px){
-  main { padding: 0 5px; margin: 10px auto; }
-  .layout{ grid-template-columns: 1fr; gap: 10px; }
-  header { padding: 10px 8px; }
-  .brand h1 { font-size: 15px; }
-  .brand .author { font-size: 10px; }
-  .table-wrap { display: none; }
-  .part-cards-container { display: flex; }
-  .card { padding: 10px; border-radius: 10px; }
-  .metric { min-width: calc(50% - 8px); padding: 6px 8px; }
-  .metric b { font-size: 14px; }
+/* A4 LAZER ETİKET BASKI ALANI (70x30 mm - 3 Sütun x 9 Satır) */
+#labelPrintArea { display: none; }
+
+@media print {
+  body.print-labels #labelPrintArea {
+    display: grid !important;
+    grid-template-columns: repeat(3, 70mm);
+    grid-auto-rows: 30mm;
+    gap: 0;
+    width: 210mm;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+  }
+  body.print-labels header, 
+  body.print-labels main, 
+  body.print-labels footer, 
+  body.print-labels .no-print {
+    display: none !important;
+  }
 }
+
+.label-card {
+  width: 70mm;
+  height: 30mm;
+  padding: 3.5mm 4.5mm;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  background: #ffffff;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  border: 1px dashed #cbd5e1;
+  page-break-inside: avoid;
+}
+
+.lbl-header { text-align: center; border-bottom: 1.5px solid #0f172a; padding-bottom: 2px; margin-top: 1mm; }
+.lbl-company { font-size: 10px; font-weight: 900; color: #0f172a; letter-spacing: 0.4px; margin: 0; text-transform: uppercase; }
+.lbl-project { font-size: 8.5px; font-weight: bold; color: #334155; margin-top: 1px; }
+
+.lbl-body { text-align: center; margin: auto 0; }
+.lbl-part-name { font-size: 11px; font-weight: bold; color: #0284c7; }
+.lbl-dimensions { font-size: 15px; font-weight: 900; color: #000000; margin-top: 1px; }
+.lbl-dim-tag { font-size: 8.5px; color: #475569; font-weight: bold; }
 
 @media print{
   @page { size: A4 portrait; margin: 8mm; }
@@ -277,7 +250,6 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 </head>
 <body>
 
-<!-- YÜKLEME OVERLAY PENCERESİ -->
 <div id="loadingOverlay">
   <div class="loading-box">
     <div class="big-spinner"></div>
@@ -285,6 +257,8 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     <p>Minimum fire ve maksimum doluluk için kombinasyonlar taranıyor...</p>
   </div>
 </div>
+
+<div id="labelPrintArea"></div>
 
 <header>
   <div class="brand">
@@ -295,12 +269,13 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA DEKORASYON</h1>
-      <div class="author">Mesut ACAN — Firesiz Plaka Kesim Programı v1.84</div>
+      <div class="author">Mesut ACAN — Firesiz Plaka Kesim & Etiket v1.91</div>
     </div>
   </div>
   <div class="header-btns no-print">
     <button class="btn-theme" onclick="toggleTheme()">🌙 Gece / ☀️ Gündüz</button>
-    <button class="btn-pdf" onclick="window.print()">🖨️ PDF YAZDIR / İNDİR</button>
+    <button class="btn-label" onclick="printLabels()">🏷️ A4 ETİKET YAZDIR (70x30 mm)</button>
+    <button class="btn-pdf" onclick="window.print()">🖨️ PDF / ŞABLON YAZDIR</button>
   </div>
 </header>
 
@@ -314,7 +289,6 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
   <input id="projName" type="text" placeholder="Örn: Mutfak Dolabı Kesim Listesi">
 </div>
 
-<!-- SADE VE ŞIK MAVİ PLAKA TİPİ SEÇİM KARTLARI -->
 <label style="margin-top:8px;">📦 Plaka Tipi Seçin</label>
 <div class="sheet-preset-grid">
   <div id="card_preset_280" class="sheet-preset-card active" onclick="selectSheetPreset('preset_280', 280, 210)">
@@ -335,7 +309,6 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
   </div>
 </div>
 
-<!-- MANUEL ÖLÇÜ GİRİŞİ SEÇİLDİĞİNDE AÇILAN KUTULAR -->
 <div id="manualSheetRow" class="row" style="display:none; margin-top:6px;">
   <div><label>En (cm)</label><input id="sw" type="number" step="0.1" value="210"></div>
   <div><label>Boy (cm)</label><input id="sh" type="number" step="0.1" value="280"></div>
@@ -366,11 +339,9 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 <button id="btnShuffle" class="btn-shuffle" onclick="shuffleAndOptimize()">🎲 FARKLI YERLEŞİM DENE (ALTERNATİF ŞABLON)</button>
 </div>
 
-<!-- PARÇA LİSTESİ KART ALANI -->
 <div class="card">
 <h2>2. Parça Listesi</h2>
 
-<!-- MASAÜSTÜ TABLO GÖRÜNÜMÜ -->
 <div class="table-wrap">
 <table>
 <thead>
@@ -391,7 +362,6 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 </table>
 </div>
 
-<!-- MOBİL KART GÖRÜNÜMÜ -->
 <div class="part-cards-container" id="partCards"></div>
 
 <div class="actions">
@@ -406,7 +376,6 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 <button id="btnOptimizeMain" class="btn-optimize-main" onclick="startOptimization()">🚀 HESAPLA VE OPTİMİZE ET</button>
 </div>
 
-<!-- TELEFON / CİHAZ YEREL HAFIZA KART ALANI -->
 <div class="card">
 <h2>📁 Telefon & Cihaz Yerel Hafızası (Kayıtlı Projeler)</h2>
 <div class="row">
@@ -418,7 +387,6 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 <div class="saved-projects-list" id="savedProjectsContainer"></div>
 </div>
 
-<!-- FİRE PLAKA DEPOSU KART ALANI -->
 <div class="card">
 <h2>♻️ Atölye Fire Plaka Deposu</h2>
 <div class="row">
@@ -461,7 +429,6 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 <div class="card">
 <h2 class="no-print">Kesim Haritası ve Detaylar</h2>
 
-<!-- YERLEŞTİRİLEMEYEN PARÇA KIRMIZI UYARI KUTUSU -->
 <div id="unplacedAlert" class="unplaced-alert">
   <h3>⚠️ DİKKAT: YERLEŞTİRİLEMEYEN PARÇALAR VAR!</h3>
   <div style="font-size:11px;">Aşağıdaki parçalar plaka boyutunu aştığı veya plakada yer kalmadığı için kesim haritasına sığdırılamadı:</div>
@@ -527,7 +494,6 @@ let shuffleSeed = 0;
 let stockWastes = [];
 let currentDetectedWastes = [];
 
-// HER FİZİKSEL PARÇANIN KENDİNE ÖZEL TEK TEK İŞARETLENMESİ İÇİN BENZERSİZ SET
 let completedUniquePartIds = new Set(); 
 let activePresetType = 'preset_280';
 
@@ -536,7 +502,6 @@ function parseNum(val) {
   return parseFloat(String(val).replace(',', '.'));
 }
 
-// SADE VE ŞIK PLAKA SEÇİM KARTLARI YÖNETİMİ
 function selectSheetPreset(type, h, w) {
   activePresetType = type;
   document.querySelectorAll('.sheet-preset-card').forEach(c => c.classList.remove('active'));
@@ -554,7 +519,63 @@ function selectSheetPreset(type, h, w) {
   }
 }
 
-// CİHAZ TELEFON YEREL HAFIZA YÖNETİMİ (LOCALSTORAGE)
+/* SVG ÇİZGİSİ İLE GARANTİLİ VE YAZICININ YUTAMAYACAĞI BANT ÇİZİM MANTIĞI */
+function printLabels() {
+  const proj = document.getElementById("projName").value || "Müşteri / Proje Belirtilmedi";
+  const labelContainer = document.getElementById("labelPrintArea");
+  labelContainer.innerHTML = "";
+
+  let count = 0;
+  parts.forEach(p => {
+    if (p.w && p.h) {
+      let q = p.q || 1;
+      for (let n = 0; n < q; n++) {
+        count++;
+        let card = document.createElement("div");
+        card.className = "label-card";
+
+        let lines = "";
+        // u = En1 (Üst), a = En2 (Alt), i = Boy2 (Sol), s = Boy1 (Sağ)
+        if (p.u) lines += `<line x1="1" y1="2" x2="99" y2="2" stroke="#0284c7" stroke-width="4" stroke-linecap="round"/>`;
+        if (p.a) lines += `<line x1="1" y1="98" x2="99" y2="98" stroke="#0284c7" stroke-width="4" stroke-linecap="round"/>`;
+        if (p.i) lines += `<line x1="2" y1="1" x2="2" y2="99" stroke="#0284c7" stroke-width="4" stroke-linecap="round"/>`;
+        if (p.s) lines += `<line x1="98" y1="1" x2="98" y2="99" stroke="#0284c7" stroke-width="4" stroke-linecap="round"/>`;
+
+        let svgOverlay = "";
+        if (lines !== "") {
+          svgOverlay = `<svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:99;">${lines}</svg>`;
+        }
+
+        card.innerHTML = `
+          ${svgOverlay}
+          <div class="lbl-header">
+            <div class="lbl-company">ACANLAR MOBİLYA DEKORASYON</div>
+            <div class="lbl-project"><b>Müşteri:</b> ${esc(proj)}</div>
+          </div>
+          <div class="lbl-body">
+            <div class="lbl-part-name">${esc(p.name)}</div>
+            <div class="lbl-dimensions">
+              <span class="lbl-dim-tag">En:</span> ${p.w} <span style="font-size:11px; color:#475569;">×</span> <span class="lbl-dim-tag">Boy:</span> ${p.h} <span style="font-size:9.5px;">cm</span>
+            </div>
+          </div>
+        `;
+        labelContainer.appendChild(card);
+      }
+    }
+  });
+
+  if (count === 0) {
+    alert("Yazdırılacak parça bulunamadı! Lütfen parça listesini doldurun.");
+    return;
+  }
+
+  document.body.classList.add("print-labels");
+  window.print();
+  setTimeout(() => {
+    document.body.classList.remove("print-labels");
+  }, 1000);
+}
+
 function saveProjectToLocalStorage() {
   let nameInput = document.getElementById("saveLocalName").value.trim() || document.getElementById("projName").value.trim();
   if(!nameInput) {
@@ -731,10 +752,10 @@ function addPart(p) {
       w: "",
       q: 1,
       rot: true,
-      s: false, // Boy1 (Sağ)
-      i: false, // Boy2 (Sol)
-      u: false, // En1 (Üst)
-      a: false  // En2 (Alt)
+      s: false,
+      i: false,
+      u: false,
+      a: false
     };
   }
   parts.push({...p, id: Date.now() + Math.random()});
@@ -873,7 +894,6 @@ function importData(ev) {
   r.readAsText(f);
 }
 
-// HER FİZİKSEL PARÇAYA BENZERSİZ ID (uniqueInstanceId) ATAYALIM
 function expand() {
   let a = [];
   let instanceCounter = 1;
@@ -901,10 +921,8 @@ function getGroupColor(h, w) {
   return groupColors[index];
 }
 
-// PLAKA NUMARALARINI SIKIŞTIRMA VE SADELEŞTİRME MANTIĞI (Örn: 1-3. Plakalar)
 function formatSheetNumbers(sheetIndices, hasDepot) {
   let result = [];
-  
   if (sheetIndices.length > 0) {
     sheetIndices.sort((a, b) => a - b);
     let ranges = [];
@@ -921,15 +939,10 @@ function formatSheetNumbers(sheetIndices, hasDepot) {
       }
     }
     ranges.push(start === end ? `${start}` : `${start}-${end}`);
-
-    let plakaText = ranges.join(", ") + ". Plaka" + (sheetIndices.length > 1 ? "lar" : "");
-    result.push(plakaText);
+    result.push(ranges.join(", ") + ". Plaka" + (sheetIndices.length > 1 ? "lar" : ""));
   }
 
-  if (hasDepot) {
-    result.push("Depo");
-  }
-
+  if (hasDepot) result.push("Depo");
   return result.join(", ");
 }
 
@@ -1059,7 +1072,6 @@ function optimize() {
     });
   }
 
-  // MOTOR SEÇİMİNE GÖRE YERLEŞİM
   if(globalDir === "otomatik_hibrit") {
     rawItems.sort((a, b) => {
       let areaA = a.w * a.h, areaB = b.w * b.h;
@@ -1154,7 +1166,6 @@ function optimize() {
     });
   }
 
-  // YERLEŞMEYEN PARÇALAR KIRMIZI BİLDİRİM KUTUSU
   const alertBox = document.getElementById("unplacedAlert");
   const alertList = document.getElementById("unplacedList");
   if(unplacedItems.length > 0) {
@@ -1179,7 +1190,6 @@ function optimize() {
   drawPlans(sheets, SW, SH, SW0, SH0, edge, K);
 }
 
-// HİBRİT GİYOTİN YERLEŞİM (KORUNAN MOTOR)
 function tryPlaceHybridGuillotine(sheet, item, K, subDirPref) {
   let bestIdx = -1, bestRot = false, bestScore = Infinity, bestSplitHoriz = true;
 
@@ -1237,7 +1247,6 @@ function tryPlaceHybridGuillotine(sheet, item, K, subDirPref) {
   return false;
 }
 
-// KLASİK ŞERİT YERLEŞİM (KORUNAN MOTOR)
 function tryPlaceNearSameGroup(sheet, item, SW, SH, K, globalDir, subDirPref) {
   let samePlaced = sheet.placed.filter(p => 
     (Math.max(p.w, p.h) === Math.max(item.w, item.h)) && 
@@ -1313,7 +1322,6 @@ function tryPlaceInSheet(sheet, item, SW, SH, K, globalDir, subDirPref) {
   return false;
 }
 
-// CANVAS ÜZERİNE TIKLAMA
 function handleCanvasClick(e, sheet, canvasElement) {
   let rect = canvasElement.getBoundingClientRect();
   let clientX = e.clientX || (e.touches && e.touches[0].clientX);
@@ -1457,7 +1465,6 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
       
       let isCompleted = completedUniquePartIds.has(p.uniqueInstanceId);
 
-      // KESİLDİ İSE YEŞİL DOKU
       ctx.fillStyle = isCompleted ? "#dcfce7" : getGroupColor(p.h, p.w);
       ctx.fillRect(x, y, w, h);
 
@@ -1503,7 +1510,6 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
         ctx.restore();
       }
 
-      // AKILLI VE ESNEK METİN MANTIĞI: DİĞER YAZILARA ÇARPMAMASI İÇİN ALAN BÜYÜKSE ORTADA ADI YAZAR
       if (p.h > 40 && p.w > 40) {
         let nameFont = Math.max(14, Math.min(30, Math.round(minSide / 3.5)));
         ctx.font = `bold ${nameFont}px Arial`;
@@ -1515,7 +1521,6 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
         ctx.fillText(labelText, x + w / 2, y + h / 2);
       }
 
-      // KÖŞEDEKİ PARÇA NO BALONU (KESİLDİ İSE ÇOK ŞIK YEŞİL TİK '✓ 1' MANTIĞI)
       let badgeRadius = Math.max(12, Math.min(18, Math.round(minSide / 6)));
       ctx.beginPath();
       ctx.arc(x + badgeRadius + 8, y + badgeRadius + 8, badgeRadius, 0, Math.PI * 2);
@@ -1548,7 +1553,6 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
   }
 }
 
-// YÜKLEME VE İLK BAŞLANGIÇ
 loadStockWastesFromStorage();
 renderSavedProjectsList();
 selectSheetPreset('preset_280', 280, 210);
