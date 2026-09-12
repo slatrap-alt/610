@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Acanlar Mobilya — Firesiz Plaka Kesim & Lazer Etiketli V.1.92</title>
+<title>Acanlar Mobilya — Firesiz Plaka Kesim & Lazer Etiketli V.1.95</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -165,7 +165,6 @@ canvas{width:100%;height:auto;display:block;border:1px solid var(--border-color)
 .band-note{font-size:11px;color:var(--muted-color);margin-top:6px}
 .notice{background:#fff7df;border:1px solid #f0d98c;color:#854d0e;border-radius:8px;padding:8px;font-size:11px;margin-top:8px}
 
-/* İŞ EMRİ TABLOSU METNİ KAYDIRMA VE TAŞMA ENGELLEME AYARI */
 .job-table-wrap { margin-top: 20px; border-top: 2px solid var(--border-color); padding-top: 15px; width: 100%; overflow-x: auto; }
 .job-header-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #cbd5e1; padding-bottom: 8px; flex-wrap: wrap; gap: 5px; }
 .job-header-info h3 { margin: 0; font-size: 15px; word-break: break-word; }
@@ -191,18 +190,27 @@ canvas{width:100%;height:auto;display:block;border:1px solid var(--border-color)
 footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-size: 12px; border-top: 1px solid var(--border-color); margin-top: 15px;}
 .print-header {display: none;}
 
-/* A4 LAZER ETİKET BASKI ALANI (70x30 mm - 3 Sütun x 9 Satır) */
+/* TANEX TW-2033 A4 LAZER ETİKET BASKI ALANI (63.5 x 25.4 mm — 3 Sütun x 8 Satır = 24 Etiket) */
 #labelPrintArea { display: none; }
 
 @media print {
+  @page {
+    size: A4 portrait;
+    margin-top: 0mm;
+    margin-bottom: 0mm;
+    margin-left: 7mm;
+    margin-right: 7mm;
+  }
+
   body.print-labels #labelPrintArea {
     display: grid !important;
-    grid-template-columns: repeat(3, 70mm);
-    grid-auto-rows: 30mm;
-    gap: 0;
-    width: 210mm;
-    margin: 0;
-    padding: 0;
+    grid-template-columns: repeat(3, 63.5mm);
+    grid-auto-rows: 25.4mm;
+    column-gap: 2.5mm;
+    row-gap: 0mm;
+    width: 196mm;
+    margin: 0 auto;
+    padding-top: 0.5mm;
     background: #fff;
   }
   body.print-labels header, 
@@ -214,9 +222,9 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 }
 
 .label-card {
-  width: 70mm;
-  height: 30mm;
-  padding: 3.5mm 4.5mm;
+  width: 63.5mm;
+  height: 25.4mm;
+  padding: 2mm 3mm;
   box-sizing: border-box;
   font-family: Arial, sans-serif;
   background: #ffffff;
@@ -229,17 +237,16 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
   page-break-inside: avoid;
 }
 
-.lbl-header { text-align: center; border-bottom: 1.5px solid #0f172a; padding-bottom: 2px; margin-top: 1mm; }
-.lbl-company { font-size: 10px; font-weight: 900; color: #0f172a; letter-spacing: 0.4px; margin: 0; text-transform: uppercase; }
-.lbl-project { font-size: 8.5px; font-weight: bold; color: #334155; margin-top: 1px; word-break: break-word; }
+.lbl-header { text-align: center; border-bottom: 1.2px solid #0f172a; padding-bottom: 1px; }
+.lbl-company { font-size: 8.5px; font-weight: 900; color: #0f172a; letter-spacing: 0.3px; margin: 0; text-transform: uppercase; }
+.lbl-project { font-size: 7.5px; font-weight: bold; color: #334155; margin-top: 1px; word-break: break-word; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .lbl-body { text-align: center; margin: auto 0; }
-.lbl-part-name { font-size: 11px; font-weight: bold; color: #0284c7; word-break: break-word; }
-.lbl-dimensions { font-size: 15px; font-weight: 900; color: #000000; margin-top: 1px; }
-.lbl-dim-tag { font-size: 8.5px; color: #475569; font-weight: bold; }
+.lbl-part-name { font-size: 10px; font-weight: bold; color: #0284c7; word-break: break-word; line-height: 1.1; }
+.lbl-dimensions { font-size: 13px; font-weight: 900; color: #000000; margin-top: 1px; }
+.lbl-dim-tag { font-size: 8px; color: #475569; font-weight: bold; }
 
 @media print{
-  @page { size: A4 portrait; margin: 8mm; }
   html, body { background: #fff !important; color: #000 !important; font-family: Arial, sans-serif !important; width: 100%; margin: 0 !important; padding: 0 !important; }
   header, .no-print, .layout > section:first-child, .notice, footer, .legend { display: none !important; }
   main { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
@@ -292,12 +299,12 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA</h1>
-      <div class="author">Mesut ACAN — v1.92</div>
+      <div class="author">Mesut ACAN — v1.95</div>
     </div>
   </div>
   <div class="header-btns no-print">
     <button id="btnThemeToggle" class="btn-theme" onclick="toggleTheme()" title="Gece/Gündüz Modu">🌙</button>
-    <button class="btn-label" onclick="printLabels()">🏷️ ETİKET (70x30)</button>
+    <button class="btn-label" onclick="printLabels()">🏷️ ETİKET (TW-2033)</button>
     <button class="btn-pdf" onclick="window.print()">🖨️ YAZDIR</button>
   </div>
 </header>
@@ -542,7 +549,6 @@ function selectSheetPreset(type, h, w) {
   }
 }
 
-/* Sadece Gece/Gündüz ikonu değiştiren buton fonskiyonu */
 function toggleTheme() {
   document.body.classList.toggle("dark-mode");
   const btn = document.getElementById("btnThemeToggle");
@@ -553,7 +559,7 @@ function toggleTheme() {
   }
 }
 
-/* SVG ÇİZGİSİ İLE GARANTİLİ VE YAZICININ YUTAMAYACAĞI BANT ÇİZİM MANTIĞI */
+/* TANEX TW-2033 (63.5 x 25.4 mm) ETİKET BASKI MOTORU (%50 KALINLAŞTIRILMIŞ SVG BANT ÇİZGİLERİ) */
 function printLabels() {
   const proj = document.getElementById("projName").value || "Müşteri / Proje Belirtilmedi";
   const labelContainer = document.getElementById("labelPrintArea");
@@ -569,11 +575,12 @@ function printLabels() {
         card.className = "label-card";
 
         let lines = "";
+        // stroke-width %50 artırılarak 4'ten 6'ya çıkarıldı (İçeri doğru kaymama garantili)
         // u = En1 (Üst), a = En2 (Alt), i = Boy2 (Sol), s = Boy1 (Sağ)
-        if (p.u) lines += `<line x1="1" y1="2" x2="99" y2="2" stroke="#0284c7" stroke-width="4" stroke-linecap="round"/>`;
-        if (p.a) lines += `<line x1="1" y1="98" x2="99" y2="98" stroke="#0284c7" stroke-width="4" stroke-linecap="round"/>`;
-        if (p.i) lines += `<line x1="2" y1="1" x2="2" y2="99" stroke="#0284c7" stroke-width="4" stroke-linecap="round"/>`;
-        if (p.s) lines += `<line x1="98" y1="1" x2="98" y2="99" stroke="#0284c7" stroke-width="4" stroke-linecap="round"/>`;
+        if (p.u) lines += `<line x1="1" y1="3" x2="99" y2="3" stroke="#0284c7" stroke-width="6" stroke-linecap="square"/>`;
+        if (p.a) lines += `<line x1="1" y1="97" x2="99" y2="97" stroke="#0284c7" stroke-width="6" stroke-linecap="square"/>`;
+        if (p.i) lines += `<line x1="3" y1="1" x2="3" y2="99" stroke="#0284c7" stroke-width="6" stroke-linecap="square"/>`;
+        if (p.s) lines += `<line x1="97" y1="1" x2="97" y2="99" stroke="#0284c7" stroke-width="6" stroke-linecap="square"/>`;
 
         let svgOverlay = "";
         if (lines !== "") {
@@ -583,13 +590,13 @@ function printLabels() {
         card.innerHTML = `
           ${svgOverlay}
           <div class="lbl-header">
-            <div class="lbl-company">ACANLAR MOBİLYA DEKORASYON</div>
+            <div class="lbl-company">ACANLAR MOBİLYA</div>
             <div class="lbl-project"><b>Müşteri:</b> ${esc(proj)}</div>
           </div>
           <div class="lbl-body">
             <div class="lbl-part-name">${esc(p.name)}</div>
             <div class="lbl-dimensions">
-              <span class="lbl-dim-tag">En:</span> ${p.w} <span style="font-size:11px; color:#475569;">×</span> <span class="lbl-dim-tag">Boy:</span> ${p.h} <span style="font-size:9.5px;">cm</span>
+              <span class="lbl-dim-tag">En:</span> ${p.w} <span style="font-size:10px; color:#475569;">×</span> <span class="lbl-dim-tag">Boy:</span> ${p.h} <span style="font-size:8px;">cm</span>
             </div>
           </div>
         `;
@@ -1412,6 +1419,18 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
   document.getElementById("used").textContent = pct + "%";
   document.getElementById("waste").textContent = (100 - pct) + "%";
 
+  /* PARÇALARI ÖLÇÜ BAZLI GRUPLAYIP X/Y SIRA BİLGİSİ HESAPLAMA */
+  let groupCounters = {};
+  sheets.forEach(s => {
+    s.placed.forEach(p => {
+      let groupKey = `${p.name}_${Math.max(p.h, p.w)}x${Math.min(p.h, p.w)}`;
+      if (!groupCounters[groupKey]) {
+        groupCounters[groupKey] = { total: 0, current: 0 };
+      }
+      groupCounters[groupKey].total++;
+    });
+  });
+
   const box = document.getElementById("plans");
   box.innerHTML = "";
 
@@ -1487,6 +1506,11 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
     ctx.setLineDash([]);
 
     s.placed.forEach((p, idx) => {
+      let groupKey = `${p.name}_${Math.max(p.h, p.w)}x${Math.min(p.h, p.w)}`;
+      groupCounters[groupKey].current++;
+      let currentSeq = groupCounters[groupKey].current;
+      let totalSeq = groupCounters[groupKey].total;
+
       let pad = 7;
       let x = OX + (curEdge + p.x) * sx + pad, 
           y = OY + (curEdge + p.y) * sy + pad, 
@@ -1540,6 +1564,7 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
         ctx.restore();
       }
 
+      /* YENİ EKLENEN: PARÇA ADI VE "5/2" ŞEKLİNDE TOPLAM/SIRA BİLGİSİ */
       if (p.h > 40 && p.w > 40) {
         let nameFont = Math.max(14, Math.min(30, Math.round(minSide / 3.5)));
         ctx.font = `bold ${nameFont}px Arial`;
@@ -1547,7 +1572,8 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         
-        let labelText = isCompleted ? `✓ [ ${p.name} ]` : `[ ${p.name} ]`;
+        let seqStr = totalSeq > 1 ? ` (${totalSeq}/${currentSeq})` : "";
+        let labelText = isCompleted ? `✓ [ ${p.name} ]${seqStr}` : `[ ${p.name} ]${seqStr}`;
         ctx.fillText(labelText, x + w / 2, y + h / 2);
       }
 
