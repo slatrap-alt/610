@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Acanlar Mobilya — Plaka Optimizasyonu V1.99.2</title>
+<title>Acanlar Mobilya — Plaka Optimizasyonu V1.99.5</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -71,7 +71,7 @@ header{
 main{max-width:1600px;margin:15px auto;padding:0 10px; width:100%;}
 .layout{display:grid;grid-template-columns:520px 1fr;gap:15px; width:100%;}
 
-/* 📲 MOBİL UYUMLU KESİM BİLGİ POP-UP STİLLERİ */
+/* 📱 KESİM BİLGİ POP-UP STİLLERİ */
 #partPopupModal {
   display: none;
   position: fixed;
@@ -201,7 +201,6 @@ th.col-del, td.col-del { width: 26px; }
 
 td input[type=text], td input[type=number] { padding: 5px 2px; text-align: center; font-size: 11px; }
 
-/* 📱 TAM MOBİL UYUM MEDIA QUERY DÜZENLEMESİ */
 @media (max-width: 900px) {
   .layout { display: flex !important; flex-direction: column !important; }
   .table-wrap { display: none !important; }
@@ -225,7 +224,7 @@ td input[type=text], td input[type=number] { padding: 5px 2px; text-align: cente
 .metric b{font-size:16px;display:block;color:var(--text-color)}.metric span{font-size:10px;color:var(--muted-color)}
 .plan{border:1px solid var(--border-color);border-radius:10px;padding:10px;margin-bottom:12px;background:var(--card-bg); width: 100%;}
 .plan h3{margin:0 0 6px;font-size:14px;color:var(--text-color)}
-canvas{width:100%;height:auto;display:block;border:1px solid var(--border-color);border-radius:6px;background:#fff; cursor: pointer; touch-action: manipulation;}
+canvas{width:100%;height:auto;display:block;border:1px solid var(--border-color);border-radius:6px;background:#fff; cursor: pointer; touch-action: pan-y;}
 .legend{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;margin:6px 0}.legend span{display:inline-flex;align-items:center;gap:4px}
 .dot{width:12px;height:8px;border:2px solid #111;display:inline-block}
 .band-note{font-size:11px;color:var(--muted-color);margin-top:6px}
@@ -389,7 +388,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA</h1>
-      <div class="author">Mesut ACAN — v1.99.2</div>
+      <div class="author">Mesut ACAN — v1.99.5</div>
     </div>
   </div>
   <div class="header-btns no-print">
@@ -1176,10 +1175,22 @@ function expand() {
   return a;
 }
 
-const groupColors = ["#ffffff", "#fef3c7", "#e0e7ff", "#dcfce7", "#ffe4e6", "#f3e8ff", "#e0f2fe"];
+/* 🎨 CANLI VE KARIŞTIRMAYACAK RENK PALETİ (BEYAZ YOK, YEŞİL YOK) */
+const groupColors = [
+  "#fef3c7", // Sıcak Sarı
+  "#e0e7ff", // Açık Mavi/İndigo
+  "#ffe4e6", // Pembe/Gül
+  "#f3e8ff", // Mor/Lila
+  "#e0f2fe", // Turkuaz Mavi
+  "#fed7aa", // Turuncu/Krem
+  "#fae8ff", // Açık Fuşya
+  "#ccfbf1", // Mint Yeşili Değil / Cyan
+  "#fef08a", // Canlı Sarı
+  "#ede9fe"  // Soft Lavanta
+];
 
-function getGroupColor(h, w) {
-  let key = `${Math.max(h, w)}x${Math.min(h, w)}`;
+function getGroupColor(h, w, name) {
+  let key = `${name}_${Math.max(h, w)}x${Math.min(h, w)}`;
   let hash = 0;
   for (let i = 0; i < key.length; i++) hash = key.charCodeAt(i) + ((hash << 5) - hash);
   let index = Math.abs(hash) % groupColors.length;
@@ -1590,16 +1601,13 @@ function tryPlaceInSheet(sheet, item, SW, SH, K, globalDir, subDirPref) {
   return false;
 }
 
-/* 📱 TAM MOBİL DOKUNMATİK UYUMLU CANVAS TIKLAMA HESABI */
+/* 📱 DOKUNMATİK KAYDIRMA (SCROLL) HAREKETİNİ ALGILAMA */
 function handleCanvasClick(e, sheet, canvasElement) {
   let rect = canvasElement.getBoundingClientRect();
   let clientX = e.clientX;
   let clientY = e.clientY;
 
-  if (e.touches && e.touches.length > 0) {
-    clientX = e.touches[0].clientX;
-    clientY = e.touches[0].clientY;
-  } else if (e.changedTouches && e.changedTouches.length > 0) {
+  if (e.changedTouches && e.changedTouches.length > 0) {
     clientX = e.changedTouches[0].clientX;
     clientY = e.changedTouches[0].clientY;
   }
@@ -1673,11 +1681,35 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
     c.width = 1400;
     c.height = Math.round(1400 * curH0 / curW0);
 
-    c.onclick = (e) => handleCanvasClick(e, s, c);
+    /* 🛡️ KAYDIRMA VE TIKLAMA AYRIŞTIRICI SİSTEM */
+    let touchStartX = 0, touchStartY = 0;
+    let isSwiping = false;
+
     c.ontouchstart = (e) => {
-      e.preventDefault();
-      handleCanvasClick(e, s, c);
+      if (e.touches && e.touches.length > 0) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        isSwiping = false;
+      }
     };
+
+    c.ontouchmove = (e) => {
+      if (e.touches && e.touches.length > 0) {
+        let diffX = Math.abs(e.touches[0].clientX - touchStartX);
+        let diffY = Math.abs(e.touches[0].clientY - touchStartY);
+        if (diffX > 8 || diffY > 8) {
+          isSwiping = true;
+        }
+      }
+    };
+
+    c.ontouchend = (e) => {
+      if (!isSwiping) {
+        handleCanvasClick(e, s, c);
+      }
+    };
+
+    c.onclick = (e) => handleCanvasClick(e, s, c);
 
     div.appendChild(c);
     box.appendChild(div);
@@ -1752,7 +1784,8 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
       
       let isCompleted = completedUniquePartIds.has(p.uniqueInstanceId);
 
-      ctx.fillStyle = isCompleted ? "#dcfce7" : getGroupColor(p.h, p.w);
+      /* ✅ KESİLDİ İSE TAM YEŞİL (#dcfce7), DEĞİLSE ZENGİN CANLI RENK PALETİNDEN BİRİ */
+      ctx.fillStyle = isCompleted ? "#dcfce7" : getGroupColor(p.h, p.w, p.name);
       ctx.fillRect(x, y, w, h);
 
       ctx.strokeStyle = isCompleted ? "#16a34a" : "#0f172a";
