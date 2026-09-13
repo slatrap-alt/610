@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Acanlar Mobilya — Firesiz Plaka Kesim & Lazer Etiketli V.1.95</title>
+<title>Acanlar Mobilya — Plaka Optimizasyonu V1.99.2</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -49,7 +49,7 @@ header{
   gap:8px;
   position:relative;
   width:100%;
-  flex-wrap:nowrap;
+  flex-wrap:wrap;
 }
 .brand{display:flex;align-items:center;gap:8px; flex-shrink: 1; min-width: 0;}
 .brand svg{height:30px;width:auto;display:block; flex-shrink: 0;}
@@ -57,7 +57,7 @@ header{
 .brand h1{margin:0;font-size:15px;letter-spacing:0.3px;color:#fff;font-weight:bold;line-height:1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
 .brand .author{font-size:10px;color:#38bdf8;font-weight:bold; white-space: nowrap;}
 
-.header-btns { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.header-btns { display: flex; align-items: center; gap: 6px; flex-shrink: 0; flex-wrap: wrap; }
 
 .btn-theme { background: #334155; color: #fff; border: none; padding: 8px 10px; font-size: 14px; font-weight: bold; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 .btn-theme:hover { background: #475569; }
@@ -71,13 +71,44 @@ header{
 main{max-width:1600px;margin:15px auto;padding:0 10px; width:100%;}
 .layout{display:grid;grid-template-columns:520px 1fr;gap:15px; width:100%;}
 
-@media (max-width: 1024px) {
-  .layout { grid-template-columns: 1fr; }
-  header { padding: 8px 10px; }
-  .brand h1 { font-size: 13px; }
-  .brand .author { font-size: 9px; }
-  .btn-pdf, .btn-label { font-size: 10px; padding: 6px 8px; }
+/* 📲 MOBİL UYUMLU KESİM BİLGİ POP-UP STİLLERİ */
+#partPopupModal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 999999;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
 }
+.popup-card {
+  background: var(--card-bg);
+  border: 3px solid #0284c7;
+  border-radius: 16px;
+  padding: 16px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+  text-align: center;
+  position: relative;
+  animation: modalPop 0.2s ease-out;
+}
+@keyframes modalPop { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+.popup-title { font-size: 18px; font-weight: 900; color: #0284c7; margin-bottom: 2px; word-break: break-word; }
+.popup-seq { font-size: 12px; font-weight: bold; color: #f59e0b; margin-bottom: 8px; }
+.popup-dim { font-size: 24px; font-weight: 900; color: var(--text-color); margin: 8px 0; background: var(--table-th-bg); padding: 8px; border-radius: 10px; border: 1.5px solid var(--border-color); }
+.popup-bands { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 10px 0; text-align: left; font-size: 11px; }
+.popup-band-item { background: var(--table-th-bg); padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border-color); font-weight: bold; text-align: center; }
+.popup-band-item.active { border-color: #0284c7; background: #e0f2fe; color: #0369a1; }
+
+.popup-action-group { display: flex; gap: 8px; margin-top: 12px; }
+.btn-pop-action { flex: 1; padding: 12px 8px; font-size: 12px; font-weight: 900; border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; }
+.btn-pop-action.mark-done { background: #10b981; color: #fff; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+.btn-pop-action.mark-pending { background: #ef4444; color: #fff; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
+.btn-close-popup { position: absolute; top: 8px; right: 12px; background: transparent; border: none; font-size: 20px; font-weight: bold; cursor: pointer; color: var(--muted-color); }
 
 .card{background:var(--card-bg);border-radius:12px;padding:14px;box-shadow:0 3px 12px #0000000b;margin-bottom:14px;border:1px solid var(--border-color); width:100%; overflow:hidden;}
 h2{font-size:15px;margin:0 0 10px}.muted{font-size:11px;color:var(--muted-color)}
@@ -93,8 +124,41 @@ input[type=text],input[type=number],select{width:100%;border:1px solid var(--bor
 .sheet-preset-card h4 { margin: 0 0 2px 0; font-size: 13px; font-weight: bold; }
 .sheet-preset-card .dim-text { font-size: 10px; opacity: 0.85; }
 
+.accordion-header {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: #38bdf8;
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  font-size: 13px;
+  border: 1px solid var(--border-color);
+  user-select: none;
+}
+.accordion-header:hover { background: #1e293b; }
+.accordion-body {
+  display: none;
+  padding: 12px;
+  background: var(--table-th-bg);
+  border: 1px solid var(--border-color);
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+}
+.cost-summary-box {
+  background: var(--card-bg);
+  border: 1px solid #10b981;
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 10px;
+}
+.cost-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
+.cost-row.total { font-weight: bold; font-size: 14px; color: #10b981; border-top: 1px dashed var(--border-color); padding-top: 6px; margin-top: 6px; }
+
 .actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
-.btn-action { border: none; border-radius: 8px; padding: 10px 14px; font-size: 11px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+.btn-action { border: none; border-radius: 8px; padding: 10px 14px; font-size: 11px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); flex: 1 1 auto; justify-content: center; }
 .btn-action.add { background: #1e293b; color: #fff; }
 .btn-action.save { background: #0284c7; color: #fff; }
 .btn-action.load { background: #475569; color: #fff; }
@@ -137,29 +201,31 @@ th.col-del, td.col-del { width: 26px; }
 
 td input[type=text], td input[type=number] { padding: 5px 2px; text-align: center; font-size: 11px; }
 
-@media (max-width: 768px) {
-  .table-wrap { display: none; }
+/* 📱 TAM MOBİL UYUM MEDIA QUERY DÜZENLEMESİ */
+@media (max-width: 900px) {
+  .layout { display: flex !important; flex-direction: column !important; }
+  .table-wrap { display: none !important; }
   .part-cards-container { display: flex !important; }
 }
 
 .part-cards-container { display: none; flex-direction: column; gap: 10px; margin-top: 10px; width:100%; }
 .part-card { background: var(--table-th-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 10px; position: relative; width: 100%; }
-.part-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.part-card-header input[type=text] { font-weight: bold; font-size: 13px; color: var(--primary-blue); }
+.part-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 6px; }
+.part-card-header input[type=text] { font-weight: bold; font-size: 13px; color: var(--primary-blue); flex: 1; }
 .part-card-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 8px; }
 .part-card-field { display: flex; flex-direction: column; }
 .part-card-field label { font-size: 9px; color: var(--muted-color); margin: 0 0 2px 0; }
 .part-card-bands { display: flex; justify-content: space-between; gap: 4px; border-top: 1px dashed var(--border-color); padding-top: 8px; }
 .band-btn { flex: 1; border: 1px solid var(--border-color); background: var(--card-bg); border-radius: 6px; padding: 6px 0; font-size: 10px; font-weight: bold; cursor: pointer; text-align: center; color: var(--text-color); }
 .band-btn.active { background: var(--primary-blue); color: #fff; border-color: var(--primary-blue); }
-.btn-card-del { background: #ef4444; color: #fff; border: none; border-radius: 6px; width: 26px; height: 26px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.btn-card-del { background: #ef4444; color: #fff; border: none; border-radius: 6px; width: 28px; height: 28px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
 .metrics{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px; width: 100%;}
 .metric{background:var(--table-th-bg);border-radius:8px;padding:8px 12px;flex: 1 1 calc(33.33% - 8px);min-width:90px;border:1px solid var(--border-color); text-align: center;}
 .metric b{font-size:16px;display:block;color:var(--text-color)}.metric span{font-size:10px;color:var(--muted-color)}
 .plan{border:1px solid var(--border-color);border-radius:10px;padding:10px;margin-bottom:12px;background:var(--card-bg); width: 100%;}
 .plan h3{margin:0 0 6px;font-size:14px;color:var(--text-color)}
-canvas{width:100%;height:auto;display:block;border:1px solid var(--border-color);border-radius:6px;background:#fff; cursor: pointer;}
+canvas{width:100%;height:auto;display:block;border:1px solid var(--border-color);border-radius:6px;background:#fff; cursor: pointer; touch-action: manipulation;}
 .legend{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;margin:6px 0}.legend span{display:inline-flex;align-items:center;gap:4px}
 .dot{width:12px;height:8px;border:2px solid #111;display:inline-block}
 .band-note{font-size:11px;color:var(--muted-color);margin-top:6px}
@@ -190,7 +256,6 @@ canvas{width:100%;height:auto;display:block;border:1px solid var(--border-color)
 footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-size: 12px; border-top: 1px solid var(--border-color); margin-top: 15px;}
 .print-header {display: none;}
 
-/* TANEX TW-2033 A4 LAZER ETİKET BASKI ALANI (63.5 x 25.4 mm — 3 Sütun x 8 Satır = 24 Etiket) */
 #labelPrintArea { display: none; }
 
 @media print {
@@ -290,6 +355,31 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 
 <div id="labelPrintArea"></div>
 
+<!-- 🔍 PARÇA BİLGİ VE KESİLDİ POPUP MODAL -->
+<div id="partPopupModal">
+  <div class="popup-card">
+    <button class="btn-close-popup" onclick="closePartPopup()">✕</button>
+    <div class="popup-title" id="popPartName">[ Parça Adı ]</div>
+    <div class="popup-seq" id="popPartSeq">Grup Sırası: -</div>
+    <div class="popup-dim" id="popPartDim">0 × 0 cm</div>
+    <div class="popup-bands">
+      <div id="popBandB1" class="popup-band-item">Boy 1: Yok</div>
+      <div id="popBandB2" class="popup-band-item">Boy 2: Yok</div>
+      <div id="popBandE1" class="popup-band-item">En 1: Yok</div>
+      <div id="popBandE2" class="popup-band-item">En 2: Yok</div>
+    </div>
+    
+    <div class="popup-action-group">
+      <button class="btn-pop-action mark-done" onclick="setCutStatusFromPopup(true)">
+        ✅ KESİLDİ İŞARETLE
+      </button>
+      <button class="btn-pop-action mark-pending" onclick="setCutStatusFromPopup(false)">
+        ❌ İPTAL ET / KESİLMEDİ
+      </button>
+    </div>
+  </div>
+</div>
+
 <header>
   <div class="brand">
     <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
@@ -299,7 +389,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA</h1>
-      <div class="author">Mesut ACAN — v1.95</div>
+      <div class="author">Mesut ACAN — v1.99.2</div>
     </div>
   </div>
   <div class="header-btns no-print">
@@ -340,8 +430,8 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 </div>
 
 <div id="manualSheetRow" class="row" style="display:none; margin-top:6px;">
-  <div><label>En (cm)</label><input id="sw" type="number" step="0.1" value="210"></div>
-  <div><label>Boy (cm)</label><input id="sh" type="number" step="0.1" value="280"></div>
+  <div><label>En (cm)</label><input id="sw" type="number" step="0.1" value="210" onchange="calculateCosts()"></div>
+  <div><label>Boy (cm)</label><input id="sh" type="number" step="0.1" value="280" onchange="calculateCosts()"></div>
 </div>
 
 <div class="row" style="margin-top:6px;">
@@ -367,6 +457,56 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 </div>
 
 <button id="btnShuffle" class="btn-shuffle" onclick="shuffleAndOptimize()">🎲 FARKLI YERLEŞİM DENE (ALTERNATİF ŞABLON)</button>
+
+<!-- 💰 GİZLENEBİLİR AKORDİYON MALİYET HESAPLAYICI -->
+<div style="margin-top:12px;">
+  <div class="accordion-header" onclick="toggleAccordion('costAccordionBody')">
+    <span>💰 MALİYET VE FİYAT HESAPLAYICI</span>
+    <span id="costAccordionArrow">▼</span>
+  </div>
+  <div id="costAccordionBody" class="accordion-body">
+    <div class="row">
+      <div>
+        <label>Küçük Plaka (280x210) ₺</label>
+        <input id="pricePreset280" type="number" value="1500" placeholder="₺ Fiyat" onchange="calculateCosts()">
+      </div>
+      <div>
+        <label>Büyük Plaka (366x183) ₺</label>
+        <input id="pricePreset366" type="number" value="1800" placeholder="₺ Fiyat" onchange="calculateCosts()">
+      </div>
+    </div>
+    <div class="row" style="margin-top:4px;">
+      <div>
+        <label>Arkalık (211x171) ₺</label>
+        <input id="pricePresetArkalik" type="number" value="450" placeholder="₺ Fiyat" onchange="calculateCosts()">
+      </div>
+      <div>
+        <label>Özel Plaka Fiyatı ₺</label>
+        <input id="priceCustom" type="number" value="1500" placeholder="₺ Fiyat" onchange="calculateCosts()">
+      </div>
+    </div>
+    <div style="margin-top:6px;">
+      <label>0.80 mm PVC Bant Metre Fiyatı ₺</label>
+      <input id="priceBand080" type="number" step="0.1" value="8.5" placeholder="₺/Metre" onchange="calculateCosts()">
+    </div>
+
+    <div class="cost-summary-box">
+      <div class="cost-row">
+        <span>Plaka Maliyeti (<b id="costSheetCount">0</b> Adet):</span>
+        <b id="costSheetTotal">0 ₺</b>
+      </div>
+      <div class="cost-row">
+        <span>0.80mm PVC Bant (<b id="costBandMeters">0 m</b>):</span>
+        <b id="costBandTotal">0 ₺</b>
+      </div>
+      <div class="cost-row total">
+        <span>TOPLAM TAHMİNİ MALİYET:</span>
+        <b id="costGrandTotal">0 ₺</b>
+      </div>
+    </div>
+  </div>
+</div>
+
 </div>
 
 <div class="card">
@@ -470,7 +610,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 <div class="metric"><b id="used">0%</b><span>DOLULUK</span></div>
 <div class="metric"><b id="waste">0%</b><span>FİRE</span></div>
 <div class="metric"><b id="pieceCount">0</b><span>TOPLAM PARÇA</span></div>
-<div class="metric" style="background:#e0f2fe; border-color:#38bdf8;"><b id="bandMeters" style="color:#0369a1;">0 m</b><span style="color:#0369a1; font-weight:bold;">PVC BANT</span></div>
+<div class="metric" style="background:#e0f2fe; border-color:#38bdf8;"><b id="bandMeters" style="color:#0369a1;">0 m</b><span style="color:#0369a1; font-weight:bold;">0.80mm PVC BANT</span></div>
 </div>
 <div class="legend no-print">
 <span><i class="dot"></i> Parça</span>
@@ -526,10 +666,25 @@ let currentDetectedWastes = [];
 
 let completedUniquePartIds = new Set(); 
 let activePresetType = 'preset_280';
+let calculatedSheetCount = 0;
+let calculatedBandMeters = 0;
+let activeSelectedPartForPopup = null;
 
 function parseNum(val) {
   if(!val) return 0;
   return parseFloat(String(val).replace(',', '.'));
+}
+
+function toggleAccordion(bodyId) {
+  const body = document.getElementById(bodyId);
+  const arrow = document.getElementById('costAccordionArrow');
+  if (body.style.display === "block") {
+    body.style.display = "none";
+    arrow.textContent = "▼";
+  } else {
+    body.style.display = "block";
+    arrow.textContent = "▲";
+  }
 }
 
 function selectSheetPreset(type, h, w) {
@@ -547,6 +702,32 @@ function selectSheetPreset(type, h, w) {
     document.getElementById("sh").value = h;
     document.getElementById("sw").value = w;
   }
+  calculateCosts();
+}
+
+function calculateCosts() {
+  let unitPrice = 0;
+  if (activePresetType === 'preset_280') {
+    unitPrice = parseNum(document.getElementById("pricePreset280").value);
+  } else if (activePresetType === 'preset_366') {
+    unitPrice = parseNum(document.getElementById("pricePreset366").value);
+  } else if (activePresetType === 'preset_arkalik') {
+    unitPrice = parseNum(document.getElementById("pricePresetArkalik").value);
+  } else {
+    unitPrice = parseNum(document.getElementById("priceCustom").value);
+  }
+
+  let bandUnitPrice = parseNum(document.getElementById("priceBand080").value);
+
+  let sheetTotal = calculatedSheetCount * unitPrice;
+  let bandTotal = calculatedBandMeters * bandUnitPrice;
+  let grandTotal = sheetTotal + bandTotal;
+
+  document.getElementById("costSheetCount").textContent = calculatedSheetCount;
+  document.getElementById("costSheetTotal").textContent = sheetTotal.toLocaleString('tr-TR') + " ₺";
+  document.getElementById("costBandMeters").textContent = calculatedBandMeters + " m";
+  document.getElementById("costBandTotal").textContent = bandTotal.toLocaleString('tr-TR') + " ₺";
+  document.getElementById("costGrandTotal").textContent = grandTotal.toLocaleString('tr-TR') + " ₺";
 }
 
 function toggleTheme() {
@@ -559,7 +740,56 @@ function toggleTheme() {
   }
 }
 
-/* TANEX TW-2033 (63.5 x 25.4 mm) ETİKET BASKI MOTORU (%50 KALINLAŞTIRILMIŞ SVG BANT ÇİZGİLERİ) */
+/* 🔍 POP-UP KONTROL FONKSİYONLARI */
+function openPartPopup(part) {
+  activeSelectedPartForPopup = part;
+  document.getElementById("popPartName").textContent = `[ ${part.name} ]`;
+  
+  if (part.seqStr) {
+    document.getElementById("popPartSeq").textContent = `Grup İçi Sırası: ${part.seqStr}`;
+    document.getElementById("popPartSeq").style.display = "block";
+  } else {
+    document.getElementById("popPartSeq").style.display = "none";
+  }
+
+  document.getElementById("popPartDim").textContent = `${part.h} × ${part.w} cm`;
+
+  document.getElementById("popBandB1").textContent = `Boy 1 (Sağ): ${part.s ? '✅ BANTLI' : 'Yok'}`;
+  document.getElementById("popBandB1").className = `popup-band-item ${part.s ? 'active' : ''}`;
+  
+  document.getElementById("popBandB2").textContent = `Boy 2 (Sol): ${part.i ? '✅ BANTLI' : 'Yok'}`;
+  document.getElementById("popBandB2").className = `popup-band-item ${part.i ? 'active' : ''}`;
+
+  document.getElementById("popBandE1").textContent = `En 1 (Üst): ${part.u ? '✅ BANTLI' : 'Yok'}`;
+  document.getElementById("popBandE1").className = `popup-band-item ${part.u ? 'active' : ''}`;
+
+  document.getElementById("popBandE2").textContent = `En 2 (Alt): ${part.a ? '✅ BANTLI' : 'Yok'}`;
+  document.getElementById("popBandE2").className = `popup-band-item ${part.a ? 'active' : ''}`;
+
+  document.getElementById("partPopupModal").style.display = "flex";
+}
+
+function setCutStatusFromPopup(isCut) {
+  if (!activeSelectedPartForPopup) return;
+  let uId = activeSelectedPartForPopup.uniqueInstanceId;
+  if (isCut) {
+    completedUniquePartIds.add(uId);
+  } else {
+    completedUniquePartIds.delete(uId);
+  }
+  
+  closePartPopup();
+  const proj = document.getElementById("projName").value || "Plaka Kesim Projesi";
+  const dateStr = new Date().toLocaleDateString('tr-TR');
+  renderJobTable(proj, dateStr, lastActiveSheets);
+  drawPlans(lastActiveSheets, lastSW0 - 2 * lastEdge, lastSH0 - 2 * lastEdge, lastSW0, lastSH0, lastEdge, lastK);
+}
+
+function closePartPopup() {
+  document.getElementById("partPopupModal").style.display = "none";
+  activeSelectedPartForPopup = null;
+}
+
 function printLabels() {
   const proj = document.getElementById("projName").value || "Müşteri / Proje Belirtilmedi";
   const labelContainer = document.getElementById("labelPrintArea");
@@ -575,8 +805,6 @@ function printLabels() {
         card.className = "label-card";
 
         let lines = "";
-        // stroke-width %50 artırılarak 4'ten 6'ya çıkarıldı (İçeri doğru kaymama garantili)
-        // u = En1 (Üst), a = En2 (Alt), i = Boy2 (Sol), s = Boy1 (Sağ)
         if (p.u) lines += `<line x1="1" y1="3" x2="99" y2="3" stroke="#0284c7" stroke-width="6" stroke-linecap="square"/>`;
         if (p.a) lines += `<line x1="1" y1="97" x2="99" y2="97" stroke="#0284c7" stroke-width="6" stroke-linecap="square"/>`;
         if (p.i) lines += `<line x1="3" y1="1" x2="3" y2="99" stroke="#0284c7" stroke-width="6" stroke-linecap="square"/>`;
@@ -799,7 +1027,7 @@ function addPart(p) {
   renderParts();
   
   setTimeout(()=>{
-    let isMobile = window.innerWidth <= 768;
+    let isMobile = window.innerWidth <= 900;
     if(isMobile) {
       let cards = document.querySelectorAll("#partCards .part-card");
       let lastInput = cards[cards.length-1]?.querySelector("input[data-k='h']");
@@ -1089,7 +1317,8 @@ function optimize() {
     if(p.s) totalBandCm += p.h * q;
     if(p.i) totalBandCm += p.h * q;
   });
-  document.getElementById("bandMeters").textContent = Math.ceil(totalBandCm / 100) + " m";
+  calculatedBandMeters = Math.ceil(totalBandCm / 100);
+  document.getElementById("bandMeters").textContent = calculatedBandMeters + " m";
 
   let rawItems = expand();
   let unplacedItems = [];
@@ -1222,7 +1451,9 @@ function optimize() {
 
   sheets = sheets.filter(s => s.placed.length > 0);
   lastActiveSheets = sheets;
+  calculatedSheetCount = sheets.length;
 
+  calculateCosts();
   renderJobTable(proj, dateStr, sheets);
   drawPlans(sheets, SW, SH, SW0, SH0, edge, K);
 }
@@ -1359,14 +1590,27 @@ function tryPlaceInSheet(sheet, item, SW, SH, K, globalDir, subDirPref) {
   return false;
 }
 
+/* 📱 TAM MOBİL DOKUNMATİK UYUMLU CANVAS TIKLAMA HESABI */
 function handleCanvasClick(e, sheet, canvasElement) {
   let rect = canvasElement.getBoundingClientRect();
-  let clientX = e.clientX || (e.touches && e.touches[0].clientX);
-  let clientY = e.clientY || (e.touches && e.touches[0].clientY);
-  if(!clientX || !clientY) return;
+  let clientX = e.clientX;
+  let clientY = e.clientY;
 
-  let clickX = clientX - rect.left;
-  let clickY = clientY - rect.top;
+  if (e.touches && e.touches.length > 0) {
+    clientX = e.touches[0].clientX;
+    clientY = e.touches[0].clientY;
+  } else if (e.changedTouches && e.changedTouches.length > 0) {
+    clientX = e.changedTouches[0].clientX;
+    clientY = e.changedTouches[0].clientY;
+  }
+
+  if (clientX === undefined || clientY === undefined) return;
+
+  let scaleX = canvasElement.width / rect.width;
+  let scaleY = canvasElement.height / rect.height;
+
+  let canvasClickX = (clientX - rect.left) * scaleX;
+  let canvasClickY = (clientY - rect.top) * scaleY;
 
   let curW0 = sheet.isStock ? sheet.customW0 : lastSW0;
   let curH0 = sheet.isStock ? sheet.customH0 : lastSH0;
@@ -1383,29 +1627,13 @@ function handleCanvasClick(e, sheet, canvasElement) {
     let pw = p.w * sx;
     let ph = p.h * sy;
 
-    let scaleFactor = rect.width / canvasElement.width;
-    let realPx = px * scaleFactor;
-    let realPy = py * scaleFactor;
-    let realPw = pw * scaleFactor;
-    let realPh = ph * scaleFactor;
-
-    if (clickX >= realPx && clickX <= realPx + realPw && clickY >= realPy && clickY <= realPy + realPh) {
+    if (canvasClickX >= px && canvasClickX <= px + pw && canvasClickY >= py && canvasClickY <= py + ph) {
       clickedPart = p;
     }
   });
 
   if (clickedPart) {
-    let uId = clickedPart.uniqueInstanceId;
-    if (completedUniquePartIds.has(uId)) {
-      completedUniquePartIds.delete(uId);
-    } else {
-      completedUniquePartIds.add(uId);
-    }
-    
-    const proj = document.getElementById("projName").value || "Plaka Kesim Projesi";
-    const dateStr = new Date().toLocaleDateString('tr-TR');
-    renderJobTable(proj, dateStr, lastActiveSheets);
-    drawPlans(lastActiveSheets, lastSW0 - 2 * lastEdge, lastSH0 - 2 * lastEdge, lastSW0, lastSH0, lastEdge, lastK);
+    openPartPopup(clickedPart);
   }
 }
 
@@ -1419,7 +1647,6 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
   document.getElementById("used").textContent = pct + "%";
   document.getElementById("waste").textContent = (100 - pct) + "%";
 
-  /* PARÇALARI ÖLÇÜ BAZLI GRUPLAYIP X/Y SIRA BİLGİSİ HESAPLAMA */
   let groupCounters = {};
   sheets.forEach(s => {
     s.placed.forEach(p => {
@@ -1446,7 +1673,11 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
     c.width = 1400;
     c.height = Math.round(1400 * curH0 / curW0);
 
-    c.addEventListener("click", (e) => handleCanvasClick(e, s, c));
+    c.onclick = (e) => handleCanvasClick(e, s, c);
+    c.ontouchstart = (e) => {
+      e.preventDefault();
+      handleCanvasClick(e, s, c);
+    };
 
     div.appendChild(c);
     box.appendChild(div);
@@ -1510,6 +1741,8 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
       groupCounters[groupKey].current++;
       let currentSeq = groupCounters[groupKey].current;
       let totalSeq = groupCounters[groupKey].total;
+      
+      p.seqStr = totalSeq > 1 ? `(${currentSeq}/${totalSeq})` : null;
 
       let pad = 7;
       let x = OX + (curEdge + p.x) * sx + pad, 
@@ -1533,8 +1766,9 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
       if(p.s) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + w - 4, y); ctx.lineTo(x + w - 4, y + h); ctx.stroke(); ctx.fillText("B1", x + w - 26, y + 24); }
       if(p.i) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + 4, y); ctx.lineTo(x + 4, y + h); ctx.stroke(); ctx.fillText("B2", x + 10, y + 24); }
 
-      let minSide = Math.min(w, h);
-      let dimFont = Math.max(14, Math.min(32, Math.round(minSide / 3)));
+      let minSideReal = Math.min(p.w, p.h);
+      let minSideCanvas = Math.min(w, h);
+      let dimFont = Math.max(14, Math.min(32, Math.round(minSideCanvas / 3)));
       ctx.font = `bold ${dimFont}px Arial`;
       ctx.fillStyle = isCompleted ? "#15803d" : "#000000";
 
@@ -1564,20 +1798,19 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
         ctx.restore();
       }
 
-      /* YENİ EKLENEN: PARÇA ADI VE "5/2" ŞEKLİNDE TOPLAM/SIRA BİLGİSİ */
-      if (p.h > 40 && p.w > 40) {
-        let nameFont = Math.max(14, Math.min(30, Math.round(minSide / 3.5)));
+      if (minSideReal >= 25) {
+        let nameFont = Math.max(14, Math.min(30, Math.round(minSideCanvas / 3.5)));
         ctx.font = `bold ${nameFont}px Arial`;
         ctx.fillStyle = isCompleted ? "#166534" : "#0f172a";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         
-        let seqStr = totalSeq > 1 ? ` (${totalSeq}/${currentSeq})` : "";
+        let seqStr = totalSeq > 1 ? ` (${currentSeq}/${totalSeq})` : "";
         let labelText = isCompleted ? `✓ [ ${p.name} ]${seqStr}` : `[ ${p.name} ]${seqStr}`;
         ctx.fillText(labelText, x + w / 2, y + h / 2);
       }
 
-      let badgeRadius = Math.max(12, Math.min(18, Math.round(minSide / 6)));
+      let badgeRadius = Math.max(12, Math.min(18, Math.round(minSideCanvas / 6)));
       ctx.beginPath();
       ctx.arc(x + badgeRadius + 8, y + badgeRadius + 8, badgeRadius, 0, Math.PI * 2);
       ctx.fillStyle = isCompleted ? "#16a34a" : "#0f172a";
@@ -1596,7 +1829,7 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
 
     let note = document.createElement("div");
     note.className = "band-note no-print";
-    note.textContent = "📱 İPUCU: Kesilen parçaya dokunarak '✓' işareti koyabilirsiniz (Her parça bağımsız seçilir).";
+    note.textContent = "📱 İPUCU: Parçaya dokunarak detaylı pop-up ekranını açabilir ve kesildi olarak işaretleyebilirsiniz.";
     div.appendChild(note);
   });
 
