@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Acanlar Mobilya — Plaka Optimizasyonu V1.99.9</title>
+<title>Acanlar Mobilya — Plaka Optimizasyonu V1.99.10</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -50,11 +50,11 @@ html, body {
   align-items: center;
   justify-content: center;
   color: #fff;
-  transition: opacity 0.4s ease-out, visibility 0.4s ease-out;
+  transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
 }
 .splash-content {
   text-align: center;
-  animation: splashPop 0.5s ease-out;
+  animation: splashPop 0.4s ease-out;
 }
 .splash-content svg {
   height: 60px;
@@ -394,7 +394,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 </head>
 <body>
 
-<!-- 🎬 AÇILIŞ ANİMASYONU (SPLASH SCREEN) -->
+<!-- 🎬 AÇILIŞ ANİMASYONU (GÜVENLİ KAPATMA SİSTEMİ) -->
 <div id="appSplash">
   <div class="splash-content">
     <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
@@ -452,7 +452,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA</h1>
-      <div class="author">Mesut ACAN — v1.99.9</div>
+      <div class="author">Mesut ACAN — v1.99.10</div>
     </div>
   </div>
   <div class="header-btns no-print">
@@ -733,16 +733,21 @@ let calculatedSheetCount = 0;
 let calculatedBandMeters = 0;
 let activeSelectedPartForPopup = null;
 
-/* 🎬 AÇILIŞ ANİMASYONUNU 0.7 SANİYE SONRA KAPAT */
+/* 🛡️ AÇILIŞ ANİMASYONUNUN TAKILMASINI ÖNLEYEN GARANTİLİ KAPATMA SİSTEMİ */
+function closeSplashNow() {
+  const splash = document.getElementById("appSplash");
+  if(splash && splash.style.display !== "none") {
+    splash.style.opacity = "0";
+    setTimeout(() => splash.style.display = "none", 300);
+  }
+}
+
 window.addEventListener('load', () => {
-  setTimeout(() => {
-    const splash = document.getElementById("appSplash");
-    if(splash) {
-      splash.style.opacity = "0";
-      setTimeout(() => splash.style.display = "none", 400);
-    }
-  }, 700);
+  setTimeout(closeSplashNow, 400);
 });
+
+// Ne olursa olsun en geç 600ms içinde splash ekranını kaldır
+setTimeout(closeSplashNow, 600);
 
 function parseNum(val) {
   if(!val) return 0;
@@ -1206,9 +1211,8 @@ function renderParts() {
   });
 }
 
-fn esc(s) { return String(s ?? "").replace(/"/g, "&quot;").replace(/</g, "&lt;"); }
+function esc(s) { return String(s ?? "").replace(/"/g, "&quot;").replace(/</g, "&lt;"); }
 
-/* 💾 DOSYA OLARAK DIŞARI AKTARIRKEN MEVCUT KESİM HARİTASINI VE BİLGİLERİ KAYDET */
 function exportData() {
   const projName = document.getElementById("projName").value || "Kesim_Listesi";
   const exportPayload = {
@@ -1220,7 +1224,7 @@ function exportData() {
     kerf: document.getElementById("kerf").value,
     edge: document.getElementById("edge").value,
     shuffleSeed: shuffleSeed,
-    savedSheets: lastActiveSheets, // 🗺️ O anki hesaplanmış harita birebir saklanır
+    savedSheets: lastActiveSheets,
     completedParts: Array.from(completedUniquePartIds)
   };
 
@@ -1233,7 +1237,6 @@ function exportData() {
   dlAnchor.remove();
 }
 
-/* 📂 DOSYADAN YÜKLERKEN KAYDEDİLEN HARİTAYI EKRANA GETİR */
 function importData(ev) {
   const f = ev.target.files[0];
   if(!f) return;
@@ -1258,7 +1261,6 @@ function importData(ev) {
 
         renderParts();
 
-        // Eğer dosya içinde kaydedilmiş harita varsa yeniden hesaplatmadan direkt ekrana bas
         if(loaded.savedSheets && loaded.savedSheets.length > 0) {
           lastActiveSheets = loaded.savedSheets;
           calculatedSheetCount = lastActiveSheets.length;
