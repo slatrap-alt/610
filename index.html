@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Acanlar Mobilya — Plaka Optimizasyonu V1.99.6</title>
+<title>Acanlar Mobilya — Plaka Optimizasyonu V1.99.9</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -113,10 +113,10 @@ header{
 .btn-theme:hover { background: #475569; }
 
 .btn-pdf { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #fff; border: none; padding: 8px 10px; font-size: 11px; font-weight: bold; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35); display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
-.btn-pdf:hover { background: linear-gradient(135deg, #059669 0%, #047857 100%); }
+.btn-pdf:hover { background: linear-gradient(135deg, #059669 100%, #047857 100%); }
 
 .btn-label { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: #fff; border: none; padding: 8px 10px; font-size: 11px; font-weight: bold; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35); display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
-.btn-label:hover { background: linear-gradient(135deg, #0369a1 0%, #075985 100%); }
+.btn-label:hover { background: linear-gradient(135deg, #0369a1 100%, #075985 100%); }
 
 main{max-width:1600px;margin:15px auto;padding:0 10px; width:100%;}
 .layout{display:grid;grid-template-columns:520px 1fr;gap:15px; width:100%;}
@@ -214,7 +214,7 @@ input[type=text],input[type=number],select{width:100%;border:1px solid var(--bor
 .btn-action.load { background: #475569; color: #fff; }
 
 .btn-optimize-main { width: 100%; margin-top: 10px; background: linear-gradient(135deg, #059669 0%, #047857 100%); color: #fff; border: none; padding: 14px 18px; font-size: 15px; font-weight: bold; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 14px rgba(5, 150, 105, 0.4); display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s ease; }
-.btn-optimize-main:hover { background: linear-gradient(135deg, #047857 0%, #065f46 100%); }
+.btn-optimize-main:hover { background: linear-gradient(135deg, #047857 100%, #065f46 100%); }
 
 .btn-shuffle { background: #10b981; color: #fff; padding: 8px 12px; border-radius: 6px; border: none; font-weight: bold; font-size: 11px; cursor: pointer; display: block; margin-top: 6px; width: 100%; text-align: center; }
 
@@ -452,7 +452,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA</h1>
-      <div class="author">Mesut ACAN — v1.99.6</div>
+      <div class="author">Mesut ACAN — v1.99.9</div>
     </div>
   </div>
   <div class="header-btns no-print">
@@ -584,10 +584,10 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     <th class="col-num">Boy(cm)</th>
     <th class="col-num">En(cm)</th>
     <th class="col-num">Adet</th>
-    <th class="col-band" title="Sağ Bant (Boy 1)">Boy1</th>
-    <th class="col-band" title="Sol Bant (Boy 2)">Boy2</th>
-    <th class="col-band" title="Üst Bant (En 1)">En1</th>
-    <th class="col-band" title="Alt Bant (En 2)">En2</th>
+    <th class="col-band" title="Boy Kenar 1 (Üst/Sağ)">Boy1</th>
+    <th class="col-band" title="Boy Kenar 2 (Alt/Sol)">Boy2</th>
+    <th class="col-band" title="En Kenar 1 (Üst/Sağ)">En1</th>
+    <th class="col-band" title="En Kenar 2 (Alt/Sol)">En2</th>
     <th class="col-del"></th>
   </tr>
 </thead>
@@ -826,19 +826,24 @@ function openPartPopup(part) {
     document.getElementById("popPartSeq").style.display = "none";
   }
 
-  document.getElementById("popPartDim").textContent = `${part.h} × ${part.w} cm`;
+  document.getElementById("popPartDim").textContent = `${part.h} × ${part.w} cm ${part.rot ? '(Döndürüldü)' : ''}`;
 
-  document.getElementById("popBandB1").textContent = `Boy 1 (Sağ): ${part.s ? '✅ BANTLI' : 'Yok'}`;
-  document.getElementById("popBandB1").className = `popup-band-item ${part.s ? 'active' : ''}`;
+  let topBand = part.rot ? part.i : part.u;
+  let botBand = part.rot ? part.s : part.a;
+  let leftBand = part.rot ? part.u : part.i;
+  let rightBand = part.rot ? part.a : part.s;
+
+  document.getElementById("popBandB1").textContent = `Boy Kenar 1: ${rightBand ? '✅ BANTLI' : 'Yok'}`;
+  document.getElementById("popBandB1").className = `popup-band-item ${rightBand ? 'active' : ''}`;
   
-  document.getElementById("popBandB2").textContent = `Boy 2 (Sol): ${part.i ? '✅ BANTLI' : 'Yok'}`;
-  document.getElementById("popBandB2").className = `popup-band-item ${part.i ? 'active' : ''}`;
+  document.getElementById("popBandB2").textContent = `Boy Kenar 2: ${leftBand ? '✅ BANTLI' : 'Yok'}`;
+  document.getElementById("popBandB2").className = `popup-band-item ${leftBand ? 'active' : ''}`;
 
-  document.getElementById("popBandE1").textContent = `En 1 (Üst): ${part.u ? '✅ BANTLI' : 'Yok'}`;
-  document.getElementById("popBandE1").className = `popup-band-item ${part.u ? 'active' : ''}`;
+  document.getElementById("popBandE1").textContent = `En Kenar 1: ${topBand ? '✅ BANTLI' : 'Yok'}`;
+  document.getElementById("popBandE1").className = `popup-band-item ${topBand ? 'active' : ''}`;
 
-  document.getElementById("popBandE2").textContent = `En 2 (Alt): ${part.a ? '✅ BANTLI' : 'Yok'}`;
-  document.getElementById("popBandE2").className = `popup-band-item ${part.a ? 'active' : ''}`;
+  document.getElementById("popBandE2").textContent = `En Kenar 2: ${botBand ? '✅ BANTLI' : 'Yok'}`;
+  document.getElementById("popBandE2").className = `popup-band-item ${botBand ? 'active' : ''}`;
 
   document.getElementById("partPopupModal").style.display = "flex";
 }
@@ -934,6 +939,8 @@ function saveProjectToLocalStorage() {
     sw: document.getElementById("sw").value,
     kerf: document.getElementById("kerf").value,
     edge: document.getElementById("edge").value,
+    shuffleSeed: shuffleSeed,
+    savedSheets: lastActiveSheets,
     completedParts: Array.from(completedUniquePartIds),
     savedDate: new Date().toLocaleDateString('tr-TR') + " " + new Date().toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'})
   };
@@ -961,6 +968,7 @@ function loadProjectFromLocalStorage(projNameKey) {
 
   document.getElementById("projName").value = projectData.projName || projNameKey;
   parts = projectData.parts || [];
+  shuffleSeed = projectData.shuffleSeed || 0;
   
   selectSheetPreset(projectData.presetType || 'custom', projectData.sh || 280, projectData.sw || 210);
   if(projectData.sh) document.getElementById("sh").value = projectData.sh;
@@ -971,7 +979,20 @@ function loadProjectFromLocalStorage(projNameKey) {
   completedUniquePartIds = new Set(projectData.completedParts || []);
 
   renderParts();
-  startOptimization();
+
+  if(projectData.savedSheets && projectData.savedSheets.length > 0) {
+    lastActiveSheets = projectData.savedSheets;
+    calculatedSheetCount = lastActiveSheets.length;
+    calculateCosts();
+    const proj = document.getElementById("projName").value || "Plaka Kesim Projesi";
+    const dateStr = new Date().toLocaleDateString('tr-TR');
+    document.getElementById("printProjName").innerHTML = `<b>Proje:</b> ${esc(proj)}`;
+    document.getElementById("printDate").innerHTML = `<b>Tarih:</b> ${dateStr}`;
+    renderJobTable(proj, dateStr, lastActiveSheets);
+    drawPlans(lastActiveSheets, parseNum(document.getElementById("sw").value) - 2 * parseNum(document.getElementById("edge").value), parseNum(document.getElementById("sh").value) - 2 * parseNum(document.getElementById("edge").value), parseNum(document.getElementById("sw").value), parseNum(document.getElementById("sh").value), parseNum(document.getElementById("edge").value), parseNum(document.getElementById("kerf").value));
+  } else {
+    startOptimization();
+  }
 }
 
 function deleteProjectFromLocalStorage(projNameKey) {
@@ -1129,10 +1150,10 @@ function renderParts() {
     <td class="col-num"><input type="number" step="0.1" value="${p.h !== undefined ? p.h : ''}" placeholder="Boy" data-i="${i}" data-k="h"></td>
     <td class="col-num"><input type="number" step="0.1" value="${p.w !== undefined ? p.w : ''}" placeholder="En" data-i="${i}" data-k="w"></td>
     <td class="col-num"><input type="number" min="1" value="${p.q || 1}" data-i="${i}" data-k="q"></td>
-    <td class="col-band"><input type="checkbox" ${p.s ? "checked" : ""} data-i="${i}" data-k="s" title="Boy 1 (Sağ)"></td>
-    <td class="col-band"><input type="checkbox" ${p.i ? "checked" : ""} data-i="${i}" data-k="i" title="Boy 2 (Sol)"></td>
-    <td class="col-band"><input type="checkbox" ${p.u ? "checked" : ""} data-i="${i}" data-k="u" title="En 1 (Üst)"></td>
-    <td class="col-band"><input type="checkbox" ${p.a ? "checked" : ""} data-i="${i}" data-k="a" title="En 2 (Alt)"></td>
+    <td class="col-band"><input type="checkbox" ${p.u ? "checked" : ""} data-i="${i}" data-k="u" title="Boy Kenar 1 (Üst)"></td>
+    <td class="col-band"><input type="checkbox" ${p.a ? "checked" : ""} data-i="${i}" data-k="a" title="Boy Kenar 2 (Alt)"></td>
+    <td class="col-band"><input type="checkbox" ${p.i ? "checked" : ""} data-i="${i}" data-k="i" title="En Kenar 1 (Sol)"></td>
+    <td class="col-band"><input type="checkbox" ${p.s ? "checked" : ""} data-i="${i}" data-k="s" title="En Kenar 2 (Sağ)"></td>
     <td class="col-del"><button class="secondary" style="padding:2px 4px;font-size:10px;cursor:pointer" onclick="parts.splice(${i},1);renderParts()">×</button></td>
     </tr>`;
   });
@@ -1161,10 +1182,10 @@ function renderParts() {
           </div>
         </div>
         <div class="part-card-bands">
-          <button class="band-btn ${p.s ? 'active' : ''}" onclick="toggleBand(${i}, 's')">Boy 1</button>
-          <button class="band-btn ${p.i ? 'active' : ''}" onclick="toggleBand(${i}, 'i')">Boy 2</button>
-          <button class="band-btn ${p.u ? 'active' : ''}" onclick="toggleBand(${i}, 'u')">En 1</button>
-          <button class="band-btn ${p.a ? 'active' : ''}" onclick="toggleBand(${i}, 'a')">En 2</button>
+          <button class="band-btn ${p.u ? 'active' : ''}" onclick="toggleBand(${i}, 'u')">Boy1</button>
+          <button class="band-btn ${p.a ? 'active' : ''}" onclick="toggleBand(${i}, 'a')">Boy2</button>
+          <button class="band-btn ${p.i ? 'active' : ''}" onclick="toggleBand(${i}, 'i')">En1</button>
+          <button class="band-btn ${p.s ? 'active' : ''}" onclick="toggleBand(${i}, 's')">En2</button>
         </div>
       </div>
     `;
@@ -1185,8 +1206,9 @@ function renderParts() {
   });
 }
 
-function esc(s) { return String(s ?? "").replace(/"/g, "&quot;").replace(/</g, "&lt;"); }
+fn esc(s) { return String(s ?? "").replace(/"/g, "&quot;").replace(/</g, "&lt;"); }
 
+/* 💾 DOSYA OLARAK DIŞARI AKTARIRKEN MEVCUT KESİM HARİTASINI VE BİLGİLERİ KAYDET */
 function exportData() {
   const projName = document.getElementById("projName").value || "Kesim_Listesi";
   const exportPayload = {
@@ -1196,7 +1218,10 @@ function exportData() {
     sh: document.getElementById("sh").value,
     sw: document.getElementById("sw").value,
     kerf: document.getElementById("kerf").value,
-    edge: document.getElementById("edge").value
+    edge: document.getElementById("edge").value,
+    shuffleSeed: shuffleSeed,
+    savedSheets: lastActiveSheets, // 🗺️ O anki hesaplanmış harita birebir saklanır
+    completedParts: Array.from(completedUniquePartIds)
   };
 
   const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportPayload, null, 2));
@@ -1208,6 +1233,7 @@ function exportData() {
   dlAnchor.remove();
 }
 
+/* 📂 DOSYADAN YÜKLERKEN KAYDEDİLEN HARİTAYI EKRANA GETİR */
 function importData(ev) {
   const f = ev.target.files[0];
   if(!f) return;
@@ -1217,15 +1243,36 @@ function importData(ev) {
       const loaded = JSON.parse(r.result);
       if(Array.isArray(loaded)) {
         parts = loaded;
+        renderParts();
+        startOptimization();
       } else if(loaded.parts) {
         parts = loaded.parts;
         if(loaded.projName) document.getElementById("projName").value = loaded.projName;
         if(loaded.sh) document.getElementById("sh").value = loaded.sh;
         if(loaded.sw) document.getElementById("sw").value = loaded.sw;
+        if(loaded.kerf) document.getElementById("kerf").value = loaded.kerf;
+        if(loaded.edge) document.getElementById("edge").value = loaded.edge;
+        if(loaded.shuffleSeed !== undefined) shuffleSeed = loaded.shuffleSeed;
+        if(loaded.completedParts) completedUniquePartIds = new Set(loaded.completedParts);
         if(loaded.presetType) selectSheetPreset(loaded.presetType, loaded.sh || 280, loaded.sw || 210);
+
+        renderParts();
+
+        // Eğer dosya içinde kaydedilmiş harita varsa yeniden hesaplatmadan direkt ekrana bas
+        if(loaded.savedSheets && loaded.savedSheets.length > 0) {
+          lastActiveSheets = loaded.savedSheets;
+          calculatedSheetCount = lastActiveSheets.length;
+          calculateCosts();
+          const proj = document.getElementById("projName").value || "Plaka Kesim Projesi";
+          const dateStr = new Date().toLocaleDateString('tr-TR');
+          document.getElementById("printProjName").innerHTML = `<b>Proje:</b> ${esc(proj)}`;
+          document.getElementById("printDate").innerHTML = `<b>Tarih:</b> ${dateStr}`;
+          renderJobTable(proj, dateStr, lastActiveSheets);
+          drawPlans(lastActiveSheets, parseNum(document.getElementById("sw").value) - 2 * parseNum(document.getElementById("edge").value), parseNum(document.getElementById("sh").value) - 2 * parseNum(document.getElementById("edge").value), parseNum(document.getElementById("sw").value), parseNum(document.getElementById("sh").value), parseNum(document.getElementById("edge").value), parseNum(document.getElementById("kerf").value));
+        } else {
+          startOptimization();
+        }
       }
-      renderParts();
-      startOptimization();
     } catch(e) {
       alert("Hatalı dosya biçimi!");
     }
@@ -1297,10 +1344,10 @@ function renderJobTable(proj, dateStr, sheets) {
   parts.forEach(p => {
     if(p.w && p.h) {
       let bandStr = [];
-      if(p.s) bandStr.push("Boy 1");
-      if(p.i) bandStr.push("Boy 2");
-      if(p.u) bandStr.push("En 1");
-      if(p.a) bandStr.push("En 2");
+      if(p.u) bandStr.push("Boy1");
+      if(p.a) bandStr.push("Boy2");
+      if(p.i) bandStr.push("En1");
+      if(p.s) bandStr.push("En2");
 
       let standardSheetIndices = [];
       let hasDepot = false;
@@ -1389,10 +1436,10 @@ function optimize() {
   let totalBandCm = 0;
   parts.forEach(p => {
     let q = p.q || 1;
-    if(p.u) totalBandCm += p.w * q;
-    if(p.a) totalBandCm += p.w * q;
-    if(p.s) totalBandCm += p.h * q;
-    if(p.i) totalBandCm += p.h * q;
+    if(p.u) totalBandCm += p.h * q;
+    if(p.a) totalBandCm += p.h * q;
+    if(p.i) totalBandCm += p.w * q;
+    if(p.s) totalBandCm += p.w * q;
   });
   calculatedBandMeters = Math.ceil(totalBandCm / 100);
   document.getElementById("bandMeters").textContent = calculatedBandMeters + " m";
@@ -1850,7 +1897,6 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
       
       let isCompleted = completedUniquePartIds.has(p.uniqueInstanceId);
 
-      /* ✅ KESİLDİ İSE TAM YEŞİL (#dcfce7), DEĞİLSE ZENGİN CANLI RENK PALETİNDEN BİRİ */
       ctx.fillStyle = isCompleted ? "#dcfce7" : getGroupColor(p.h, p.w, p.name);
       ctx.fillRect(x, y, w, h);
 
@@ -1858,12 +1904,17 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
       ctx.lineWidth = isCompleted ? 3 : 2;
       ctx.strokeRect(x, y, w, h);
 
+      let topBand = p.rot ? p.i : p.u;
+      let botBand = p.rot ? p.s : p.a;
+      let leftBand = p.rot ? p.u : p.i;
+      let rightBand = p.rot ? p.a : p.s;
+
       ctx.font = "bold 13px Arial";
       ctx.fillStyle = "#0284c7";
-      if(p.u) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x, y + 4); ctx.lineTo(x + w, y + 4); ctx.stroke(); ctx.fillText("E1", x + 10, y + 24); }
-      if(p.a) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x, y + h - 4); ctx.lineTo(x + w, y + h - 4); ctx.stroke(); ctx.fillText("E2", x + 10, y + h - 10); }
-      if(p.s) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + w - 4, y); ctx.lineTo(x + w - 4, y + h); ctx.stroke(); ctx.fillText("B1", x + w - 26, y + 24); }
-      if(p.i) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + 4, y); ctx.lineTo(x + 4, y + h); ctx.stroke(); ctx.fillText("B2", x + 10, y + 24); }
+      if(topBand)   { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x, y + 4); ctx.lineTo(x + w, y + 4); ctx.stroke(); ctx.fillText("Boy1", x + 10, y + 24); }
+      if(botBand)   { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x, y + h - 4); ctx.lineTo(x + w, y + h - 4); ctx.stroke(); ctx.fillText("Boy2", x + 10, y + h - 10); }
+      if(rightBand) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + w - 4, y); ctx.lineTo(x + w - 4, y + h); ctx.stroke(); ctx.fillText("En2", x + w - 30, y + 24); }
+      if(leftBand)  { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + 4, y); ctx.lineTo(x + 4, y + h); ctx.stroke(); ctx.fillText("En1", x + 10, y + 24); }
 
       let minSideReal = Math.min(p.w, p.h);
       let minSideCanvas = Math.min(w, h);
