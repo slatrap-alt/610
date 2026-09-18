@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Acanlar Mobilya — Plaka Optimizasyonu V1.99.16</title>
+<title>Acanlar Mobilya — Plaka Optimizasyonu V1.99.19</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -444,7 +444,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA</h1>
-      <div class="author">Mesut ACAN — v1.99.16</div>
+      <div class="author">Mesut ACAN — v1.99.19</div>
     </div>
   </div>
   <div class="header-btns no-print">
@@ -522,11 +522,11 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     <div class="row">
       <div>
         <label>Küçük Plaka (280x210) ₺</label>
-        <input id="pricePreset280" type="number" value="1500" placeholder="₺ Fiyat" onchange="calculateCosts()">
+        <input id="pricePreset280" type="number" value="2500" placeholder="₺ Fiyat" onchange="calculateCosts()">
       </div>
       <div>
         <label>Büyük Plaka (366x183) ₺</label>
-        <input id="pricePreset366" type="number" value="1800" placeholder="₺ Fiyat" onchange="calculateCosts()">
+        <input id="pricePreset366" type="number" value="3000" placeholder="₺ Fiyat" onchange="calculateCosts()">
       </div>
     </div>
     <div class="row" style="margin-top:4px;">
@@ -536,18 +536,28 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
       </div>
       <div>
         <label>Özel Plaka Fiyatı ₺</label>
-        <input id="priceCustom" type="number" value="1500" placeholder="₺ Fiyat" onchange="calculateCosts()">
+        <input id="priceCustom" type="number" value="2500" placeholder="₺ Fiyat" onchange="calculateCosts()">
       </div>
     </div>
-    <div style="margin-top:6px;">
-      <label>0.80 mm PVC Bant Metre Fiyatı ₺</label>
-      <input id="priceBand080" type="number" step="0.1" value="8.5" placeholder="₺/Metre" onchange="calculateCosts()">
+    <div class="row" style="margin-top:6px;">
+      <div>
+        <label>Plaka Başı Kesim Ücreti ₺</label>
+        <input id="priceCuttingFee" type="number" value="500" placeholder="₺ Kesim Ücreti" onchange="calculateCosts()">
+      </div>
+      <div>
+        <label>0.80 mm PVC Bant Metre ₺</label>
+        <input id="priceBand080" type="number" step="0.1" value="50" placeholder="₺/Metre" onchange="calculateCosts()">
+      </div>
     </div>
 
     <div class="cost-summary-box">
       <div class="cost-row">
-        <span>Plaka Maliyeti (<b id="costSheetCount">0</b> Adet):</span>
+        <span>Plaka Malzeme (<b id="costSheetCount">0</b> Adet):</span>
         <b id="costSheetTotal">0 ₺</b>
+      </div>
+      <div class="cost-row">
+        <span>Kesim İşçiliği (<b id="costCuttingCount">0</b> Plaka × 500₺):</span>
+        <b id="costCuttingTotal">0 ₺</b>
       </div>
       <div class="cost-row">
         <span>0.80mm PVC Bant (<b id="costBandMeters">0 m</b>):</span>
@@ -787,15 +797,19 @@ function calculateCosts() {
     unitPrice = parseNum(document.getElementById("priceCustom").value);
   }
 
+  let cuttingFeeUnit = parseNum(document.getElementById("priceCuttingFee").value);
   let bandUnitPrice = parseNum(document.getElementById("priceBand080").value);
 
   let sheetTotal = calculatedSheetCount * unitPrice;
+  let cuttingTotal = calculatedSheetCount * cuttingFeeUnit;
   let bandTotal = calculatedBandMeters * bandUnitPrice;
-  let grandTotal = sheetTotal + bandTotal;
+  let grandTotal = sheetTotal + cuttingTotal + bandTotal;
 
   document.getElementById("costSheetCount").textContent = calculatedSheetCount;
   document.getElementById("costSheetTotal").textContent = sheetTotal.toLocaleString('tr-TR') + " ₺";
-  document.getElementById("costBandMeters").textContent = calculatedBandMeters + " m";
+  document.getElementById("costCuttingCount").textContent = calculatedSheetCount;
+  document.getElementById("costCuttingTotal").textContent = cuttingTotal.toLocaleString('tr-TR') + " ₺";
+  document.getElementById("costBandMeters").textContent = calculatedBandMeters;
   document.getElementById("costBandTotal").textContent = bandTotal.toLocaleString('tr-TR') + " ₺";
   document.getElementById("costGrandTotal").textContent = grandTotal.toLocaleString('tr-TR') + " ₺";
 }
@@ -872,7 +886,6 @@ function printLabels() {
 
   let count = 0;
   
-  // Plakalara yerleşen parçaları sırayla tarayarak etiket basıyoruz (böylece döndürülmüş halleriyle tam uyuşur)
   if (lastActiveSheets && lastActiveSheets.length > 0) {
     lastActiveSheets.forEach(s => {
       s.placed.forEach(p => {
@@ -1242,6 +1255,7 @@ function renderParts() {
     el.addEventListener("change", () => {
       let i = +el.dataset.i, k = el.dataset.k;
       parts[i][k] = el.type === "checkbox" ? el.checked : (["w","h","q"].includes(k) ? (el.value ? parseNum(el.value) : "") : el.value);
+      updateTotalBandsAndCosts();
     });
     
     el.addEventListener("keydown", e => {
@@ -1251,6 +1265,22 @@ function renderParts() {
       }
     });
   });
+  updateTotalBandsAndCosts();
+}
+
+function updateTotalBandsAndCosts() {
+  let totalBandCm = 0;
+  parts.forEach(p => {
+    let q = p.q || 1;
+    if(p.b1) totalBandCm += parseNum(p.h) * q;
+    if(p.b2) totalBandCm += parseNum(p.h) * q;
+    if(p.e1) totalBandCm += parseNum(p.w) * q;
+    if(p.e2) totalBandCm += parseNum(p.w) * q;
+  });
+  calculatedBandMeters = Math.ceil(totalBandCm / 100);
+  let bmEl = document.getElementById("bandMeters");
+  if(bmEl) bmEl.textContent = calculatedBandMeters + " m";
+  calculateCosts();
 }
 
 function esc(s) { return String(s ?? "").replace(/"/g, "&quot;").replace(/</g, "&lt;"); }
@@ -1474,16 +1504,7 @@ function optimize() {
   document.getElementById("printProjName").innerHTML = `<b>Proje:</b> ${esc(proj)}`;
   document.getElementById("printDate").innerHTML = `<b>Tarih:</b> ${dateStr}`;
 
-  let totalBandCm = 0;
-  parts.forEach(p => {
-    let q = p.q || 1;
-    if(p.b1) totalBandCm += p.h * q;
-    if(p.b2) totalBandCm += p.h * q;
-    if(p.e1) totalBandCm += p.w * q;
-    if(p.e2) totalBandCm += p.w * q;
-  });
-  calculatedBandMeters = Math.ceil(totalBandCm / 100);
-  document.getElementById("bandMeters").textContent = calculatedBandMeters + " m";
+  updateTotalBandsAndCosts();
 
   let rawItems = expand();
   let unplacedItems = [];
