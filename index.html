@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Acanlar Mobilya — Plaka Optimizasyonu V1.99.14</title>
+<title>Acanlar Mobilya — Plaka Optimizasyonu V1.99.16</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -444,7 +444,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA</h1>
-      <div class="author">Mesut ACAN — v1.99.14</div>
+      <div class="author">Mesut ACAN — v1.99.16</div>
     </div>
   </div>
   <div class="header-btns no-print">
@@ -724,6 +724,8 @@ let calculatedSheetCount = 0;
 let calculatedBandMeters = 0;
 let activeSelectedPartForPopup = null;
 let activeSelectedSheetIndex = null;
+let lastActiveSheets = [];
+let lastSW0 = 0, lastSH0 = 0, lastEdge = 0, lastK = 0;
 
 function closeSplashNow() {
   const splash = document.getElementById("appSplash");
@@ -869,19 +871,33 @@ function printLabels() {
   labelContainer.innerHTML = "";
 
   let count = 0;
-  parts.forEach(p => {
-    if (p.w && p.h) {
-      let q = p.q || 1;
-      for (let n = 0; n < q; n++) {
+  
+  // Plakalara yerleşen parçaları sırayla tarayarak etiket basıyoruz (böylece döndürülmüş halleriyle tam uyuşur)
+  if (lastActiveSheets && lastActiveSheets.length > 0) {
+    lastActiveSheets.forEach(s => {
+      s.placed.forEach(p => {
         count++;
         let card = document.createElement("div");
         card.className = "label-card";
 
+        let leftBand, rightBand, topBand, botBand;
+        if (!p.rot) {
+          leftBand = p.b1;   
+          rightBand = p.b2;  
+          topBand = p.e1;    
+          botBand = p.e2;    
+        } else {
+          topBand = p.b1;
+          botBand = p.b2;
+          leftBand = p.e1;
+          rightBand = p.e2;
+        }
+
         let lines = "";
-        if (p.b1) lines += `<line x1="3" y1="1" x2="3" y2="99" stroke="#0284c7" stroke-width="6" stroke-linecap="square"/>`;
-        if (p.b2) lines += `<line x1="97" y1="1" x2="97" y2="99" stroke="#0284c7" stroke-width="6" stroke-linecap="square"/>`;
-        if (p.e1) lines += `<line x1="1" y1="3" x2="99" y2="3" stroke="#0284c7" stroke-width="6" stroke-linecap="square"/>`;
-        if (p.e2) lines += `<line x1="1" y1="97" x2="99" y2="97" stroke="#0284c7" stroke-width="6" stroke-linecap="square"/>`;
+        if (topBand)   lines += `<line x1="1" y1="2" x2="99" y2="2" stroke="#0284c7" stroke-width="5" stroke-linecap="square"/>`;
+        if (botBand)   lines += `<line x1="1" y1="98" x2="99" y2="98" stroke="#0284c7" stroke-width="5" stroke-linecap="square"/>`;
+        if (rightBand) lines += `<line x1="98" y1="1" x2="98" y2="99" stroke="#0284c7" stroke-width="5" stroke-linecap="square"/>`;
+        if (leftBand)  lines += `<line x1="2" y1="1" x2="2" y2="99" stroke="#0284c7" stroke-width="5" stroke-linecap="square"/>`;
 
         let svgOverlay = "";
         if (lines !== "") {
@@ -902,12 +918,49 @@ function printLabels() {
           </div>
         `;
         labelContainer.appendChild(card);
+      });
+    });
+  } else {
+    parts.forEach(p => {
+      if (p.w && p.h) {
+        let q = p.q || 1;
+        for (let n = 0; n < q; n++) {
+          count++;
+          let card = document.createElement("div");
+          card.className = "label-card";
+
+          let lines = "";
+          if (p.b1) lines += `<line x1="2" y1="1" x2="2" y2="99" stroke="#0284c7" stroke-width="5" stroke-linecap="square"/>`;
+          if (p.b2) lines += `<line x1="98" y1="1" x2="98" y2="99" stroke="#0284c7" stroke-width="5" stroke-linecap="square"/>`;
+          if (p.e1) lines += `<line x1="1" y1="2" x2="99" y2="2" stroke="#0284c7" stroke-width="5" stroke-linecap="square"/>`;
+          if (p.e2) lines += `<line x1="1" y1="98" x2="99" y2="98" stroke="#0284c7" stroke-width="5" stroke-linecap="square"/>`;
+
+          let svgOverlay = "";
+          if (lines !== "") {
+            svgOverlay = `<svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:99;">${lines}</svg>`;
+          }
+
+          card.innerHTML = `
+            ${svgOverlay}
+            <div class="lbl-header">
+              <div class="lbl-company">ACANLAR MOBİLYA</div>
+              <div class="lbl-project"><b>Müşteri:</b> ${esc(proj)}</div>
+            </div>
+            <div class="lbl-body">
+              <div class="lbl-part-name">${esc(p.name)}</div>
+              <div class="lbl-dimensions">
+                <span class="lbl-dim-tag">En:</span> ${p.w} <span style="font-size:10px; color:#475569;">×</span> <span class="lbl-dim-tag">Boy:</span> ${p.h} <span style="font-size:8px;">cm</span>
+              </div>
+            </div>
+          `;
+          labelContainer.appendChild(card);
+        }
       }
-    }
-  });
+    });
+  }
 
   if (count === 0) {
-    alert("Yazdırılacak parça bulunamadı!");
+    alert("Yazdırılacak parça bulunamadı! Lütfen önce optimizasyonu çalıştırın.");
     return;
   }
 
@@ -1401,9 +1454,6 @@ function saveCurrentWastesToDepot() {
   document.getElementById("btnSaveCurrentWastes").style.display = "none";
 }
 
-let lastActiveSheets = [];
-let lastSW0 = 0, lastSH0 = 0, lastEdge = 0, lastK = 0;
-
 function optimize() {
   const SW0 = parseNum(document.getElementById("sw").value);
   const SH0 = parseNum(document.getElementById("sh").value);
@@ -1884,17 +1934,13 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
       ctx.lineWidth = isCompleted ? 3 : 2;
       ctx.strokeRect(x, y, w, h);
 
-      // 📌 RÖTUŞLANMIŞ KESİN BANT EŞLEŞTİRMESİ (DÖNDÜRME BAĞIMSIZ):
-      // p.rot true ise parça 90 derece dönmüştür: canvas genişliği p.h (boy), canvas yüksekliği p.w (en) olmuştur.
       let leftBand, rightBand, topBand, botBand;
       if (!p.rot) {
-        // Normal konum: Sol/Sağ = Boy (b1, b2), Üst/Alt = En (e1, e2)
         leftBand = p.b1;   
         rightBand = p.b2;  
         topBand = p.e1;    
         botBand = p.e2;    
       } else {
-        // Döndürülmüş konum: Üst/Alt = Boy (b1, b2), Sol/Sağ = En (e1, e2)
         topBand = p.b1;
         botBand = p.b2;
         leftBand = p.e1;
