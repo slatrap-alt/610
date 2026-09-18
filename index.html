@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Acanlar Mobilya — Plaka Optimizasyonu V1.99.10</title>
+<title>Acanlar Mobilya — Plaka Optimizasyonu V1.99.14</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -39,7 +39,6 @@ html, body {
   transition: background 0.3s, color 0.3s;
 }
 
-/* 🎬 AÇILIŞ / SPLASH EKRANI ANİMASYONU */
 #appSplash {
   position: fixed;
   top: 0; left: 0; width: 100vw; height: 100vh;
@@ -121,7 +120,6 @@ header{
 main{max-width:1600px;margin:15px auto;padding:0 10px; width:100%;}
 .layout{display:grid;grid-template-columns:520px 1fr;gap:15px; width:100%;}
 
-/* 📱 KESİM BİLGİ POP-UP STİLLERİ */
 #partPopupModal {
   display: none;
   position: fixed;
@@ -139,7 +137,7 @@ main{max-width:1600px;margin:15px auto;padding:0 10px; width:100%;}
   border-radius: 16px;
   padding: 16px;
   width: 100%;
-  max-width: 400px;
+  max-width: 360px;
   box-shadow: 0 15px 35px rgba(0,0,0,0.4);
   text-align: center;
   position: relative;
@@ -149,15 +147,15 @@ main{max-width:1600px;margin:15px auto;padding:0 10px; width:100%;}
 
 .popup-title { font-size: 18px; font-weight: 900; color: #0284c7; margin-bottom: 2px; word-break: break-word; }
 .popup-seq { font-size: 12px; font-weight: bold; color: #f59e0b; margin-bottom: 8px; }
-.popup-dim { font-size: 24px; font-weight: 900; color: var(--text-color); margin: 8px 0; background: var(--table-th-bg); padding: 8px; border-radius: 10px; border: 1.5px solid var(--border-color); }
+.popup-dim { font-size: 20px; font-weight: 900; color: var(--text-color); margin: 8px 0; background: var(--table-th-bg); padding: 8px; border-radius: 10px; border: 1.5px solid var(--border-color); }
 .popup-bands { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 10px 0; text-align: left; font-size: 11px; }
 .popup-band-item { background: var(--table-th-bg); padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border-color); font-weight: bold; text-align: center; }
 .popup-band-item.active { border-color: #0284c7; background: #e0f2fe; color: #0369a1; }
 
-.popup-action-group { display: flex; gap: 8px; margin-top: 12px; }
-.btn-pop-action { flex: 1; padding: 12px 8px; font-size: 12px; font-weight: 900; border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; }
+.popup-action-group { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; }
+.btn-pop-action { width: 100%; padding: 10px 8px; font-size: 12px; font-weight: 900; border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; }
 .btn-pop-action.mark-done { background: #10b981; color: #fff; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
-.btn-pop-action.mark-pending { background: #ef4444; color: #fff; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
+.btn-pop-action.mark-pending { background: #f59e0b; color: #fff; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3); }
 .btn-close-popup { position: absolute; top: 8px; right: 12px; background: transparent; border: none; font-size: 20px; font-weight: bold; cursor: pointer; color: var(--muted-color); }
 
 .card{background:var(--card-bg);border-radius:12px;padding:14px;box-shadow:0 3px 12px #0000000b;margin-bottom:14px;border:1px solid var(--border-color); width:100%; overflow:hidden;}
@@ -394,7 +392,6 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 </head>
 <body>
 
-<!-- 🎬 AÇILIŞ ANİMASYONU (GÜVENLİ KAPATMA SİSTEMİ) -->
 <div id="appSplash">
   <div class="splash-content">
     <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
@@ -418,7 +415,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 
 <div id="labelPrintArea"></div>
 
-<!-- 🔍 PARÇA BİLGİ VE KESİLDİ POPUP MODAL -->
+<!-- 🔍 PARÇA BİLGİ MODALI -->
 <div id="partPopupModal">
   <div class="popup-card">
     <button class="btn-close-popup" onclick="closePartPopup()">✕</button>
@@ -431,14 +428,9 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
       <div id="popBandE1" class="popup-band-item">En 1: Yok</div>
       <div id="popBandE2" class="popup-band-item">En 2: Yok</div>
     </div>
-    
     <div class="popup-action-group">
-      <button class="btn-pop-action mark-done" onclick="setCutStatusFromPopup(true)">
-        ✅ KESİLDİ İŞARETLE
-      </button>
-      <button class="btn-pop-action mark-pending" onclick="setCutStatusFromPopup(false)">
-        ❌ İPTAL ET / KESİLMEDİ
-      </button>
+      <button class="btn-pop-action mark-done" onclick="setCutStatusFromPopup(true)">✅ KESİLDİ İŞARETLE</button>
+      <button class="btn-pop-action mark-pending" onclick="setCutStatusFromPopup(false)">⏳ BEKLİYOR YAP</button>
     </div>
   </div>
 </div>
@@ -452,7 +444,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA</h1>
-      <div class="author">Mesut ACAN — v1.99.10</div>
+      <div class="author">Mesut ACAN — v1.99.14</div>
     </div>
   </div>
   <div class="header-btns no-print">
@@ -521,7 +513,6 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 
 <button id="btnShuffle" class="btn-shuffle" onclick="shuffleAndOptimize()">🎲 FARKLI YERLEŞİM DENE (ALTERNATİF ŞABLON)</button>
 
-<!-- 💰 GİZLENEBİLİR AKORDİYON MALİYET HESAPLAYICI -->
 <div style="margin-top:12px;">
   <div class="accordion-header" onclick="toggleAccordion('costAccordionBody')">
     <span>💰 MALİYET VE FİYAT HESAPLAYICI</span>
@@ -584,10 +575,10 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     <th class="col-num">Boy(cm)</th>
     <th class="col-num">En(cm)</th>
     <th class="col-num">Adet</th>
-    <th class="col-band" title="Boy Kenar 1 (Üst/Sağ)">Boy1</th>
-    <th class="col-band" title="Boy Kenar 2 (Alt/Sol)">Boy2</th>
-    <th class="col-band" title="En Kenar 1 (Üst/Sağ)">En1</th>
-    <th class="col-band" title="En Kenar 2 (Alt/Sol)">En2</th>
+    <th class="col-band" title="Boy Kenar 1">Boy1</th>
+    <th class="col-band" title="Boy Kenar 2">Boy2</th>
+    <th class="col-band" title="En Kenar 1">En1</th>
+    <th class="col-band" title="En Kenar 2">En2</th>
     <th class="col-del"></th>
   </tr>
 </thead>
@@ -732,8 +723,8 @@ let activePresetType = 'preset_280';
 let calculatedSheetCount = 0;
 let calculatedBandMeters = 0;
 let activeSelectedPartForPopup = null;
+let activeSelectedSheetIndex = null;
 
-/* 🛡️ AÇILIŞ ANİMASYONUNUN TAKILMASINI ÖNLEYEN GARANTİLİ KAPATMA SİSTEMİ */
 function closeSplashNow() {
   const splash = document.getElementById("appSplash");
   if(splash && splash.style.display !== "none") {
@@ -745,8 +736,6 @@ function closeSplashNow() {
 window.addEventListener('load', () => {
   setTimeout(closeSplashNow, 400);
 });
-
-// Ne olursa olsun en geç 600ms içinde splash ekranını kaldır
 setTimeout(closeSplashNow, 600);
 
 function parseNum(val) {
@@ -819,9 +808,10 @@ function toggleTheme() {
   }
 }
 
-/* 🔍 POP-UP KONTROL FONKSİYONLARI */
-function openPartPopup(part) {
+function openPartPopup(part, sheetIdx) {
   activeSelectedPartForPopup = part;
+  activeSelectedSheetIndex = sheetIdx;
+
   document.getElementById("popPartName").textContent = `[ ${part.name} ]`;
   
   if (part.seqStr) {
@@ -833,22 +823,20 @@ function openPartPopup(part) {
 
   document.getElementById("popPartDim").textContent = `${part.h} × ${part.w} cm ${part.rot ? '(Döndürüldü)' : ''}`;
 
-  let topBand = part.rot ? part.i : part.u;
-  let botBand = part.rot ? part.s : part.a;
-  let leftBand = part.rot ? part.u : part.i;
-  let rightBand = part.rot ? part.a : part.s;
+  document.getElementById("popBandB1").textContent = `Boy 1: ${part.b1 ? '✅ BANTLI' : 'Yok'}`;
+  document.getElementById("popBandB1").className = `popup-band-item ${part.b1 ? 'active' : ''}`;
+  document.getElementById("popBandB2").textContent = `Boy 2: ${part.b2 ? '✅ BANTLI' : 'Yok'}`;
+  document.getElementById("popBandB2").className = `popup-band-item ${part.b2 ? 'active' : ''}`;
+  document.getElementById("popBandE1").textContent = `En 1: ${part.e1 ? '✅ BANTLI' : 'Yok'}`;
+  document.getElementById("popBandE1").className = `popup-band-item ${part.e1 ? 'active' : ''}`;
+  document.getElementById("popBandE2").textContent = `En 2: ${part.e2 ? '✅ BANTLI' : 'Yok'}`;
+  document.getElementById("popBandE2").className = `popup-band-item ${part.e2 ? 'active' : ''}`;
 
-  document.getElementById("popBandB1").textContent = `Boy Kenar 1: ${rightBand ? '✅ BANTLI' : 'Yok'}`;
-  document.getElementById("popBandB1").className = `popup-band-item ${rightBand ? 'active' : ''}`;
-  
-  document.getElementById("popBandB2").textContent = `Boy Kenar 2: ${leftBand ? '✅ BANTLI' : 'Yok'}`;
-  document.getElementById("popBandB2").className = `popup-band-item ${leftBand ? 'active' : ''}`;
-
-  document.getElementById("popBandE1").textContent = `En Kenar 1: ${topBand ? '✅ BANTLI' : 'Yok'}`;
-  document.getElementById("popBandE1").className = `popup-band-item ${topBand ? 'active' : ''}`;
-
-  document.getElementById("popBandE2").textContent = `En Kenar 2: ${botBand ? '✅ BANTLI' : 'Yok'}`;
-  document.getElementById("popBandE2").className = `popup-band-item ${botBand ? 'active' : ''}`;
+  let actionGroup = document.querySelector(".popup-action-group");
+  actionGroup.innerHTML = `
+    <button class="btn-pop-action mark-done" onclick="setCutStatusFromPopup(true)">✅ KESİLDİ İŞARETLE</button>
+    <button class="btn-pop-action mark-pending" onclick="setCutStatusFromPopup(false)">⏳ BEKLİYOR YAP</button>
+  `;
 
   document.getElementById("partPopupModal").style.display = "flex";
 }
@@ -872,6 +860,7 @@ function setCutStatusFromPopup(isCut) {
 function closePartPopup() {
   document.getElementById("partPopupModal").style.display = "none";
   activeSelectedPartForPopup = null;
+  activeSelectedSheetIndex = null;
 }
 
 function printLabels() {
@@ -889,10 +878,10 @@ function printLabels() {
         card.className = "label-card";
 
         let lines = "";
-        if (p.u) lines += `<line x1="1" y1="3" x2="99" y2="3" stroke="#0284c7" stroke-width="6" stroke-linecap="square"/>`;
-        if (p.a) lines += `<line x1="1" y1="97" x2="99" y2="97" stroke="#0284c7" stroke-width="6" stroke-linecap="square"/>`;
-        if (p.i) lines += `<line x1="3" y1="1" x2="3" y2="99" stroke="#0284c7" stroke-width="6" stroke-linecap="square"/>`;
-        if (p.s) lines += `<line x1="97" y1="1" x2="97" y2="99" stroke="#0284c7" stroke-width="6" stroke-linecap="square"/>`;
+        if (p.b1) lines += `<line x1="3" y1="1" x2="3" y2="99" stroke="#0284c7" stroke-width="6" stroke-linecap="square"/>`;
+        if (p.b2) lines += `<line x1="97" y1="1" x2="97" y2="99" stroke="#0284c7" stroke-width="6" stroke-linecap="square"/>`;
+        if (p.e1) lines += `<line x1="1" y1="3" x2="99" y2="3" stroke="#0284c7" stroke-width="6" stroke-linecap="square"/>`;
+        if (p.e2) lines += `<line x1="1" y1="97" x2="99" y2="97" stroke="#0284c7" stroke-width="6" stroke-linecap="square"/>`;
 
         let svgOverlay = "";
         if (lines !== "") {
@@ -918,7 +907,7 @@ function printLabels() {
   });
 
   if (count === 0) {
-    alert("Yazdırılacak parça bulunamadı! Lütfen parça listesini doldurun.");
+    alert("Yazdırılacak parça bulunamadı!");
     return;
   }
 
@@ -994,14 +983,14 @@ function loadProjectFromLocalStorage(projNameKey) {
     document.getElementById("printProjName").innerHTML = `<b>Proje:</b> ${esc(proj)}`;
     document.getElementById("printDate").innerHTML = `<b>Tarih:</b> ${dateStr}`;
     renderJobTable(proj, dateStr, lastActiveSheets);
-    drawPlans(lastActiveSheets, parseNum(document.getElementById("sw").value) - 2 * parseNum(document.getElementById("edge").value), parseNum(document.getElementById("sh").value) - 2 * parseNum(document.getElementById("edge").value), parseNum(document.getElementById("sw").value), parseNum(document.getElementById("sh").value), parseNum(document.getElementById("edge").value), parseNum(document.getElementById("kerf").value));
+    drawPlans(lastActiveSheets, lastSW0 - 2 * lastEdge, lastSH0 - 2 * lastEdge, lastSW0, lastSH0, lastEdge, lastK);
   } else {
     startOptimization();
   }
 }
 
 function deleteProjectFromLocalStorage(projNameKey) {
-  if(confirm(`"${projNameKey}" projesini cihazınızdan silmek istediğinize emin misiniz?`)) {
+  if(confirm(`"${projNameKey}" projesini silmek istediğinize emin misiniz?`)) {
     let savedProjects = getSavedProjectsFromStorage();
     delete savedProjects[projNameKey];
     localStorage.setItem("acanlar_local_projects", JSON.stringify(savedProjects));
@@ -1015,7 +1004,7 @@ function renderSavedProjectsList() {
   let keys = Object.keys(savedProjects);
 
   if(keys.length === 0) {
-    container.innerHTML = `<div class="muted" style="text-align:center;padding:6px">Cihazınızda henüz kayıtlı proje yok.</div>`;
+    container.innerHTML = `<div class="muted" style="text-align:center;padding:6px">Cihazınızda kayıtlı proje yok.</div>`;
     return;
   }
 
@@ -1025,7 +1014,7 @@ function renderSavedProjectsList() {
     container.innerHTML += `
       <div class="saved-project-item">
         <div>
-          <b>${esc(key)}</b> <span class="muted">(${item.parts ? item.parts.length : 0} Kalem — ${item.savedDate || ''})</span>
+          <b>${esc(key)}</b> <span class="muted">(${item.parts ? item.parts.length : 0} Kalem)</span>
         </div>
         <div class="project-btn-group">
           <button class="btn-mini load-proj" onclick="loadProjectFromLocalStorage('${esc(key)}')">📂 Yükle</button>
@@ -1117,10 +1106,10 @@ function addPart(p) {
       w: "",
       q: 1,
       rot: true,
-      s: false,
-      i: false,
-      u: false,
-      a: false
+      b1: false,
+      b2: false,
+      e1: false,
+      e2: false
     };
   }
   parts.push({...p, id: Date.now() + Math.random()});
@@ -1155,10 +1144,10 @@ function renderParts() {
     <td class="col-num"><input type="number" step="0.1" value="${p.h !== undefined ? p.h : ''}" placeholder="Boy" data-i="${i}" data-k="h"></td>
     <td class="col-num"><input type="number" step="0.1" value="${p.w !== undefined ? p.w : ''}" placeholder="En" data-i="${i}" data-k="w"></td>
     <td class="col-num"><input type="number" min="1" value="${p.q || 1}" data-i="${i}" data-k="q"></td>
-    <td class="col-band"><input type="checkbox" ${p.u ? "checked" : ""} data-i="${i}" data-k="u" title="Boy Kenar 1 (Üst)"></td>
-    <td class="col-band"><input type="checkbox" ${p.a ? "checked" : ""} data-i="${i}" data-k="a" title="Boy Kenar 2 (Alt)"></td>
-    <td class="col-band"><input type="checkbox" ${p.i ? "checked" : ""} data-i="${i}" data-k="i" title="En Kenar 1 (Sol)"></td>
-    <td class="col-band"><input type="checkbox" ${p.s ? "checked" : ""} data-i="${i}" data-k="s" title="En Kenar 2 (Sağ)"></td>
+    <td class="col-band"><input type="checkbox" ${p.b1 ? "checked" : ""} data-i="${i}" data-k="b1" title="Boy Kenar 1"></td>
+    <td class="col-band"><input type="checkbox" ${p.b2 ? "checked" : ""} data-i="${i}" data-k="b2" title="Boy Kenar 2"></td>
+    <td class="col-band"><input type="checkbox" ${p.e1 ? "checked" : ""} data-i="${i}" data-k="e1" title="En Kenar 1"></td>
+    <td class="col-band"><input type="checkbox" ${p.e2 ? "checked" : ""} data-i="${i}" data-k="e2" title="En Kenar 2"></td>
     <td class="col-del"><button class="secondary" style="padding:2px 4px;font-size:10px;cursor:pointer" onclick="parts.splice(${i},1);renderParts()">×</button></td>
     </tr>`;
   });
@@ -1187,10 +1176,10 @@ function renderParts() {
           </div>
         </div>
         <div class="part-card-bands">
-          <button class="band-btn ${p.u ? 'active' : ''}" onclick="toggleBand(${i}, 'u')">Boy1</button>
-          <button class="band-btn ${p.a ? 'active' : ''}" onclick="toggleBand(${i}, 'a')">Boy2</button>
-          <button class="band-btn ${p.i ? 'active' : ''}" onclick="toggleBand(${i}, 'i')">En1</button>
-          <button class="band-btn ${p.s ? 'active' : ''}" onclick="toggleBand(${i}, 's')">En2</button>
+          <button class="band-btn ${p.b1 ? 'active' : ''}" onclick="toggleBand(${i}, 'b1')">Boy1</button>
+          <button class="band-btn ${p.b2 ? 'active' : ''}" onclick="toggleBand(${i}, 'b2')">Boy2</button>
+          <button class="band-btn ${p.e1 ? 'active' : ''}" onclick="toggleBand(${i}, 'e1')">En1</button>
+          <button class="band-btn ${p.e2 ? 'active' : ''}" onclick="toggleBand(${i}, 'e2')">En2</button>
         </div>
       </div>
     `;
@@ -1290,7 +1279,7 @@ function expand() {
       let q = p.q || 1;
       for(let n = 0; n < q; n++) {
         a.push({
-          ...p, 
+          ...p,
           uniqueInstanceId: `part_${p.name}_${instanceCounter++}` 
         });
       }
@@ -1346,10 +1335,10 @@ function renderJobTable(proj, dateStr, sheets) {
   parts.forEach(p => {
     if(p.w && p.h) {
       let bandStr = [];
-      if(p.u) bandStr.push("Boy1");
-      if(p.a) bandStr.push("Boy2");
-      if(p.i) bandStr.push("En1");
-      if(p.s) bandStr.push("En2");
+      if(p.b1) bandStr.push("Boy1");
+      if(p.b2) bandStr.push("Boy2");
+      if(p.e1) bandStr.push("En1");
+      if(p.e2) bandStr.push("En2");
 
       let standardSheetIndices = [];
       let hasDepot = false;
@@ -1438,10 +1427,10 @@ function optimize() {
   let totalBandCm = 0;
   parts.forEach(p => {
     let q = p.q || 1;
-    if(p.u) totalBandCm += p.h * q;
-    if(p.a) totalBandCm += p.h * q;
-    if(p.i) totalBandCm += p.w * q;
-    if(p.s) totalBandCm += p.w * q;
+    if(p.b1) totalBandCm += p.h * q;
+    if(p.b2) totalBandCm += p.h * q;
+    if(p.e1) totalBandCm += p.w * q;
+    if(p.e2) totalBandCm += p.w * q;
   });
   calculatedBandMeters = Math.ceil(totalBandCm / 100);
   document.getElementById("bandMeters").textContent = calculatedBandMeters + " m";
@@ -1716,8 +1705,7 @@ function tryPlaceInSheet(sheet, item, SW, SH, K, globalDir, subDirPref) {
   return false;
 }
 
-/* 📱 DOKUNMATİK KAYDIRMA (SCROLL) HAREKETİNİ ALGILAMA */
-function handleCanvasClick(e, sheet, canvasElement) {
+function handleCanvasClick(e, sheet, sheetIdx, canvasElement) {
   let rect = canvasElement.getBoundingClientRect();
   let clientX = e.clientX;
   let clientY = e.clientY;
@@ -1726,7 +1714,6 @@ function handleCanvasClick(e, sheet, canvasElement) {
     clientX = e.changedTouches[0].clientX;
     clientY = e.changedTouches[0].clientY;
   }
-
   if (clientX === undefined || clientY === undefined) return;
 
   let scaleX = canvasElement.width / rect.width;
@@ -1756,7 +1743,7 @@ function handleCanvasClick(e, sheet, canvasElement) {
   });
 
   if (clickedPart) {
-    openPartPopup(clickedPart);
+    openPartPopup(clickedPart, sheetIdx);
   }
 }
 
@@ -1791,12 +1778,11 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
 
     let div = document.createElement("div");
     div.className = "plan";
-    div.innerHTML = `<h3>${s.isStock ? '♻️ DEPODAN HARCANAN FİRE PLAKA' : 'PLAKA ' + (si + 1)} — ${curW0} × ${curH0} cm ${s.isStock ? '('+s.stockLabel+')' : ''}</h3>`;
+    div.innerHTML = `<h3>${s.isStock ? '♻️ DEPODAN HARCANAN FİRE PLAKA' : 'PLAKA ' + (si + 1)} — ${curW0} × ${curH0} cm</h3>`;
     let c = document.createElement("canvas");
     c.width = 1400;
     c.height = Math.round(1400 * curH0 / curW0);
 
-    /* 🛡️ KAYDIRMA VE TIKLAMA AYRIŞTIRICI SİSTEM */
     let touchStartX = 0, touchStartY = 0;
     let isSwiping = false;
 
@@ -1807,24 +1793,17 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
         isSwiping = false;
       }
     };
-
     c.ontouchmove = (e) => {
       if (e.touches && e.touches.length > 0) {
         let diffX = Math.abs(e.touches[0].clientX - touchStartX);
         let diffY = Math.abs(e.touches[0].clientY - touchStartY);
-        if (diffX > 8 || diffY > 8) {
-          isSwiping = true;
-        }
+        if (diffX > 8 || diffY > 8) isSwiping = true;
       }
     };
-
     c.ontouchend = (e) => {
-      if (!isSwiping) {
-        handleCanvasClick(e, s, c);
-      }
+      if (!isSwiping) handleCanvasClick(e, s, si, c);
     };
-
-    c.onclick = (e) => handleCanvasClick(e, s, c);
+    c.onclick = (e) => handleCanvasClick(e, s, si, c);
 
     div.appendChild(c);
     box.appendChild(div);
@@ -1844,7 +1823,7 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
     }
 
     s.freeRects.forEach(fr => {
-      if(fr.w >= 30 && fr.h >= 20) {
+      if(fr.w >= 20 && fr.h >= 20) {
         let fx = OX + (curEdge + fr.x) * sx;
         let fy = OY + (curEdge + fr.y) * sy;
         let fw = fr.w * sx;
@@ -1856,11 +1835,11 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
         ctx.lineWidth = 1;
         ctx.strokeRect(fx, fy, fw, fh);
 
-        ctx.font = "bold 16px Arial";
-        ctx.fillStyle = "#64748b";
+        ctx.font = "bold 15px Arial";
+        ctx.fillStyle = "#0284c7";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText(`Kalan Fire: ${fr.w.toFixed(1)} x ${fr.h.toFixed(1)} cm`, fx + fw / 2, fy + fh / 2);
+        ctx.fillText(`+ Boş Fire (${fr.w.toFixed(1)} x ${fr.h.toFixed(1)})`, fx + fw / 2, fy + fh / 2);
 
         if(!s.isStock) {
           currentDetectedWastes.push({ w: fr.w, h: fr.h });
@@ -1888,7 +1867,6 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
       groupCounters[groupKey].current++;
       let currentSeq = groupCounters[groupKey].current;
       let totalSeq = groupCounters[groupKey].total;
-      
       p.seqStr = totalSeq > 1 ? `(${currentSeq}/${totalSeq})` : null;
 
       let pad = 7;
@@ -1906,17 +1884,29 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
       ctx.lineWidth = isCompleted ? 3 : 2;
       ctx.strokeRect(x, y, w, h);
 
-      let topBand = p.rot ? p.i : p.u;
-      let botBand = p.rot ? p.s : p.a;
-      let leftBand = p.rot ? p.u : p.i;
-      let rightBand = p.rot ? p.a : p.s;
+      // 📌 RÖTUŞLANMIŞ KESİN BANT EŞLEŞTİRMESİ (DÖNDÜRME BAĞIMSIZ):
+      // p.rot true ise parça 90 derece dönmüştür: canvas genişliği p.h (boy), canvas yüksekliği p.w (en) olmuştur.
+      let leftBand, rightBand, topBand, botBand;
+      if (!p.rot) {
+        // Normal konum: Sol/Sağ = Boy (b1, b2), Üst/Alt = En (e1, e2)
+        leftBand = p.b1;   
+        rightBand = p.b2;  
+        topBand = p.e1;    
+        botBand = p.e2;    
+      } else {
+        // Döndürülmüş konum: Üst/Alt = Boy (b1, b2), Sol/Sağ = En (e1, e2)
+        topBand = p.b1;
+        botBand = p.b2;
+        leftBand = p.e1;
+        rightBand = p.e2;
+      }
 
       ctx.font = "bold 13px Arial";
       ctx.fillStyle = "#0284c7";
-      if(topBand)   { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x, y + 4); ctx.lineTo(x + w, y + 4); ctx.stroke(); ctx.fillText("Boy1", x + 10, y + 24); }
-      if(botBand)   { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x, y + h - 4); ctx.lineTo(x + w, y + h - 4); ctx.stroke(); ctx.fillText("Boy2", x + 10, y + h - 10); }
-      if(rightBand) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + w - 4, y); ctx.lineTo(x + w - 4, y + h); ctx.stroke(); ctx.fillText("En2", x + w - 30, y + 24); }
-      if(leftBand)  { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + 4, y); ctx.lineTo(x + 4, y + h); ctx.stroke(); ctx.fillText("En1", x + 10, y + 24); }
+      if(topBand)   { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x, y + 4); ctx.lineTo(x + w, y + 4); ctx.stroke(); ctx.fillText("Bant", x + 10, y + 24); }
+      if(botBand)   { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x, y + h - 4); ctx.lineTo(x + w, y + h - 4); ctx.stroke(); ctx.fillText("Bant", x + 10, y + h - 10); }
+      if(rightBand) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + w - 4, y); ctx.lineTo(x + w - 4, y + h); ctx.stroke(); ctx.fillText("Bant", x + w - 40, y + 24); }
+      if(leftBand)  { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + 4, y); ctx.lineTo(x + 4, y + h); ctx.stroke(); ctx.fillText("Bant", x + 10, y + 24); }
 
       let minSideReal = Math.min(p.w, p.h);
       let minSideCanvas = Math.min(w, h);
@@ -1981,7 +1971,7 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
 
     let note = document.createElement("div");
     note.className = "band-note no-print";
-    note.textContent = "📱 İPUCU: Parçaya dokunarak detaylı pop-up ekranını açabilir ve kesildi olarak işaretleyebilirsiniz.";
+    note.textContent = "📱 Parça üzerine tıklayarak kesildi durumunu güncelleyebilirsiniz.";
     div.appendChild(note);
   });
 
