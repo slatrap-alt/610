@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Acanlar Mobilya — Plaka Optimizasyonu V1.99.19</title>
+<title>Acanlar Mobilya — Plaka Optimizasyonu V1.99.21</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -120,7 +120,7 @@ header{
 main{max-width:1600px;margin:15px auto;padding:0 10px; width:100%;}
 .layout{display:grid;grid-template-columns:520px 1fr;gap:15px; width:100%;}
 
-#partPopupModal {
+#partPopupModal, #labelSettingsModal {
   display: none;
   position: fixed;
   top: 0; left: 0; width: 100vw; height: 100vh;
@@ -156,6 +156,7 @@ main{max-width:1600px;margin:15px auto;padding:0 10px; width:100%;}
 .btn-pop-action { width: 100%; padding: 10px 8px; font-size: 12px; font-weight: 900; border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; }
 .btn-pop-action.mark-done { background: #10b981; color: #fff; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
 .btn-pop-action.mark-pending { background: #f59e0b; color: #fff; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3); }
+.btn-pop-action.print-confirm { background: #0284c7; color: #fff; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); }
 .btn-close-popup { position: absolute; top: 8px; right: 12px; background: transparent; border: none; font-size: 20px; font-weight: bold; cursor: pointer; color: var(--muted-color); }
 
 .card{background:var(--card-bg);border-radius:12px;padding:14px;box-shadow:0 3px 12px #0000000b;margin-bottom:14px;border:1px solid var(--border-color); width:100%; overflow:hidden;}
@@ -415,7 +416,23 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 
 <div id="labelPrintArea"></div>
 
-<!-- 🔍 PARÇA BİLGİ MODALI -->
+<div id="labelSettingsModal">
+  <div class="popup-card">
+    <button class="btn-close-popup" onclick="closeLabelModal()">✕</button>
+    <div class="popup-title">🏷️ Tanex TW-2033 Etiket Ayarı</div>
+    <div class="muted" style="margin: 8px 0; font-size: 12px;">Yarım kalmış A4 etiket kağıdı kullanıyorsanız, kağıtta <b>ilk hangi hücreden</b> başlanacağını seçin.</div>
+    
+    <div style="margin: 15px 0; text-align: left;">
+      <label>Kağıtta Kaçıncı Etiket Dolu / Boş Başla (1 - 24):</label>
+      <input id="labelStartIndex" type="number" min="1" max="24" value="1" style="font-size: 16px; font-weight: bold; text-align: center; padding: 10px;">
+    </div>
+
+    <div class="popup-action-group">
+      <button class="btn-pop-action print-confirm" onclick="executePrintLabels()">🖨️ YAZDIRMAYA BAŞLA</button>
+    </div>
+  </div>
+</div>
+
 <div id="partPopupModal">
   <div class="popup-card">
     <button class="btn-close-popup" onclick="closePartPopup()">✕</button>
@@ -444,12 +461,12 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA</h1>
-      <div class="author">Mesut ACAN — v1.99.19</div>
+      <div class="author">Mesut ACAN — v1.99.21</div>
     </div>
   </div>
   <div class="header-btns no-print">
     <button id="btnThemeToggle" class="btn-theme" onclick="toggleTheme()" title="Gece/Gündüz Modu">🌙</button>
-    <button class="btn-label" onclick="printLabels()">🏷️ ETİKET (TW-2033)</button>
+    <button class="btn-label" onclick="openLabelModal()">🏷️ ETİKET (TW-2033)</button>
     <button class="btn-pdf" onclick="window.print()">🖨️ YAZDIR</button>
   </div>
 </header>
@@ -879,10 +896,32 @@ function closePartPopup() {
   activeSelectedSheetIndex = null;
 }
 
-function printLabels() {
+function openLabelModal() {
+  document.getElementById("labelSettingsModal").style.display = "flex";
+}
+
+function closeLabelModal() {
+  document.getElementById("labelSettingsModal").style.display = "none";
+}
+
+function executePrintLabels() {
+  let startIndex = parseInt(document.getElementById("labelStartIndex").value) || 1;
+  if (startIndex < 1) startIndex = 1;
+  if (startIndex > 24) startIndex = 24;
+  
+  closeLabelModal();
+
   const proj = document.getElementById("projName").value || "Müşteri / Proje Belirtilmedi";
   const labelContainer = document.getElementById("labelPrintArea");
   labelContainer.innerHTML = "";
+
+  for (let b = 1; b < startIndex; b++) {
+    let emptyCard = document.createElement("div");
+    emptyCard.className = "label-card";
+    emptyCard.style.border = "none";
+    emptyCard.innerHTML = "";
+    labelContainer.appendChild(emptyCard);
+  }
 
   let count = 0;
   
