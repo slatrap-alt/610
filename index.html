@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Acanlar Mobilya — Plaka Optimizasyonu V1.99.21</title>
+<title>Acanlar Mobilya — Plaka Optimizasyonu V1.99.22</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -351,13 +351,13 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 }
 
 .lbl-header { text-align: center; border-bottom: 1.2px solid #0f172a; padding-bottom: 1px; }
-.lbl-company { font-size: 8.5px; font-weight: 900; color: #0f172a; letter-spacing: 0.3px; margin: 0; text-transform: uppercase; }
-.lbl-project { font-size: 7.5px; font-weight: bold; color: #334155; margin-top: 1px; word-break: break-word; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lbl-company { font-size: 8px; font-weight: 900; color: #0f172a; letter-spacing: 0.3px; margin: 0; text-transform: uppercase; }
+.lbl-project { font-size: 7px; font-weight: bold; color: #334155; margin-top: 1px; word-break: break-word; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .lbl-body { text-align: center; margin: auto 0; }
-.lbl-part-name { font-size: 10px; font-weight: bold; color: #0284c7; word-break: break-word; line-height: 1.1; }
-.lbl-dimensions { font-size: 13px; font-weight: 900; color: #000000; margin-top: 1px; }
-.lbl-dim-tag { font-size: 8px; color: #475569; font-weight: bold; }
+.lbl-part-name { font-size: 9.5px; font-weight: bold; color: #0284c7; word-break: break-word; line-height: 1.1; }
+.lbl-dimensions { font-size: 12px; font-weight: 900; color: #000000; margin-top: 1px; }
+.lbl-dim-tag { font-size: 7.5px; color: #475569; font-weight: bold; }
 
 @media print{
   html, body { background: #fff !important; color: #000 !important; font-family: Arial, sans-serif !important; width: 100%; margin: 0 !important; padding: 0 !important; }
@@ -461,7 +461,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA</h1>
-      <div class="author">Mesut ACAN — v1.99.21</div>
+      <div class="author">Mesut ACAN — v1.99.22</div>
     </div>
   </div>
   <div class="header-btns no-print">
@@ -923,12 +923,32 @@ function executePrintLabels() {
     labelContainer.appendChild(emptyCard);
   }
 
+  // Grup içi sıra numaralarını etiket basarken doğru hesaplayabilmek için sayaç hazırlıyoruz
+  let labelGroupCounters = {};
+  if (lastActiveSheets && lastActiveSheets.length > 0) {
+    lastActiveSheets.forEach(s => {
+      s.placed.forEach(p => {
+        let groupKey = `${p.name}_${Math.max(p.h, p.w)}x${Math.min(p.h, p.w)}`;
+        if (!labelGroupCounters[groupKey]) {
+          labelGroupCounters[groupKey] = { total: 0, current: 0 };
+        }
+        labelGroupCounters[groupKey].total++;
+      });
+    });
+  }
+
   let count = 0;
   
   if (lastActiveSheets && lastActiveSheets.length > 0) {
     lastActiveSheets.forEach(s => {
       s.placed.forEach(p => {
         count++;
+        let groupKey = `${p.name}_${Math.max(p.h, p.w)}x${Math.min(p.h, p.w)}`;
+        labelGroupCounters[groupKey].current++;
+        let curSeq = labelGroupCounters[groupKey].current;
+        let totSeq = labelGroupCounters[groupKey].total;
+        let seqText = totSeq > 1 ? ` (${curSeq}/${totSeq})` : "";
+
         let card = document.createElement("div");
         card.className = "label-card";
 
@@ -963,7 +983,7 @@ function executePrintLabels() {
             <div class="lbl-project"><b>Müşteri:</b> ${esc(proj)}</div>
           </div>
           <div class="lbl-body">
-            <div class="lbl-part-name">${esc(p.name)}</div>
+            <div class="lbl-part-name">${esc(p.name)}${seqText}</div>
             <div class="lbl-dimensions">
               <span class="lbl-dim-tag">En:</span> ${p.w} <span style="font-size:10px; color:#475569;">×</span> <span class="lbl-dim-tag">Boy:</span> ${p.h} <span style="font-size:8px;">cm</span>
             </div>
@@ -978,6 +998,7 @@ function executePrintLabels() {
         let q = p.q || 1;
         for (let n = 0; n < q; n++) {
           count++;
+          let seqText = q > 1 ? ` (${n+1}/${q})` : "";
           let card = document.createElement("div");
           card.className = "label-card";
 
@@ -999,7 +1020,7 @@ function executePrintLabels() {
               <div class="lbl-project"><b>Müşteri:</b> ${esc(proj)}</div>
             </div>
             <div class="lbl-body">
-              <div class="lbl-part-name">${esc(p.name)}</div>
+              <div class="lbl-part-name">${esc(p.name)}${seqText}</div>
               <div class="lbl-dimensions">
                 <span class="lbl-dim-tag">En:</span> ${p.w} <span style="font-size:10px; color:#475569;">×</span> <span class="lbl-dim-tag">Boy:</span> ${p.h} <span style="font-size:8px;">cm</span>
               </div>
