@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Acanlar Mobilya — Plaka Optimizasyonu V1.99.26</title>
+<title>Acanlar Mobilya — Plaka Optimizasyonu V1.99.28</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -428,7 +428,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     </div>
 
     <div class="popup-action-group">
-      <button class="btn-pop-action print-confirm" onclick="executePrintLabels()">🖨️️ YAZDIRMAYA BAŞLA</button>
+      <button class="btn-pop-action print-confirm" onclick="executePrintLabels()">🖨️ YAZDIRMAYA BAŞLA</button>
     </div>
   </div>
 </div>
@@ -461,7 +461,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA</h1>
-      <div class="author">Mesut ACAN — v1.99.26</div>
+      <div class="author">Mesut ACAN — v1.99.28</div>
     </div>
   </div>
   <div class="header-btns no-print">
@@ -523,7 +523,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
   <label>📐 Kesim Yönü Eğilimi / Önceliği (1. ve 2. Motor İçin)</label>
   <select id="subDirPref">
     <option value="auto" selected>✨ Otomatik / Hibrit (En Yüksek Doluluk Hangisindeyse)</option>
-    <option value="enine">↔️ Enine (Yatay Kesim Öncelikli Alternatif Türet)</option>
+    <option value="enine">↔️️ Enine (Yatay Kesim Öncelikli Alternatif Türet)</option>
     <option value="boyuna">↕️ Boyuna (Dikey Kesim Öncelikli Alternatif Türet)</option>
   </select>
 </div>
@@ -951,6 +951,7 @@ function executePrintLabels() {
         let card = document.createElement("div");
         card.className = "label-card";
 
+        // Haritadaki çizim mantığı ile birebir uyumlu doğru bant yönü ataması
         let leftBand, rightBand, topBand, botBand;
         if (!p.rot) {
           leftBand = p.b1;   
@@ -2040,40 +2041,33 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
       ctx.font = `bold ${dimFont}px Arial`;
       ctx.fillStyle = isCompleted ? "#15803d" : "#000000";
 
-      let isVerticalPart = h >= w;
-
-      if (isVerticalPart) {
-        if (w > 20) {
-          ctx.save();
-          ctx.translate(x + w / 2, y + h / 2);
-          ctx.rotate(-Math.PI / 2);
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
-          ctx.fillText(`${p.w}`, 0, -(h/2) + 20);
-          ctx.fillText(`${p.h}`, 0, 0);
-          ctx.restore();
-        }
-      } else {
-        if (w > 25) {
-          ctx.textAlign = "center";
-          ctx.textBaseline = "top";
-          ctx.fillText(`${p.w}`, x + w / 2, y + 6);
-        }
-        if (h > 25) {
-          ctx.save();
-          ctx.translate(x + (dimFont * 0.8), y + h / 2);
-          ctx.rotate(-Math.PI / 2);
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
-          ctx.fillText(`${p.h}`, 0, 0);
-          ctx.restore();
-        }
+      if (w > 25) {
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        ctx.fillText(`${p.w}`, x + w / 2, y + 6);
+        ctx.textBaseline = "bottom";
+        ctx.fillText(`${p.w}`, x + w / 2, y + h - 6);
       }
 
-      // 30 cm ve altındaki ölçülerde parça açıklaması (adı) kısmını pasif et (gizle)
-      let isSmallPart = p.w <= 30 || p.h <= 30;
+      if (h > 25) {
+        ctx.save();
+        ctx.translate(x + (dimFont * 0.8), y + h / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(`${p.h}`, 0, 0);
+        ctx.restore();
 
-      if (!isSmallPart && minSideReal >= 25) {
+        ctx.save();
+        ctx.translate(x + w - (dimFont * 0.8), y + h / 2);
+        ctx.rotate(Math.PI / 2);
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(`${p.h}`, 0, 0);
+        ctx.restore();
+      }
+
+      if (minSideReal >= 25) {
         let nameFont = Math.max(14, Math.min(30, Math.round(minSideCanvas / 3.5)));
         ctx.font = `bold ${nameFont}px Arial`;
         ctx.fillStyle = isCompleted ? "#166534" : "#0f172a";
