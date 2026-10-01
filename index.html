@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Acanlar Mobilya — Plaka Optimizasyonu V1.99.22</title>
+<title>Acanlar Mobilya — Plaka Optimizasyonu V1.99.26</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -428,7 +428,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     </div>
 
     <div class="popup-action-group">
-      <button class="btn-pop-action print-confirm" onclick="executePrintLabels()">🖨️ YAZDIRMAYA BAŞLA</button>
+      <button class="btn-pop-action print-confirm" onclick="executePrintLabels()">🖨️️ YAZDIRMAYA BAŞLA</button>
     </div>
   </div>
 </div>
@@ -461,7 +461,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA</h1>
-      <div class="author">Mesut ACAN — v1.99.22</div>
+      <div class="author">Mesut ACAN — v1.99.26</div>
     </div>
   </div>
   <div class="header-btns no-print">
@@ -923,7 +923,6 @@ function executePrintLabels() {
     labelContainer.appendChild(emptyCard);
   }
 
-  // Grup içi sıra numaralarını etiket basarken doğru hesaplayabilmek için sayaç hazırlıyoruz
   let labelGroupCounters = {};
   if (lastActiveSheets && lastActiveSheets.length > 0) {
     lastActiveSheets.forEach(s => {
@@ -979,7 +978,7 @@ function executePrintLabels() {
         card.innerHTML = `
           ${svgOverlay}
           <div class="lbl-header">
-            <div class="lbl-company">ACANLAR MOBİLYA DEKORASYON</div>
+            <div class="lbl-company">ACANLAR MOBİLYA</div>
             <div class="lbl-project"><b>Müşteri:</b> ${esc(proj)}</div>
           </div>
           <div class="lbl-body">
@@ -2041,33 +2040,40 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
       ctx.font = `bold ${dimFont}px Arial`;
       ctx.fillStyle = isCompleted ? "#15803d" : "#000000";
 
-      if (w > 25) {
-        ctx.textAlign = "center";
-        ctx.textBaseline = "top";
-        ctx.fillText(`${p.w}`, x + w / 2, y + 6);
-        ctx.textBaseline = "bottom";
-        ctx.fillText(`${p.w}`, x + w / 2, y + h - 6);
+      let isVerticalPart = h >= w;
+
+      if (isVerticalPart) {
+        if (w > 20) {
+          ctx.save();
+          ctx.translate(x + w / 2, y + h / 2);
+          ctx.rotate(-Math.PI / 2);
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(`${p.w}`, 0, -(h/2) + 20);
+          ctx.fillText(`${p.h}`, 0, 0);
+          ctx.restore();
+        }
+      } else {
+        if (w > 25) {
+          ctx.textAlign = "center";
+          ctx.textBaseline = "top";
+          ctx.fillText(`${p.w}`, x + w / 2, y + 6);
+        }
+        if (h > 25) {
+          ctx.save();
+          ctx.translate(x + (dimFont * 0.8), y + h / 2);
+          ctx.rotate(-Math.PI / 2);
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(`${p.h}`, 0, 0);
+          ctx.restore();
+        }
       }
 
-      if (h > 25) {
-        ctx.save();
-        ctx.translate(x + (dimFont * 0.8), y + h / 2);
-        ctx.rotate(-Math.PI / 2);
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(`${p.h}`, 0, 0);
-        ctx.restore();
+      // 30 cm ve altındaki ölçülerde parça açıklaması (adı) kısmını pasif et (gizle)
+      let isSmallPart = p.w <= 30 || p.h <= 30;
 
-        ctx.save();
-        ctx.translate(x + w - (dimFont * 0.8), y + h / 2);
-        ctx.rotate(Math.PI / 2);
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(`${p.h}`, 0, 0);
-        ctx.restore();
-      }
-
-      if (minSideReal >= 25) {
+      if (!isSmallPart && minSideReal >= 25) {
         let nameFont = Math.max(14, Math.min(30, Math.round(minSideCanvas / 3.5)));
         ctx.font = `bold ${nameFont}px Arial`;
         ctx.fillStyle = isCompleted ? "#166534" : "#0f172a";
