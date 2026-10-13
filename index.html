@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Acanlar Mobilya — Plaka Optimizasyonu V1.99.28</title>
+<title>Acanlar Mobilya — Plaka Optimizasyonu V1.99.33</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -401,7 +401,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
       <polygon points="250,40 360,200 320,200 250,95 210,155 225,178 240,155" fill="#ffffff"/>
     </svg>
     <h2>ACANLAR MOBİLYA</h2>
-    <div class="splash-sub">Plaka Optimizasyon Sistemi Hazırlanıyor...</div>
+    <div class="splash-sub">Plaka Optimizasyon Sistemi v1.99.33</div>
     <div class="splash-spinner"></div>
   </div>
 </div>
@@ -461,7 +461,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA</h1>
-      <div class="author">Mesut ACAN — v1.99.28</div>
+      <div class="author">Mesut ACAN — v1.99.33</div>
     </div>
   </div>
   <div class="header-btns no-print">
@@ -517,13 +517,14 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 <option value="otomatik_klasik">🎲 2. Motor: Klasik Otomatik (Şerit Bazlı & Alternatif Dene)</option>
 <option value="boyuna">📐 3. Motor: Boyuna (Dikey Kesim Öncelikli)</option>
 <option value="enine">📐 4. Motor: Enine (Yatay Kesim Öncelikli)</option>
+<option value="siper_dostu">🎯 5. Motor: Siper Dostu / Grup Sıralı (Aynı Ölçüleri Peş Peşe Kes)</option>
 </select>
 
 <div id="dirPreferenceArea" style="margin-top:6px;">
-  <label>📐 Kesim Yönü Eğilimi / Önceliği (1. ve 2. Motor İçin)</label>
+  <label>📐 Kesim Yönü Eğilimi / Önceliği</label>
   <select id="subDirPref">
     <option value="auto" selected>✨ Otomatik / Hibrit (En Yüksek Doluluk Hangisindeyse)</option>
-    <option value="enine">↔️️ Enine (Yatay Kesim Öncelikli Alternatif Türet)</option>
+    <option value="enine">↔️ Enine (Yatay Kesim Öncelikli Alternatif Türet)</option>
     <option value="boyuna">↕️ Boyuna (Dikey Kesim Öncelikli Alternatif Türet)</option>
   </select>
 </div>
@@ -680,6 +681,9 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 <div class="card">
 <h2 class="no-print">Kesim Haritası ve Detaylar</h2>
 
+<!-- MOBİL İÇİN HIZLI FARKLI YERLEŞİM DENE BUTONU -->
+<button id="btnShuffleMobile" class="btn-shuffle no-print" onclick="shuffleAndOptimize()" style="margin-bottom: 12px; display: none;">🎲 FARKLI YERLEŞİM DENE (ALTERNATİF ŞABLON)</button>
+
 <div id="unplacedAlert" class="unplaced-alert">
   <h3>⚠️ DİKKAT: YERLEŞTİRİLEMEYEN PARÇALAR VAR!</h3>
   <div style="font-size:11px;">Aşağıdaki parçalar plaka boyutunu aştığı veya plakada yer kalmadığı için kesim haritasına sığdırılamadı:</div>
@@ -754,18 +758,21 @@ let activeSelectedSheetIndex = null;
 let lastActiveSheets = [];
 let lastSW0 = 0, lastSH0 = 0, lastEdge = 0, lastK = 0;
 
+let splashClosed = false;
 function closeSplashNow() {
+  if (splashClosed) return;
+  splashClosed = true;
   const splash = document.getElementById("appSplash");
-  if(splash && splash.style.display !== "none") {
+  if(splash) {
     splash.style.opacity = "0";
     setTimeout(() => splash.style.display = "none", 300);
   }
 }
 
 window.addEventListener('load', () => {
-  setTimeout(closeSplashNow, 400);
+  setTimeout(closeSplashNow, 300);
 });
-setTimeout(closeSplashNow, 600);
+setTimeout(closeSplashNow, 1200);
 
 function parseNum(val) {
   if(!val) return 0;
@@ -951,7 +958,6 @@ function executePrintLabels() {
         let card = document.createElement("div");
         card.className = "label-card";
 
-        // Haritadaki çizim mantığı ile birebir uyumlu doğru bant yönü ataması
         let leftBand, rightBand, topBand, botBand;
         if (!p.rot) {
           leftBand = p.b1;   
@@ -1202,8 +1208,14 @@ function renderStockWasteList() {
 function checkShuffleBtn() {
   let dir = document.getElementById("globalDir").value;
   let isAuto = dir.includes("otomatik");
-  document.getElementById("btnShuffle").style.display = isAuto ? "block" : "none";
-  document.getElementById("dirPreferenceArea").style.display = isAuto ? "block" : "none";
+  
+  let btnShuffleDesk = document.getElementById("btnShuffle");
+  let btnShuffleMob = document.getElementById("btnShuffleMobile");
+  
+  if(btnShuffleDesk) btnShuffleDesk.style.display = isAuto ? "block" : "none";
+  if(btnShuffleMob) btnShuffleMob.style.display = isAuto ? "block" : "none";
+  
+  document.getElementById("dirPreferenceArea").style.display = (isAuto || dir === "siper_dostu") ? "block" : "none";
 }
 
 function shuffleAndOptimize() {
@@ -1416,14 +1428,13 @@ function importData(ev) {
 
 function expand() {
   let a = [];
-  let instanceCounter = 1;
-  parts.forEach(p => {
+  parts.forEach((p, rowIndex) => {
     if(p.w && p.h) {
       let q = p.q || 1;
       for(let n = 0; n < q; n++) {
         a.push({
           ...p,
-          uniqueInstanceId: `part_${p.name}_${instanceCounter++}` 
+          uniqueInstanceId: `r${rowIndex}_i${n}`
         });
       }
     }
@@ -1475,7 +1486,7 @@ function renderJobTable(proj, dateStr, sheets) {
   document.getElementById("jobDate").innerHTML = `<b>Tarih:</b> ${dateStr}`;
 
   jb.innerHTML = "";
-  parts.forEach(p => {
+  parts.forEach((p, rowIndex) => {
     if(p.w && p.h) {
       let bandStr = [];
       if(p.b1) bandStr.push("Boy1");
@@ -1487,23 +1498,30 @@ function renderJobTable(proj, dateStr, sheets) {
       let hasDepot = false;
       let totalCutCount = 0;
       let totalPlacedCount = 0;
+      let q = p.q || 1;
 
-      sheets.forEach((s, sIdx) => {
-        s.placed.forEach(item => {
-          if(item.name === p.name) {
-            totalPlacedCount++;
-            if(s.isStock) {
-              hasDepot = true;
-            } else {
-              let pNo = sIdx + 1;
-              if(!standardSheetIndices.includes(pNo)) standardSheetIndices.push(pNo);
+      for(let n = 0; n < q; n++) {
+        let targetId = `r${rowIndex}_i${n}`;
+        let foundInSheet = false;
+
+        sheets.forEach((s, sIdx) => {
+          s.placed.forEach(item => {
+            if(item.uniqueInstanceId === targetId) {
+              foundInSheet = true;
+              totalPlacedCount++;
+              if(s.isStock) {
+                hasDepot = true;
+              } else {
+                let pNo = sIdx + 1;
+                if(!standardSheetIndices.includes(pNo)) standardSheetIndices.push(pNo);
+              }
+              if(completedUniquePartIds.has(targetId)) {
+                totalCutCount++;
+              }
             }
-            if(completedUniquePartIds.has(item.uniqueInstanceId)) {
-              totalCutCount++;
-            }
-          }
+          });
         });
-      });
+      }
 
       let sheetText = (standardSheetIndices.length > 0 || hasDepot) ? formatSheetNumbers(standardSheetIndices, hasDepot) : "<span style='color:#ef4444;font-weight:bold'>SIĞMADI</span>";
       
@@ -1521,7 +1539,7 @@ function renderJobTable(proj, dateStr, sheets) {
         <td><b style="color:${sheetText.includes('Depo') ? '#8b5cf6' : (sheetText.includes('Plaka') ? '#0284c7' : '#ef4444')}">${sheetText}</b></td>
         <td>${p.h} cm</td>
         <td>${p.w} cm</td>
-        <td><b>${p.q || 1} Adet</b></td>
+        <td><b>${q} Adet</b></td>
         <td>${bandStr.length > 0 ? bandStr.join(" - ") : "-"}</td>
         <td>${cutStatusText}</td>
       </tr>`;
@@ -1570,21 +1588,47 @@ function optimize() {
   let unplacedItems = [];
   let sheets = [];
 
-  if(useStock && stockWastes.length > 0) {
-    stockWastes.forEach(st => {
-      sheets.push({
-        freeRects: [{ x: 0, y: 0, w: st.w, h: st.h }],
-        placed: [],
-        cuts: [],
-        isStock: true,
-        stockLabel: st.label,
-        customW0: st.w,
-        customH0: st.h
-      });
+  if (globalDir === "siper_dostu") {
+    rawItems.sort((a, b) => {
+      let dimA1 = Math.max(a.h, a.w), dimA2 = Math.min(a.h, a.w);
+      let dimB1 = Math.max(b.h, b.w), dimB2 = Math.min(b.h, b.w);
+      
+      if (subDirPref === "boyuna") {
+        if (b.h !== a.h) return b.h - a.h;
+        return b.w - a.w;
+      } else if (subDirPref === "enine") {
+        if (b.w !== a.w) return b.w - a.w;
+        return b.h - a.h;
+      } else {
+        if (dimB1 !== dimA1) return dimB1 - dimA1;
+        return dimB2 - dimA2;
+      }
     });
-  }
 
-  if(globalDir === "otomatik_hibrit") {
+    rawItems.forEach(item => {
+      let placed = false;
+      for (let s of sheets) {
+        if (tryPlaceHybridGuillotine(s, item, K, subDirPref)) {
+          placed = true;
+          break;
+        }
+      }
+      if (!placed) {
+        let fitsStandard = (item.w <= SW && item.h <= SH) || (item.rot && item.h <= SW && item.w <= SH);
+        if (!fitsStandard) {
+          unplacedItems.push(item);
+        } else {
+          let newSheet = { freeRects: [{ x: 0, y: 0, w: SW, h: SH }], placed: [], cuts: [] };
+          if (tryPlaceHybridGuillotine(newSheet, item, K, subDirPref)) {
+            sheets.push(newSheet);
+          } else {
+            unplacedItems.push(item);
+          }
+        }
+      }
+    });
+
+  } else if(globalDir === "otomatik_hibrit") {
     rawItems.sort((a, b) => {
       let areaA = a.w * a.h, areaB = b.w * b.h;
       let maxDimA = Math.max(a.w, a.h), maxDimB = Math.max(b.w, b.h);
