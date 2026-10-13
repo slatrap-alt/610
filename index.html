@@ -117,6 +117,58 @@ header{
 .btn-label { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: #fff; border: none; padding: 8px 10px; font-size: 11px; font-weight: bold; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35); display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
 .btn-label:hover { background: linear-gradient(135deg, #0369a1 100%, #075985 100%); }
 
+/* ACANLAR PORTAL MENÜ STİLLERİ */
+.portal-bar {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-bottom: 1px solid var(--border-color);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+}
+.portal-title {
+  font-size: 11px;
+  font-weight: 900;
+  color: #38bdf8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.portal-links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  flex: 1;
+  justify-content: flex-end;
+}
+.btn-portal {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid #475569;
+  color: #f8fafc;
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: bold;
+  border-radius: 6px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.btn-portal:hover {
+  background: #0284c7;
+  border-color: #0284c7;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.4);
+}
+
 main{max-width:1600px;margin:15px auto;padding:0 10px; width:100%;}
 .layout{display:grid;grid-template-columns:520px 1fr;gap:15px; width:100%;}
 
@@ -327,6 +379,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     background: #fff;
   }
   body.print-labels header, 
+  body.print-labels .portal-bar,
   body.print-labels main, 
   body.print-labels footer, 
   body.print-labels .no-print {
@@ -361,7 +414,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 
 @media print{
   html, body { background: #fff !important; color: #000 !important; font-family: Arial, sans-serif !important; width: 100%; margin: 0 !important; padding: 0 !important; }
-  header, .no-print, .layout > section:first-child, .notice, footer, .legend { display: none !important; }
+  header, .portal-bar, .no-print, .layout > section:first-child, .notice, footer, .legend { display: none !important; }
   main { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
   .layout { display: block !important; }
   .card { box-shadow: none !important; border: 0 !important; padding: 0 !important; margin: 0 !important; }
@@ -470,6 +523,19 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     <button class="btn-pdf" onclick="window.print()">🖨️ YAZDIR</button>
   </div>
 </header>
+
+<!-- ACANLAR PORTAL HIZLI ERİŞİM MENÜSÜ -->
+<div class="portal-bar no-print">
+  <div class="portal-title">🌐 Acanlar Portal:</div>
+  <div class="portal-links">
+    <a href="https://slatrap-alt.github.io/acanlar/" target="_blank" class="btn-portal">
+      🧮 Fiyat Hesaplama Sistemi
+    </a>
+    <a href="https://slatrap-alt.github.io/index.html/" target="_blank" class="btn-portal">
+      📐 Çizim Programı
+    </a>
+  </div>
+</div>
 
 <main>
 <div class="layout">
