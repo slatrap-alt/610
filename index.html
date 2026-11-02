@@ -442,6 +442,10 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
   .metric b { font-size: 13px !important; color: #000 !important; }
   .job-table-wrap { break-before: page; }
 }
+/* Cloud project controls */
+.cut-cloud-actions{display:flex;gap:8px;flex-wrap:wrap}.cut-cloud-actions button{flex:1;justify-content:center;min-height:40px}.cut-setup{font-size:11px;margin-top:12px;line-height:1.6}.cut-setup summary{cursor:pointer}.cut-setup pre{overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;background:var(--table-th-bg);padding:10px;border-radius:8px}#cutCloudStatus{line-height:1.6;margin:10px 0}#cutLogin{width:min(420px,calc(100vw - 30px));max-height:90dvh;overflow:auto;border:1px solid var(--border-color);border-radius:16px;background:var(--panel-bg,#fff);color:var(--text-color,#1e293b);padding:22px}#cutLogin::backdrop{background:#0f172a88}#cutLogin input{width:100%;box-sizing:border-box;margin:6px 0 14px;padding:12px;font-size:16px}#cutLoginError{color:#dc2626;font-size:12px}.saved-project-item{gap:10px}.saved-project-item .project-btn-group{flex-shrink:0}.saved-project-item .btn-mini{min-height:34px}@media(max-width:480px){.saved-project-item{flex-wrap:wrap}.cut-cloud-actions{flex-direction:column}.saved-project-item .project-btn-group{margin-left:auto}}
+/* Compact cloud account indicator */
+#cutAccountButton{--cloud-led:#94a3b8;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:32px;padding:7px 10px;border:1px solid #ffffff24;border-radius:8px;background:#ffffff0c;color:#e2e8f0;font:600 11px/1.2 inherit;font-family:inherit;font-size:11px;font-weight:600;white-space:nowrap;cursor:pointer;transition:background .15s,border-color .15s}#cutAccountButton::before{content:'';width:7px;height:7px;flex-shrink:0;border-radius:50%;background:var(--cloud-led);box-shadow:0 0 5px var(--cloud-led)}#cutAccountButton[data-state="connected"]{--cloud-led:#4ade80}#cutAccountButton[data-state="pending"],#cutAccountButton[data-state="offline"]{--cloud-led:#fbbf24}#cutAccountButton[data-state="error"]{--cloud-led:#f87171}#cutAccountButton:hover{background:#ffffff1c;border-color:#ffffff50}#cutAccountButton:focus-visible{outline:2px solid #7dd3fc;outline-offset:3px}.cut-status-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 </style>
 </head>
 <body>
@@ -454,7 +458,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
       <polygon points="250,40 360,200 320,200 250,95 210,155 225,178 240,155" fill="#ffffff"/>
     </svg>
     <h2>ACANLAR MOBİLYA</h2>
-    <div class="splash-sub">Plaka Optimizasyon Sistemi v1.99.33</div>
+    <div class="splash-sub">Plaka Optimizasyon Sistemi v1.99.37</div>
     <div class="splash-spinner"></div>
   </div>
 </div>
@@ -514,15 +518,19 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA</h1>
-      <div class="author">Mesut ACAN — v1.99.33</div>
+      <div class="author">Mesut ACAN — v1.99.37</div>
     </div>
   </div>
   <div class="header-btns no-print">
+    <button id="cutAccountButton" type="button" data-state="disconnected" onclick="cutAccount()" title="Bulut hesabına bağlan" aria-label="Bulut hesabına bağlan">☁ Bulut</button>
+    <span id="cutCloudStatus" class="cut-status-sr" role="status" aria-live="polite">Atölye hesabınla giriş yaparak projelerini eşitle.</span>
     <button id="btnThemeToggle" class="btn-theme" onclick="toggleTheme()" title="Gece/Gündüz Modu">🌙</button>
     <button class="btn-label" onclick="openLabelModal()">🏷️ ETİKET (TW-2033)</button>
     <button class="btn-pdf" onclick="window.print()">🖨️ YAZDIR</button>
   </div>
 </header>
+
+
 
 <!-- ACANLAR PORTAL HIZLI ERİŞİM MENÜSÜ -->
 <div class="portal-bar no-print">
@@ -695,14 +703,18 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 </div>
 
 <div class="card">
-<h2>📁 Telefon & Cihaz Yerel Hafızası (Kayıtlı Projeler)</h2>
+<h2>📁 Kayıtlı Kesim Projeleri</h2>
+<div class="cut-cloud-actions"><button class="btn-action save" onclick="cutAccount()">☁ Bulut hesabı</button><button class="btn-action load" onclick="cutFlush()">↻ Yeniden eşitle</button></div>
+<p class="muted">Atölye programındaki e-posta ve şifrenle giriş yap. Kaydettiğin projeler aynı hesapla diğer cihazlarda görünür.</p>
 <div class="row">
   <input id="saveLocalName" type="text" placeholder="Proje Adı Girin (Örn: Mutfak Kapaklar)">
-  <button class="btn-action save" style="justify-content:center" onclick="saveProjectToLocalStorage()">💾 Hafızaya Kaydet</button>
+  <button class="btn-action save" style="justify-content:center" onclick="saveProjectToLocalStorage()">💾 Projeyi Kaydet</button>
 </div>
 
-<label style="margin-top:10px;">📋 Cihazınızda Kayıtlı Projeler:</label>
+<label style="margin-top:10px;">📋 Kayıtlı projelerin:</label>
 <div class="saved-projects-list" id="savedProjectsContainer"></div>
+<button id="cutImport" hidden class="btn-action load" style="margin-top:10px;width:100%" onclick="cutImportLocal()">☁ Eski cihaz kayıtlarını buluta aktar</button>
+<p class="muted" style="margin-top:8px">Eski kayıtlar yalnızca kaydedildikleri tarayıcıda bulunur. O cihazda giriş yapıp aktar. Fire plaka deposu bu cihazda tutulmaya devam eder.</p>
 </div>
 
 <div class="card">
@@ -1116,48 +1128,258 @@ function executePrintLabels() {
   }, 1000);
 }
 
-function saveProjectToLocalStorage() {
-  let nameInput = document.getElementById("saveLocalName").value.trim() || document.getElementById("projName").value.trim();
-  if(!nameInput) {
-    alert("Lütfen projeye bir isim verin!");
-    return;
-  }
-
-  let projectData = {
-    projName: nameInput,
-    parts: parts,
-    presetType: activePresetType,
-    sh: document.getElementById("sh").value,
-    sw: document.getElementById("sw").value,
-    kerf: document.getElementById("kerf").value,
-    edge: document.getElementById("edge").value,
-    shuffleSeed: shuffleSeed,
-    savedSheets: lastActiveSheets,
-    completedParts: Array.from(completedUniquePartIds),
-    savedDate: new Date().toLocaleDateString('tr-TR') + " " + new Date().toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'})
-  };
-
-  let savedProjects = getSavedProjectsFromStorage();
-  savedProjects[nameInput] = projectData;
-  localStorage.setItem("acanlar_local_projects", JSON.stringify(savedProjects));
-  
-  document.getElementById("saveLocalName").value = "";
-  renderSavedProjectsList();
-  alert(`"${nameInput}" projesi cihazınıza kaydedildi!`);
+// Acanlar: account-scoped project cache and Firestore synchronization.
+let cutUser = null, cutDB = null, cutAuth = null, cutStop = null;
+let cutRecords = {}, cutSending = false, cutEpoch = 0;
+const cutEl = id => document.getElementById(id);
+const cutClone = value => JSON.parse(JSON.stringify(value));
+const cutId = () => 'p_' + (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
+const cutKey = uid => 'acanlar_cut_projects_v2_' + uid;
+function cutStatus(message, bad=false) {
+  cutEl('cutCloudStatus').textContent = message;
+  cutEl('cutCloudStatus').style.color = bad ? '#dc2626' : '';
+  const button = cutEl('cutAccountButton');
+  const pending = cutUser && Object.values(cutRecords).some(record => record.pending);
+  const sending = /gönderiliyor|alınıyor|kaydediliyor/i.test(message);
+  button.dataset.state = bad ? 'error' : !cutUser ? 'disconnected' : navigator.onLine === false ? 'offline' : pending || sending ? 'pending' : 'connected';
+  button.textContent = '☁ Bulut';
+  const action = cutUser ? 'Hesap bağlı · Çıkış için tıkla' : 'Giriş yapmak için tıkla';
+  button.title = action + ' — ' + message;
+  button.setAttribute('aria-label', 'Bulut: ' + action + '. ' + message);
 }
-
+function cutRead(uid) {
+  try { return JSON.parse(localStorage.getItem(cutKey(uid)) || '{}'); }
+  catch(e) { cutStatus('Cihaz kayıtları okunamadı. JSON yedeğini kullanabilirsin.', true); return {}; }
+}
+function cutPersist(uid, records) {
+  localStorage.setItem(cutKey(uid), JSON.stringify(records));
+}
 function getSavedProjectsFromStorage() {
-  try {
-    let saved = localStorage.getItem("acanlar_local_projects");
-    return saved ? JSON.parse(saved) : {};
-  } catch(e) { return {}; }
+  try { return JSON.parse(localStorage.getItem('acanlar_local_projects') || '{}'); }
+  catch(e) { return {}; }
 }
+function cutCapture(name) {
+  return cutClone({projName:name, parts, presetType:activePresetType,
+    sh:cutEl('sh').value, sw:cutEl('sw').value, kerf:cutEl('kerf').value,
+    edge:cutEl('edge').value, shuffleSeed, savedSheets:lastActiveSheets,
+    completedParts:Array.from(completedUniquePartIds),
+    savedDate:new Date().toLocaleString('tr-TR')});
+}
+function cutQueue(name, data, old) {
+  const payload = JSON.stringify(data);
+  if(new TextEncoder().encode(payload).length > 900000)
+    throw Error('Bu proje bulut sınırından büyük. JSON dosyası olarak indirerek yedekle.');
+  return {id:old?.id || cutId(), name, data, baseRev:old?.baseRev || 0,
+    pending:true, opId:cutId(), updated:Date.now(), deleted:false,
+    ...(old?.importToken ? {importToken:old.importToken} : {})};
+}
+async function saveProjectToLocalStorage() {
+  const name = (cutEl('saveLocalName').value.trim() || cutEl('projName').value.trim()).slice(0,180);
+  if(!name) return alert('Lütfen projeye bir isim verin!');
+  try {
+    const data = cutCapture(name);
+    if(!cutUser) {
+      const records = getSavedProjectsFromStorage();
+      if(Object.hasOwn(records,name) && !confirm('Bu isimdeki cihaz kaydı güncellensin mi?')) return;
+      Object.defineProperty(records,name,{value:data,enumerable:true,configurable:true,writable:true});
+      localStorage.setItem('acanlar_local_projects', JSON.stringify(records));
+      cutStatus('✓ Bu cihaza kaydedildi. Diğer cihazlar için hesabına bağlan ve Buluta aktar düğmesini kullan.');
+    } else {
+      const old = Object.values(cutRecords).find(r=>!r.deleted && r.name===name);
+      if(old && !confirm('Bu isimdeki proje güncellensin mi?')) return;
+      const record = cutQueue(name,data,old);
+      const next = {...cutRecords,[record.id]:record};
+      cutPersist(cutUser.uid,next); Object.assign(cutRecords,next);
+      cutStatus('✓ Cihaz kopyası kaydedildi. Buluta gönderilmesi bekleniyor…');
+      void cutFlush();
+    }
+    cutEl('saveLocalName').value=''; renderSavedProjectsList();
+  } catch(e) { alert('Kayıt tamamlanamadı: ' + e.message); }
+}
+function loadProjectFromLocalStorage(key) {
+  const data = cutUser ? cutRecords[key]?.data : getSavedProjectsFromStorage()[key];
+  if(!data) return;
+  cutApplyProject(cutClone(data),cutUser ? cutRecords[key].name : key);
+  cutEl('saveLocalName').value=cutUser ? cutRecords[key].name : key;
+}
+function deleteProjectFromLocalStorage(key) {
+  const name=cutUser ? cutRecords[key]?.name : key;
+  if(!name || !confirm('"'+name+'" projesi silinsin mi?'+(cutUser?' Silme diğer cihazlara da yansır.':''))) return;
+  try {
+    if(cutUser) {
+      const old=cutRecords[key];
+      const next={...cutRecords,[key]:{...old,data:null,deleted:true,pending:true,opId:cutId(),updated:Date.now()}};
+      cutPersist(cutUser.uid,next); Object.assign(cutRecords,next);
+      cutStatus('Silme cihazda kaydedildi; buluta gönderilmesi bekleniyor…'); void cutFlush();
+    } else {
+      const records=getSavedProjectsFromStorage(); delete records[key];
+      localStorage.setItem('acanlar_local_projects',JSON.stringify(records));
+    }
+    renderSavedProjectsList();
+  } catch(e) { alert('Silme kaydedilemedi: '+e.message); }
+}
+function renderSavedProjectsList() {
+  const container=cutEl('savedProjectsContainer'); container.replaceChildren();
+  const entries=cutUser ? Object.values(cutRecords).filter(r=>!r.deleted).map(r=>[r.id,r.data,r.name,r.pending])
+    : Object.entries(getSavedProjectsFromStorage()).map(([key,data])=>[key,data,key,false]);
+  if(!entries.length) { const p=document.createElement('div'); p.className='muted'; p.textContent=cutUser?'Bu hesapta kayıtlı proje yok.':'Bu cihazda kayıtlı proje yok.'; container.append(p); }
+  entries.sort((a,b)=>a[2].localeCompare(b[2],'tr')).forEach(([key,data,name,pending])=>{
+    const row=document.createElement('div'); row.className='saved-project-item';
+    const label=document.createElement('div'); label.style.minWidth='0'; label.style.overflowWrap='anywhere';
+    const strong=document.createElement('b'); strong.textContent=name;
+    const small=document.createElement('div'); small.className='muted';
+    small.textContent=(data?.parts?.length||0)+' Kalem · '+(pending?'⏳ Buluta gönderilecek':cutUser?'☁ Bulut kopyası':'Cihaz kaydı');
+    label.append(strong,small); const actions=document.createElement('div'); actions.className='project-btn-group';
+    [['📂 Yükle','load-proj',()=>loadProjectFromLocalStorage(key)],['Sil','del-proj',()=>deleteProjectFromLocalStorage(key)]].forEach(([text,cls,fn])=>{
+      const b=document.createElement('button'); b.className='btn-mini '+cls; b.textContent=text; b.onclick=fn; actions.append(b);
+    }); row.append(label,actions); container.append(row);
+  });
+  cutEl('cutImport').hidden=!cutUser;
+}
+function cutError(e) {
+  if(String(e.code).includes('permission')) return 'Bulut erişim izni eksik. Cihaz kopyan korunuyor.';
+  return 'Buluta ulaşılamadı. Cihaz kopyası korunuyor; tekrar denenecek. ('+(e.code||e.message||'bağlantı')+')';
+}
+async function cutFlush() {
+  if(cutSending || !cutUser || !cutDB || navigator.onLine===false) return;
+  cutSending=true;
+  const uid=cutUser.uid, epoch=cutEpoch, records=cutRecords;
+  try {
+    for(const id of Object.keys(records)) {
+      if(epoch!==cutEpoch) break;
+      const local=records[id]; if(!local.pending) continue;
+      const sent=cutClone(local), ref=cutDB.collection('acanlar_cut_projects').doc(uid).collection('items').doc(id);
+      const recoveryId=sent.opId;
+      cutStatus('☁ Projeler buluta gönderiliyor…');
+      const outcome=await cutDB.runTransaction(async tx=>{
+        const doc=await tx.get(ref), remote=doc.exists ? doc.data() : null;
+        if(remote?.opId===sent.opId) return {rev:remote.rev};
+        const conflict=!!remote && (remote.rev||0)!==sent.baseRev;
+        if(conflict && sent.deleted) return {conflictDelete:true,remote};
+        const target=conflict ? ref.parent.doc(recoveryId) : ref;
+        const revision=conflict ? 1 : (remote?.rev||0)+1;
+        const name=sent.name+(conflict?' (diğer cihazla çakışan kopya)':'');
+        tx.set(target,{name,payload:sent.deleted?'':JSON.stringify(sent.data),deleted:sent.deleted,
+          rev:revision,opId:sent.opId,updated:sent.updated,importToken:sent.importToken||null});
+        return {rev:revision,conflict,name,remote};
+      });
+      // Never redirect an in-flight acknowledgement into another account's cache.
+      const current=records[id];
+      if(outcome.conflictDelete) {
+        records[id]=cutFromRemote(id,outcome.remote);
+        if(epoch===cutEpoch) cutStatus('Proje diğer cihazda değişmiş. Silme iptal edildi; güncel kayıt korundu.',true);
+      } else if(outcome.conflict) {
+        records[recoveryId]={...sent,id:recoveryId,name:outcome.name,baseRev:outcome.rev,pending:false};
+        if(current.opId===sent.opId) records[id]=cutFromRemote(id,outcome.remote);
+        else { records[id]={...current,id:recoveryId,name:outcome.name,baseRev:outcome.rev}; records[recoveryId]=records[id]; records[id]=cutFromRemote(id,outcome.remote); }
+        if(epoch===cutEpoch) cutStatus('İki cihazda farklı değişiklik vardı. Her iki sürüm ayrı proje olarak korundu.');
+      } else {
+        current.baseRev=outcome.rev;
+        if(current.opId===sent.opId) current.pending=false;
+      }
+      cutPersist(uid,records);
+    }
+    if(epoch===cutEpoch) {
+      renderSavedProjectsList();
+      const count=Object.values(records).filter(r=>r.pending).length;
+      if(!count && !cutEl('cutCloudStatus').textContent.includes('korundu')) cutStatus('☁ Tüm projeler buluta kaydedildi.');
+    }
+  } catch(e) { if(epoch===cutEpoch) cutStatus(cutError(e),true); }
+  finally { cutSending=false; }
+}
+function cutFromRemote(id, remote) {
+  return {id,name:remote.name,data:remote.deleted?null:JSON.parse(remote.payload),deleted:!!remote.deleted,
+    baseRev:remote.rev||0,pending:false,opId:remote.opId,updated:remote.updated||0,importToken:remote.importToken||null};
+}
+async function cutImportLocal() {
+  if(!cutUser) return;
+  const uid=cutUser.uid;
+  if(!confirm('Bu tarayıcıdaki eski projeler bağlı hesaba kopyalansın mı? Cihazdaki asılları korunur.')) return;
+  try {
+    const next={...cutRecords}; let count=0;
+    for(const [name,data] of Object.entries(getSavedProjectsFromStorage())) {
+      const bytes=new TextEncoder().encode(name+'\n'+JSON.stringify(data));
+      const token=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))).map(n=>n.toString(16).padStart(2,'0')).join('');
+      if(cutUser?.uid!==uid) return;
+      if(Object.values(next).some(r=>r.importToken===token)) continue;
+      let newName=name;
+      if(Object.values(next).some(r=>!r.deleted && r.name===name)) newName=name+' (cihazdan aktarılan)';
+      const record=cutQueue(newName,data); record.importToken=token;
+      next[record.id]=record; count++;
+    }
+    cutPersist(uid,next); Object.assign(cutRecords,next); renderSavedProjectsList();
+    cutStatus(count+' proje cihazda hazırlandı; buluta gönderilmesi bekleniyor…'); void cutFlush();
+  } catch(e) { alert('Aktarım tamamlanamadı: '+e.message); }
+}
+function cutAccount() {
+  if(cutUser) {
+    if(Object.values(cutRecords).some(r=>r.pending) && !confirm('Henüz buluta gitmeyen kayıtlar var. Bu cihazda korunacak; yine de çıkılsın mı?')) return;
+    if(confirm('Bulut hesabından çıkılsın mı?')) cutAuth.signOut().catch(e=>cutStatus(cutError(e),true));
+  } else cutEl('cutLogin').showModal();
+}
+async function cutLoginSubmit(event) {
+  event.preventDefault(); const button=cutEl('cutLoginButton'); button.disabled=true; button.textContent='Bağlanıyor…';
+  cutEl('cutLoginError').textContent='Hesabın doğrulanıyor…';
+  let loginTimeout;
+  try {
+    if(!cutAuth) throw Error('Bulut bağlantısı yüklenemedi. İnternetini kontrol edip sayfayı yenile.');
+    await Promise.race([
+      cutAuth.signInWithEmailAndPassword(cutEl('cutEmail').value.trim(),cutEl('cutPassword').value),
+      new Promise((_,reject)=>{loginTimeout=setTimeout(()=>reject({code:'auth/timeout'}),20000)})
+    ]);
+    cutEl('cutPassword').value=''; cutEl('cutLoginError').textContent='Giriş başarılı.'; cutEl('cutLogin').close();
+  } catch(e) {
+    const messages={
+      'auth/invalid-credential':'E-posta veya şifre doğru değil. Atölye programındaki hesabını kullan.',
+      'auth/wrong-password':'E-posta veya şifre doğru değil.',
+      'auth/user-not-found':'Bu e-posta ile kayıtlı hesap bulunamadı.',
+      'auth/invalid-email':'E-posta adresini kontrol et.',
+      'auth/too-many-requests':'Çok sayıda giriş denemesi yapıldı. Biraz bekleyip yeniden dene.',
+      'auth/network-request-failed':'Giriş sunucusuna ulaşılamadı. İnternet bağlantını ve tarayıcı engellemelerini kontrol et.',
+      'auth/timeout':'Giriş sunucusu yanıt vermedi. İnternetini kontrol edip yeniden dene.',
+      'auth/operation-not-allowed':'Firebase projesinde e-posta ve şifreyle giriş etkin değil.'
+    };
+    cutEl('cutLoginError').textContent=messages[e.code] || e.message?.includes('yüklenemedi') && e.message || 'Giriş yapılamadı. Bağlantıyı ve hesap bilgilerini kontrol et. Hata: '+(e.code||'bilinmiyor');
+  }
+  finally { clearTimeout(loginTimeout); button.disabled=false; button.textContent='Bağlan'; }
+}
+function cutStartCloud() {
+  try {
+    const app=firebase.initializeApp({apiKey:'AIzaSyB3Pfgk5Z8x4c95BqfPcnNZHNYQ01pQpSU',authDomain:'oykum-6de70.firebaseapp.com',projectId:'oykum-6de70',appId:'1:908914397464:web:63bcd5f48fcce81cf2ce6d'},'acanlar-cut');
+    cutAuth=app.auth(); cutDB=app.firestore();
+    cutAuth.onAuthStateChanged(u=>{
+      cutEpoch++; if(cutStop) cutStop(); cutStop=null; cutUser=u;
+      cutRecords=u?cutRead(u.uid):{};
+      cutEl('cutAccountButton').textContent='☁ Bulut';
+      renderSavedProjectsList();
+      if(!u) return cutStatus('Cihaz kayıtları açık. Her yerden erişmek için atölye hesabına bağlan.');
+      cutStatus('☁ Bulut projeleri alınıyor…');
+      const epoch=cutEpoch;
+      cutStop=cutDB.collection('acanlar_cut_projects').doc(u.uid).collection('items').onSnapshot(snap=>{
+        if(epoch!==cutEpoch) return;
+        try {
+          for(const doc of snap.docs) {
+            const current=cutRecords[doc.id], remote=doc.data();
+            if(current?.pending) continue;
+            if(!current || (remote.rev||0)>=(current.baseRev||0)) cutRecords[doc.id]=cutFromRemote(doc.id,remote);
+          }
+          cutPersist(u.uid,cutRecords); renderSavedProjectsList();
+          if(!Object.values(cutRecords).some(r=>r.pending)) cutStatus(navigator.onLine===false?'Çevrimdışı · Bu cihazdaki hesap kopyası açık.':'☁ Bulut projeleri güncel.');
+          void cutFlush();
+        } catch(e) { cutStatus('Bazı kayıtlar okunamadı veya cihaza yazılamadı: '+e.message,true); }
+      },e=>cutStatus(cutError(e),true));
+      void cutFlush();
+    });
+  } catch(e) { cutStatus('Bulut yüklenemedi. Cihaz kayıtları kullanılabilir.',true); }
+}
+window.addEventListener('online',()=>void cutFlush());
+window.addEventListener('offline',()=>cutStatus('Çevrimdışı · Kayıtlar cihazda korunur; bağlantı gelince gönderilir.'));
+window.addEventListener('storage',event=>{
+  if(cutUser && event.key===cutKey(cutUser.uid) && !cutSending) {cutRecords=cutRead(cutUser.uid);renderSavedProjectsList();void cutFlush();}
+});
+setInterval(()=>void cutFlush(),15000);
 
-function loadProjectFromLocalStorage(projNameKey) {
-  let savedProjects = getSavedProjectsFromStorage();
-  let projectData = savedProjects[projNameKey];
-  if(!projectData) return;
-
+function cutApplyProject(projectData, projNameKey) {
   document.getElementById("projName").value = projectData.projName || projNameKey;
   parts = projectData.parts || [];
   shuffleSeed = projectData.shuffleSeed || 0;
@@ -1165,11 +1387,15 @@ function loadProjectFromLocalStorage(projNameKey) {
   selectSheetPreset(projectData.presetType || 'custom', projectData.sh || 280, projectData.sw || 210);
   if(projectData.sh) document.getElementById("sh").value = projectData.sh;
   if(projectData.sw) document.getElementById("sw").value = projectData.sw;
-  if(projectData.kerf) document.getElementById("kerf").value = projectData.kerf;
-  if(projectData.edge) document.getElementById("edge").value = projectData.edge;
+  if(projectData.kerf != null) document.getElementById("kerf").value = projectData.kerf;
+  if(projectData.edge != null) document.getElementById("edge").value = projectData.edge;
 
   completedUniquePartIds = new Set(projectData.completedParts || []);
 
+  lastSW0 = parseNum(document.getElementById("sw").value);
+  lastSH0 = parseNum(document.getElementById("sh").value);
+  lastEdge = parseNum(document.getElementById("edge").value);
+  lastK = parseNum(document.getElementById("kerf").value);
   renderParts();
 
   if(projectData.savedSheets && projectData.savedSheets.length > 0) {
@@ -1185,42 +1411,6 @@ function loadProjectFromLocalStorage(projNameKey) {
   } else {
     startOptimization();
   }
-}
-
-function deleteProjectFromLocalStorage(projNameKey) {
-  if(confirm(`"${projNameKey}" projesini silmek istediğinize emin misiniz?`)) {
-    let savedProjects = getSavedProjectsFromStorage();
-    delete savedProjects[projNameKey];
-    localStorage.setItem("acanlar_local_projects", JSON.stringify(savedProjects));
-    renderSavedProjectsList();
-  }
-}
-
-function renderSavedProjectsList() {
-  const container = document.getElementById("savedProjectsContainer");
-  let savedProjects = getSavedProjectsFromStorage();
-  let keys = Object.keys(savedProjects);
-
-  if(keys.length === 0) {
-    container.innerHTML = `<div class="muted" style="text-align:center;padding:6px">Cihazınızda kayıtlı proje yok.</div>`;
-    return;
-  }
-
-  container.innerHTML = "";
-  keys.forEach(key => {
-    let item = savedProjects[key];
-    container.innerHTML += `
-      <div class="saved-project-item">
-        <div>
-          <b>${esc(key)}</b> <span class="muted">(${item.parts ? item.parts.length : 0} Kalem)</span>
-        </div>
-        <div class="project-btn-group">
-          <button class="btn-mini load-proj" onclick="loadProjectFromLocalStorage('${esc(key)}')">📂 Yükle</button>
-          <button class="btn-mini del-proj" onclick="deleteProjectFromLocalStorage('${esc(key)}')">Sil</button>
-        </div>
-      </div>
-    `;
-  });
 }
 
 function loadStockWastesFromStorage() {
@@ -2227,5 +2417,9 @@ selectSheetPreset('preset_280', 280, 210);
 addPart();
 checkShuffleBtn();
 </script>
+<dialog id="cutLogin"><form onsubmit="window.cutLoginSubmit(event)"><h2>☁ Atölye hesabına bağlan</h2><p class="muted">Atölye programındaki mevcut hesabını kullan.</p><label for="cutEmail">E-posta</label><input id="cutEmail" type="email" autocomplete="username" required><label for="cutPassword">Şifre</label><input id="cutPassword" type="password" autocomplete="current-password" required><p id="cutLoginError" role="alert"></p><div class="cut-cloud-actions"><button id="cutLoginButton" class="btn-action save" type="submit">Bağlan</button><button class="btn-action load" type="button" onclick="document.getElementById('cutLogin').close()">Vazgeç</button></div></form></dialog>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js" defer onerror="cutStatus('Bulut bağlantısı yüklenemedi. İnterneti kontrol et; cihaz kayıtları açık.',true)"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js" defer onload="cutStartCloud()" onerror="cutStatus('Bulut bağlantısı yüklenemedi. Cihaz kayıtları açık.',true)"></script>
 </body>
 </html>
