@@ -6,7 +6,7 @@
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; base-uri 'none'; form-action 'none'">
 <meta name="theme-color" content="#121c27">
-<title>Acanlar Kesim · iPad Harita v2.0.3</title>
+<title>Acanlar Kesim · iPad Harita v2.0.4</title>
 <style>
 [hidden]{display:none!important}
 *{box-sizing:border-box}
@@ -33,6 +33,22 @@ button:disabled{opacity:.48;cursor:default}
 .toolbar{display:flex;align-items:flex-end;flex-wrap:wrap}
 .toolbar .project{flex:1 1 230px;margin:0 8px 7px 0}
 .toolbar button{margin:0 8px 7px 0}
+#viewToggle{white-space:nowrap}
+#jobList{margin-top:10px}
+#jobList h2{font-size:23px;margin:0 0 6px}
+#jobListMeta{margin:0 0 12px;color:#435569;overflow-wrap:break-word}
+#jobScroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+#jobTable{width:100%;min-width:620px;border-collapse:collapse;font-size:15px}
+#jobTable th,#jobTable td{padding:10px 8px;border-bottom:1px solid #d6e0e8;text-align:left;vertical-align:top}
+#jobTable th{background:#e7eff5;color:#213c50;white-space:nowrap}
+#jobTable td:first-child{font-weight:bold;overflow-wrap:break-word;max-width:180px}
+#jobTable .number{white-space:nowrap}
+#jobTable tr:nth-child(even){background:#f6f9fb}
+#jobTable tr.done{background:#ecf9f1}
+#jobTable .done td:last-child{color:#14623d;font-weight:bold}
+#jobTable .partial td:last-child{color:#785207;font-weight:bold}
+#jobTable .unplaced{display:block}
+#jobTable .unplaced,#jobTable .unplaced-cell{color:#ab2525;font-weight:bold}
 #board{margin-top:10px;text-align:center}
 .nav{display:flex;justify-content:center;align-items:center;margin:0 0 8px}
 .nav b{min-width:64px}
@@ -68,6 +84,7 @@ button:disabled{opacity:.48;cursor:default}
   <section id="controls" class="card" hidden>
     <div class="toolbar">
       <div class="project"><label for="projects">Buluttaki proje</label><select id="projects"></select></div>
+      <button id="viewToggle" type="button" aria-controls="board jobList" hidden>Kesim Listesi</button>
       <button id="refresh" class="secondary" type="button">Son kaydı aç</button>
       <button id="logout" class="secondary" type="button">Çıkış</button>
     </div>
@@ -84,6 +101,20 @@ button:disabled{opacity:.48;cursor:default}
     <canvas id="map" aria-label="Plaka kesim haritası"></canvas>
     <p id="detail" role="status">Ölçüyü görmek veya kesim durumunu değiştirmek için parçaya dokun.</p>
     <p id="legend">Ölçüler cm · Kalın mavi çizgi: kenar bandı · Yeşil parça: kesildi</p>
+  </section>
+  <section id="jobList" class="card" aria-labelledby="jobListTitle" hidden>
+    <h2 id="jobListTitle">Kesim Listesi</h2>
+    <p id="jobListMeta"></p>
+    <p id="jobEmpty" hidden>Bu projenin kayıtlı parça listesi yok.</p>
+    <div id="jobScroll" tabindex="0" role="region" aria-label="Projenin kesim tablosu">
+      <table id="jobTable" aria-labelledby="jobListTitle">
+        <thead><tr>
+          <th scope="col">Parça</th><th scope="col">Plaka</th><th scope="col">Boy</th><th scope="col">En</th>
+          <th scope="col">Adet</th><th scope="col">Kenar bandı</th><th scope="col">Kesim durumu</th>
+        </tr></thead>
+        <tbody id="jobTableBody"></tbody>
+      </table>
+    </div>
   </section>
 </main>
 <div id="partOverlay" hidden>
@@ -297,7 +328,7 @@ var root = 'https://firestore.googleapis.com/v1/projects/' + projectId + '/datab
 var storageKey = 'acanlar-cut-ipad-session-v1';
 var session = null, remembered = false, busy = false;
 var data = null, activeProject = '', plateIndex = 0, hits = [], sequences = [], completed = new Set();
-var selectedPart = null;
+var selectedPart = null, listView = false;
 
 function show(text, error) {
   $('status').textContent = text || '';
@@ -360,13 +391,22 @@ async function cloudRequest(method, suffix, body) {
   }
 }
 function readCloud(suffix) { return cloudRequest('GET', suffix); }
+function hideProjectViews() {
+  $('board').hidden = true;
+  $('jobList').hidden = true;
+  $('viewToggle').hidden = true;
+  data = null;
+}
 function signOut(clearStatus) {
   closePart();
   activeProject = '';
   session = null;
   remembered = false;
   storeSession();
-  data = null;
+  hideProjectViews();
+  listView = false;
+  $('jobTableBody').textContent = '';
+  $('jobListMeta').textContent = '';
   hits = [];
   sequences = [];
   completed = new Set();
@@ -376,20 +416,19 @@ function signOut(clearStatus) {
   $('plateTitle').textContent = '';
   $('detail').textContent = '';
   $('controls').hidden = true;
-  $('board').hidden = true;
   $('login').hidden = false;
   if (clearStatus) show('');
 }
 async function run(action, fallback) {
   if (busy) return;
   busy = true;
-  ['loginButton', 'refresh', 'logout', 'projects'].forEach(function (id) { $(id).disabled = true; });
+  ['loginButton', 'refresh', 'logout', 'projects', 'viewToggle'].forEach(function (id) { $(id).disabled = true; });
   try { await action(); }
   catch (error) {
     if (error.status === 403) show('Bulut projeleri için erişim izni alınamadı. Aynı atölye hesabını kontrol et.', true);
     else show(fallback && error.status === 400 ? fallback : error.message, true);
   } finally {
-    ['loginButton', 'refresh', 'logout', 'projects'].forEach(function (id) { $(id).disabled = false; });
+    ['loginButton', 'refresh', 'logout', 'projects', 'viewToggle'].forEach(function (id) { $(id).disabled = false; });
     busy = false;
   }
 }
@@ -421,7 +460,7 @@ async function listProjects(preferred) {
   select.textContent = '';
   rows.forEach(function (row) { select.appendChild(new Option(row.name, row.id)); });
   if (!rows.length) {
-    $('board').hidden = true;
+    hideProjectViews();
     show('Bulutta kayıtlı proje yok. Telefonda iPad’e Gönder düğmesini kullan.');
     return;
   }
@@ -429,7 +468,7 @@ async function listProjects(preferred) {
   else if (preferred) {
     select.insertBefore(new Option('Bir proje seç', ''), select.firstChild);
     select.value = '';
-    $('board').hidden = true;
+    hideProjectViews();
     show('Bu harita bu hesapta bulunamadı. Listeden bir proje seç.', true);
     return;
   }
@@ -438,8 +477,7 @@ async function listProjects(preferred) {
 async function loadProject(id, reset) {
   if (!id) return;
   show('Kesim haritası yükleniyor…');
-  $('board').hidden = true;
-  data = null;
+  hideProjectViews();
   var doc = await readCloud('/' + encodeURIComponent(id));
   var plan = savedPlan(doc);
   if (!plan) {
@@ -472,8 +510,119 @@ function applyPlan(plan) {
     });
   });
   data = plan;
-  showPlate();
+  showProjectView();
 }
+function formatSheetNumbers(sheetIndices, hasDepot) {
+  const result = [];
+  if (sheetIndices.length > 0) {
+    sheetIndices.sort((a, b) => a - b);
+    const ranges = [];
+    let start = sheetIndices[0], end = start;
+    for (let i = 1; i < sheetIndices.length; i++) {
+      if (sheetIndices[i] === end + 1) end = sheetIndices[i];
+      else { ranges.push(start === end ? `${start}` : `${start}-${end}`); start = sheetIndices[i]; end = start; }
+    }
+    ranges.push(start === end ? `${start}` : `${start}-${end}`);
+    result.push(ranges.join(', ') + '. Plaka' + (sheetIndices.length > 1 ? 'lar' : ''));
+  }
+  if (hasDepot) result.push('Depo');
+  return result.join(', ');
+}
+
+function renderJobList() {
+  var entries = Array.isArray(data.parts) ? data.parts : [];
+  var rows = entries.map(function (part) {
+    if (!part) return null;
+    var width = parseNum(part.w), height = parseNum(part.h);
+    if (!(width > 0 && height > 0)) return null;
+    return {
+      part: part, width: width, height: height, quantity: Math.max(1, Math.round(parseNum(part.q) || 1)),
+      sheets: [], depot: false, placed: 0, cut: 0
+    };
+  });
+  // Match each physical piece to its original input row, including rotated placements.
+  data.savedSheets.forEach(function (sheet, sheetIndex) {
+    (sheet.placed || []).forEach(function (part) {
+      var match = /^r(0|[1-9][0-9]*)_i(0|[1-9][0-9]*)$/.exec(part.uniqueInstanceId);
+      var row = match && rows[Number(match[1])];
+      if (!row || Number(match[2]) >= row.quantity) return;
+      row.placed++;
+      if (completed.has(part.uniqueInstanceId)) row.cut++;
+      if (sheet.isStock) row.depot = true;
+      else {
+        var number = sheet.no || sheetIndex + 1;
+        if (row.sheets.indexOf(number) === -1) row.sheets.push(number);
+      }
+    });
+  });
+
+  var body = $('jobTableBody'), count = 0, quantity = 0;
+  var fragment = document.createDocumentFragment();
+  rows.forEach(function (row) {
+    if (!row) return;
+    count++;
+    quantity += row.quantity;
+    var part = row.part, band = [];
+    if (part.b1) band.push('Boy1');
+    if (part.b2) band.push('Boy2');
+    if (part.e1) band.push('En1');
+    if (part.e2) band.push('En2');
+    var tr = document.createElement('tr');
+    var done = row.cut > 0 && row.cut === row.placed;
+    var missing = row.quantity - row.placed;
+    if (done) tr.className = 'done';
+    else if (row.cut) tr.className = 'partial';
+    var status = done ? '✓ Kesildi (' + row.cut + '/' + row.placed + ')'
+      : row.cut ? 'Kesiliyor (' + row.cut + '/' + row.placed + ')' : row.placed ? 'Bekliyor' : 'Sığmadı';
+    var values = [
+      part.name == null ? '—' : part.name, formatSheetNumbers(row.sheets, row.depot) || '—',
+      row.height + ' cm', row.width + ' cm', row.quantity + ' adet',
+      band.length ? band.join(' · ') + ' (' + (part.bt || '0.8') + ' mm)' : '—', status
+    ];
+    values.forEach(function (value, index) {
+      var td = document.createElement('td');
+      td.textContent = value;
+      if (index >= 2 && index <= 4) td.className = 'number';
+      if (index === 6 && missing > 0) {
+        if (row.placed) {
+          var note = document.createElement('span');
+          note.className = 'unplaced';
+          note.textContent = missing + ' parça sığmadı';
+          td.appendChild(note);
+        } else td.className = 'unplaced-cell';
+      }
+      tr.appendChild(td);
+    });
+    fragment.appendChild(tr);
+  });
+  body.textContent = '';
+  body.appendChild(fragment);
+  var title = data.projName || $('projects').options[$('projects').selectedIndex].text;
+  $('jobListMeta').textContent = title + ' · ' + count + ' kalem · ' + quantity + ' parça' +
+    (data.savedDate ? ' · ' + data.savedDate : '');
+  $('jobEmpty').hidden = count > 0;
+  $('jobScroll').hidden = count === 0;
+}
+
+function showProjectView() {
+  var toggle = $('viewToggle');
+  toggle.hidden = false;
+  toggle.textContent = listView ? 'Kesim Haritası' : 'Kesim Listesi';
+  if (listView) {
+    $('board').hidden = true;
+    renderJobList();
+    $('jobList').hidden = false;
+  } else {
+    $('jobList').hidden = true;
+    showPlate();
+  }
+}
+$('viewToggle').onclick = function () {
+  if (busy || !data) return;
+  listView = !listView;
+  showProjectView();
+};
+
 function showPlate() {
   var sheet = data.savedSheets[plateIndex];
   var w = parseNum(sheet.isStock ? sheet.customW0 : data.sw);
@@ -569,7 +718,7 @@ $('partAction').onclick = function () {
       var result = await saveCutStatus(activeProject, selection, layoutOf(data));
       closePart();
       if (result.plan) applyPlan(result.plan);
-      else $('board').hidden = true;
+      else hideProjectViews();
       show(result.changed
         ? 'Kesim planı başka cihazda değişti. Güncel haritada parçayı tekrar seç.'
         : (selection.markCut ? 'Parça kesildi olarak kaydedildi.' : 'Parça bekliyor olarak kaydedildi.'), result.changed);
