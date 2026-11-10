@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0d1117">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<title>Acanlar Mobilya — Plaka Optimizasyonu v2.0.0</title>
+<title>Acanlar Mobilya — Plaka Optimizasyonu v2.0.2</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -607,6 +607,16 @@ body.dark-mode .notice{background:#3b2a08;border-color:#7a5a12;color:#fcd34d}
 }
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 
+#btnIpadMap { margin: 0 0 12px; }
+#btnIpadMap[hidden] { display: none; }
+#ipadMapDialog { width: min(380px, calc(100% - 28px)); padding: 20px; border: 1px solid var(--border-color); border-radius: 16px; background: var(--card-bg); color: var(--text-color); text-align: center; }
+#ipadMapDialog::backdrop { background: rgba(15,23,42,.65); }
+#ipadMapDialog h2 { margin-top: 0; }
+#ipadMapQr { width: 230px; max-width: 100%; margin: 12px auto; }
+#ipadMapQr svg { display: block; width: 100%; }
+#ipadMapAddress { display: block; margin: 12px 0; color: var(--primary-blue); overflow-wrap: anywhere; }
+#ipadMapAddress[hidden], #ipadMapForm[hidden], #ipadMapLogin[hidden] { display: none; }
+#ipadMapForm input { margin: 5px 0 10px; width: 100%; }
 </style>
 </head>
 <body>
@@ -619,7 +629,7 @@ body.dark-mode .notice{background:#3b2a08;border-color:#7a5a12;color:#fcd34d}
       <polygon points="250,40 360,200 320,200 250,95 210,155 225,178 240,155" fill="#ffffff"/>
     </svg>
     <h2>ACANLAR MOBİLYA</h2>
-    <div class="splash-sub">Plaka Optimizasyon Sistemi v2.0.0</div>
+    <div class="splash-sub">Plaka Optimizasyon Sistemi v2.0.2</div>
     <div class="splash-spinner"></div>
   </div>
 </div>
@@ -722,7 +732,7 @@ body.dark-mode .notice{background:#3b2a08;border-color:#7a5a12;color:#fcd34d}
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA</h1>
-      <div class="author">Mesut ACAN — v2.0.0</div>
+      <div class="author">Mesut ACAN — v2.0.2</div>
     </div>
   </div>
   <div class="header-btns no-print">
@@ -981,6 +991,7 @@ body.dark-mode .notice{background:#3b2a08;border-color:#7a5a12;color:#fcd34d}
 <div class="card">
 <div id="resultsTop"></div>
 <h2 class="no-print">Kesim Haritası ve Detaylar</h2>
+<button id="btnIpadMap" class="btn-action save no-print" type="button" onclick="shareIpadMap()" hidden>iPad’e Gönder</button>
 
 <!-- MOBİL İÇİN HIZLI FARKLI YERLEŞİM DENE BUTONU -->
 <button id="btnShuffleMobile" class="btn-shuffle no-print" onclick="shuffleAndOptimize()" style="margin-bottom: 12px; display: none;">🎲 FARKLI YERLEŞİM DENE (ALTERNATİF ŞABLON)</button>
@@ -1009,6 +1020,20 @@ body.dark-mode .notice{background:#3b2a08;border-color:#7a5a12;color:#fcd34d}
 </div>
 <div id="emptyState" class="empty-state no-print"><div class="big">📐</div><b>Henüz kesim planı yok</b>Parçaları gir ve <b style="display:inline">HESAPLA VE OPTİMİZE ET</b> düğmesine bas.</div>
 <div id="plans"></div>
+<dialog id="ipadMapDialog" class="no-print" aria-labelledby="ipadMapTitle">
+  <h2 id="ipadMapTitle">iPad’de Kesim Haritası</h2>
+  <p id="ipadMapStatus" role="status"></p>
+  <form id="ipadMapForm" onsubmit="sendIpadMap(event)" hidden>
+    <label for="ipadMapName">Proje adı</label>
+    <input id="ipadMapName" maxlength="180" required>
+    <button id="ipadMapSend" class="btn-action save" type="submit">Buluta Kaydet ve Gönder</button>
+  </form>
+  <button id="ipadMapLogin" class="btn-action load" type="button" hidden onclick="document.getElementById('ipadMapDialog').close(); cutAccount()">Bulut Hesabına Bağlan</button>
+  <div id="ipadMapQr"></div>
+  <a id="ipadMapAddress" target="_blank" rel="noopener" hidden></a>
+  <p><a href="ipad.html" target="_blank" rel="noopener">Sabit iPad ekranını aç</a></p>
+  <form method="dialog"><button class="btn-action load" type="submit">Kapat</button></form>
+</dialog>
 
 <button id="btnSaveCurrentWastes" class="btn-save-wastes no-print" onclick="saveCurrentWastesToDepot()" style="display:none">
   ♻️ Bu Kesimden Kalan Büyük Fireleri Depoma Kaydet
@@ -1966,8 +1991,8 @@ function cutQueue(name, data, old) {
     pending:true, opId:cutId(), updated:Date.now(), deleted:false,
     ...(old?.importToken ? {importToken:old.importToken} : {})};
 }
-async function saveProjectToLocalStorage() {
-  const name = (cutEl('saveLocalName').value.trim() || cutEl('projName').value.trim()).slice(0,180);
+async function saveProjectToLocalStorage(ipadName) {
+  const name = (ipadName || cutEl('saveLocalName').value.trim() || cutEl('projName').value.trim()).slice(0,180);
   if(!name) return alert('Lütfen projeye bir isim verin!');
   try {
     const data = cutCapture(name);
@@ -1985,6 +2010,8 @@ async function saveProjectToLocalStorage() {
       cutPersist(cutUser.uid,next); Object.assign(cutRecords,next);
       cutStatus('✓ Cihaz kopyası kaydedildi. Buluta gönderilmesi bekleniyor…');
       void cutFlush();
+      cutEl('saveLocalName').value=''; renderSavedProjectsList();
+      return record;
     }
     cutEl('saveLocalName').value=''; renderSavedProjectsList();
   } catch(e) { alert('Kayıt tamamlanamadı: ' + e.message); }
@@ -2519,7 +2546,7 @@ function applyResult(res, job, items, lb) {
   const dateStr = new Date().toLocaleDateString('tr-TR');
   document.getElementById('printProjName').innerHTML = `<b>Proje:</b> ${esc(proj)}`;
   document.getElementById('printDate').innerHTML = `<b>Tarih:</b> ${dateStr}`;
-  markStale();
+  cutEl('staleBanner').style.display = 'none';
   updateTotalBandsAndCosts();
   renderJobTable(proj, dateStr, sheets);
   drawPlans(sheets, job.SW, job.SH, job.SW0, job.SH0, job.edge, job.K);
@@ -3020,6 +3047,7 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
 
   const box = document.getElementById('plans');
   box.innerHTML = '';
+  document.getElementById('btnIpadMap').hidden = true;
 
   sheets.forEach((s, si) => {
     const curW0 = s.isStock ? s.customW0 : SW0, curH0 = s.isStock ? s.customH0 : SH0;
@@ -3129,6 +3157,7 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
     div.appendChild(note);
   });
 
+  document.getElementById('btnIpadMap').hidden = !sheets.length;
   const btnSave = document.getElementById('btnSaveCurrentWastes');
   if (currentDetectedWastes.length > 0 && !depotSavedForCurrent) {
     btnSave.style.display = 'block';
@@ -3137,6 +3166,79 @@ function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
       : `♻️ Bu Kesimden Kalan ${currentDetectedWastes.length} Adet Büyük Fireyi Depoma Kaydet`;
   } else btnSave.style.display = 'none';
 }
+
+function hasCurrentIpadMap() {
+  return lastActiveSheets.length > 0 && cutEl('staleBanner').style.display !== 'flex'
+    && parseNum(cutEl('sw').value) === lastSW0 && parseNum(cutEl('sh').value) === lastSH0
+    && (parseNum(cutEl('edge').value) || 0) === lastEdge && (parseNum(cutEl('kerf').value) || 0) === lastK;
+}
+
+function shareIpadMap() {
+  const dialog = cutEl('ipadMapDialog');
+  cutEl('ipadMapQr').textContent = '';
+  cutEl('ipadMapAddress').hidden = true;
+  cutEl('ipadMapForm').hidden = true;
+  cutEl('ipadMapLogin').hidden = true;
+  cutEl('ipadMapName').value = cutEl('saveLocalName').value.trim() || cutRecords[currentCloudId]?.name || cutEl('projName').value.trim();
+  const status = cutEl('ipadMapStatus');
+  if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+    status.textContent = 'Cihazlar arası gönderim için kesim programını kendi web adresinde aç.';
+  } else if (!hasCurrentIpadMap()) {
+    status.textContent = 'Güncel haritayı göndermek için önce planı yeniden hesapla.';
+  } else if (!cutUser) {
+    status.textContent = 'Telefondan ve bilgisayardan göndermek için atölye bulut hesabına bağlan.';
+    cutEl('ipadMapLogin').hidden = false;
+  } else {
+    status.textContent = cutEl('ipadMapSend').disabled ? 'Kesim haritası buluta gönderiliyor…'
+      : 'Projeyi hesabına kaydedip iPad’de açabileceğin bir QR bağlantısı oluştur.';
+    cutEl('ipadMapForm').hidden = false;
+  }
+  dialog.showModal();
+}
+
+async function sendIpadMap(event) {
+  event.preventDefault();
+  const status = cutEl('ipadMapStatus');
+  const name = cutEl('ipadMapName').value.trim();
+  if (!name || !cutUser || navigator.onLine === false || !hasCurrentIpadMap()) {
+    status.textContent = 'Proje adını, internet bağlantısını ve güncel haritayı kontrol et.';
+    return;
+  }
+  const send = cutEl('ipadMapSend');
+  if (send.disabled) return;
+  const epoch = cutEpoch;
+  send.disabled = true;
+  status.textContent = 'Kesim haritası buluta gönderiliyor…';
+  try {
+    const saved = await saveProjectToLocalStorage(name);
+    if (!saved) {
+      status.textContent = 'Gönderim için bulut kaydının tamamlanması gerekiyor.';
+      return;
+    }
+    const deadline = Date.now() + 18000;
+    while (cutEpoch === epoch && Date.now() < deadline) {
+      const synced = Object.values(cutRecords).find(record => record.opId === saved.opId && !record.pending);
+      if (synced) {
+        const address = cutEl('ipadMapAddress');
+        address.href = new URL('ipad.html#' + encodeURIComponent(synced.id), location.href).href;
+        address.textContent = 'Haritayı aç';
+        address.hidden = false;
+        cutEl('ipadMapQr').innerHTML = qrSvg(address.href, 4, 1);
+        cutEl('ipadMapForm').hidden = true;
+        status.textContent = 'Harita hazır. QR kodu iPad’in Kamerasıyla okut veya iPad ekranını açıp projeyi seç.';
+        return;
+      }
+      if (cutEl('cutAccountButton').dataset.state === 'error') break;
+      await new Promise(resolve => setTimeout(resolve, 300));
+    }
+    status.textContent = cutEpoch === epoch
+      ? 'Bulut henüz onay vermedi. Bulut durumunu kontrol et. Kayıt tamamlanınca proje iPad ekranında görünür.'
+      : 'Bulut hesabı değişti. Yeni oturumla tekrar dene.';
+  } finally {
+    send.disabled = false;
+  }
+}
+
 
 /* ====================================================================
    BAŞLANGIÇ
@@ -3165,7 +3267,7 @@ function installApp() {
   deferredInstall.prompt();
   deferredInstall.userChoice.finally(() => { deferredInstall = null; const b = document.getElementById('btnInstall'); if (b) b.style.display = 'none'; });
 }
-if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && location.origin !== 'http://127.0.0.1:8765') {
   window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => { }); });
 }
 
