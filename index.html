@@ -3,7 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Acanlar Mobilya — Plaka Optimizasyonu V1.99.33</title>
+<meta name="theme-color" content="#0d1117">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Acanlar Mobilya — Plaka Optimizasyonu v2.0.0</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -446,6 +449,164 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 .cut-cloud-actions{display:flex;gap:8px;flex-wrap:wrap}.cut-cloud-actions button{flex:1;justify-content:center;min-height:40px}.cut-setup{font-size:11px;margin-top:12px;line-height:1.6}.cut-setup summary{cursor:pointer}.cut-setup pre{overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;background:var(--table-th-bg);padding:10px;border-radius:8px}#cutCloudStatus{line-height:1.6;margin:10px 0}#cutLogin{width:min(420px,calc(100vw - 30px));max-height:90dvh;overflow:auto;border:1px solid var(--border-color);border-radius:16px;background:var(--panel-bg,#fff);color:var(--text-color,#1e293b);padding:22px}#cutLogin::backdrop{background:#0f172a88}#cutLogin input{width:100%;box-sizing:border-box;margin:6px 0 14px;padding:12px;font-size:16px}#cutLoginError{color:#dc2626;font-size:12px}.saved-project-item{gap:10px}.saved-project-item .project-btn-group{flex-shrink:0}.saved-project-item .btn-mini{min-height:34px}@media(max-width:480px){.saved-project-item{flex-wrap:wrap}.cut-cloud-actions{flex-direction:column}.saved-project-item .project-btn-group{margin-left:auto}}
 /* Compact cloud account indicator */
 #cutAccountButton{--cloud-led:#94a3b8;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:32px;padding:7px 10px;border:1px solid #ffffff24;border-radius:8px;background:#ffffff0c;color:#e2e8f0;font:600 11px/1.2 inherit;font-family:inherit;font-size:11px;font-weight:600;white-space:nowrap;cursor:pointer;transition:background .15s,border-color .15s}#cutAccountButton::before{content:'';width:7px;height:7px;flex-shrink:0;border-radius:50%;background:var(--cloud-led);box-shadow:0 0 5px var(--cloud-led)}#cutAccountButton[data-state="connected"]{--cloud-led:#4ade80}#cutAccountButton[data-state="pending"],#cutAccountButton[data-state="offline"]{--cloud-led:#fbbf24}#cutAccountButton[data-state="error"]{--cloud-led:#f87171}#cutAccountButton:hover{background:#ffffff1c;border-color:#ffffff50}#cutAccountButton:focus-visible{outline:2px solid #7dd3fc;outline-offset:3px}.cut-status-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+
+/* ================= v2.0 — görsel yenileme ve yeni özellikler ================= */
+:root{
+  --accent:#0284c7; --accent-2:#0369a1; --ok:#10b981; --warn:#f59e0b; --bad:#ef4444;
+  --radius:14px; --shadow-sm:0 1px 2px rgba(15,23,42,.06),0 2px 8px rgba(15,23,42,.05);
+  --shadow-md:0 4px 20px rgba(15,23,42,.10);
+  --soft-blue:#e0f2fe; --soft-blue-text:#0369a1; --job-th:#f1f5f9; --job-line:#cbd5e1;
+}
+body.dark-mode{
+  --soft-blue:#0c2a3f; --soft-blue-text:#7dd3fc; --job-th:#0f172a; --job-line:#334155;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.3),0 2px 8px rgba(0,0,0,.25);
+}
+html,body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.layout{grid-template-columns:560px 1fr}
+.card{border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:16px}
+h2{font-size:15px;margin:0 0 12px;display:flex;align-items:center;gap:8px}
+h2::before{content:"";width:4px;height:16px;border-radius:2px;background:linear-gradient(180deg,var(--accent),#38bdf8);flex-shrink:0}
+h2.no-print::before{display:inline-block}
+input[type=text],input[type=number],select,textarea{border-radius:8px;padding:8px 8px;transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(2,132,199,.18)}
+textarea{width:100%;border:1px solid var(--border-color);background:var(--card-bg);color:var(--text-color);font:12px/1.5 ui-monospace,Consolas,monospace}
+button{transition:transform .08s,box-shadow .15s,background .15s,opacity .15s}
+button:active:not(:disabled){transform:translateY(1px)}
+button:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid #38bdf8;outline-offset:2px}
+header{background:linear-gradient(135deg,#0d1117 0%,#161b22 100%)}
+.btn-action{border-radius:10px}
+.btn-action.ghost{background:var(--table-th-bg);color:var(--text-color);border:1px solid var(--border-color);box-shadow:none;flex:0 0 auto}
+.btn-optimize-main{border-radius:12px;padding:15px 18px;font-size:15px;letter-spacing:.3px}
+.btn-quote{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border:none;padding:8px 10px;font-size:11px;font-weight:bold;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;box-shadow:0 4px 12px rgba(245,158,11,.3)}
+.btn-install{display:none;background:#334155;color:#fff;border:none;padding:8px 10px;font-size:11px;font-weight:bold;border-radius:8px;cursor:pointer;align-items:center;gap:4px;white-space:nowrap}
+.sheet-preset-card{border-radius:12px}
+.sheet-preset-card.active{box-shadow:0 6px 16px rgba(2,132,199,.35)}
+
+/* tablo / parça satırları */
+th.col-name,td.col-name{width:80px}th.col-num,td.col-num{width:54px}
+th.col-bt,td.col-bt{width:58px}th.col-del,td.col-del{width:54px}
+td.col-bt select{padding:5px 1px;font-size:11px;text-align:center}
+.row-btn{background:var(--table-th-bg);border:1px solid var(--border-color);color:var(--text-color);border-radius:6px;width:22px;height:24px;cursor:pointer;font-size:13px;line-height:1;padding:0;margin:0 1px}
+.row-btn.del{color:#ef4444;font-weight:bold}.row-btn:hover{border-color:var(--accent)}
+.table-wrap tbody tr:hover{background:rgba(2,132,199,.05)}
+.part-card-header{align-items:center}
+.btn-card-dup{background:var(--card-bg);border:1px solid var(--border-color);color:var(--text-color);border-radius:6px;width:28px;height:28px;cursor:pointer;flex-shrink:0}
+.part-card-extra{display:flex;gap:6px;align-items:center;margin-top:6px}
+.part-card-extra .band-btn{flex:0 0 auto;padding:6px 10px}
+.bt-label{margin:0 0 0 auto;display:flex;align-items:center;gap:4px;font-size:10px;color:var(--muted-color)}
+.bt-label select{width:auto;padding:4px;font-size:11px}
+.part-card{border-radius:12px}
+
+/* sonuç özet kartları */
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:10px}
+.metric{border-radius:12px;padding:10px 12px;position:relative;overflow:hidden}
+.metric::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--border-color)}
+.metric b{font-size:22px;letter-spacing:-.5px}
+.metric span{text-transform:uppercase;letter-spacing:.6px;font-weight:700}
+.metric small{display:block;font-size:10px;color:var(--muted-color);margin-top:2px;min-height:12px}
+.metric.good::before{background:var(--ok)}.metric.warn::before{background:var(--warn)}.metric.bad::before{background:var(--bad)}
+.metric.band{background:var(--soft-blue);border-color:#38bdf8}.metric.band b,.metric.band span{color:var(--soft-blue-text)}
+.metric.band::before{background:#0284c7}
+.lb-note{display:none;font-size:11px;color:var(--muted-color);background:var(--table-th-bg);border:1px dashed var(--border-color);border-radius:8px;padding:6px 10px;margin-bottom:10px}
+.cut-progress{display:none;align-items:center;gap:10px;margin:0 0 12px;font-size:11px;font-weight:700}
+.cut-progress .bar{flex:1;height:8px;border-radius:99px;background:var(--border-color);overflow:hidden}
+.cut-progress .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#10b981,#34d399);transition:width .3s}
+.stale-banner{display:none;align-items:center;justify-content:space-between;gap:8px;background:#fff7df;border:1px solid #f0d98c;color:#854d0e;border-radius:10px;padding:8px 12px;font-size:12px;font-weight:700;margin-bottom:12px}
+.stale-banner button{background:#d97706;color:#fff;border:none;border-radius:8px;padding:6px 12px;font-weight:bold;font-size:11px;cursor:pointer;white-space:nowrap}
+body.dark-mode .stale-banner{background:#3b2a08;border-color:#7a5a12;color:#fcd34d}
+.empty-state{text-align:center;padding:36px 12px;color:var(--muted-color);border:2px dashed var(--border-color);border-radius:14px;margin-bottom:12px}
+.empty-state .big{font-size:38px;line-height:1;margin-bottom:8px}
+.empty-state b{display:block;color:var(--text-color);font-size:14px;margin-bottom:4px}
+.plan{border-radius:14px;box-shadow:var(--shadow-sm)}
+.plan-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.plan-head h3{margin:0}
+.plan-chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px;background:var(--table-th-bg);border:1px solid var(--border-color);color:var(--text-color)}
+.chip.good{background:#dcfce7;border-color:#86efac;color:#166534}.chip.warn{background:#fef9c3;border-color:#fde047;color:#854d0e}.chip.bad{background:#fee2e2;border-color:#fca5a5;color:#991b1b}
+body.dark-mode .chip.good{background:#052e16;color:#86efac;border-color:#166534}
+body.dark-mode .chip.warn{background:#3b2a08;color:#fde047;border-color:#7a5a12}
+body.dark-mode .chip.bad{background:#450a0a;color:#fca5a5;border-color:#7f1d1d}
+.cut-steps{margin-top:8px;border:1px solid var(--border-color);border-radius:10px;background:var(--table-th-bg);font-size:12px}
+.cut-steps summary{cursor:pointer;padding:9px 12px;font-weight:700;font-size:12px}
+.cut-steps ol{margin:0;padding:4px 14px 12px 34px}.cut-steps li{padding:2px 0}
+.cut-trim{margin:0;padding:0 14px 4px;color:var(--muted-color);font-size:11px}
+.legend .cn{display:inline-flex;width:15px;height:15px;border-radius:50%;background:#d32f2f;color:#fff;font-size:9px;font-weight:bold;align-items:center;justify-content:center}
+.job-table th{background:var(--job-th);color:var(--text-color)}
+.job-table th,.job-table td{border-color:var(--job-line)}
+.job-header-info{border-bottom-color:var(--job-line)}
+.popup-band-item.active{background:var(--soft-blue);color:var(--soft-blue-text)}
+body.dark-mode .unplaced-alert{background:#450a0a;color:#fecaca}
+body.dark-mode .notice{background:#3b2a08;border-color:#7a5a12;color:#fcd34d}
+.popup-card{border-radius:18px}
+.popup-sub{font-size:11px;color:var(--muted-color);margin-top:-4px}
+.btn-pop-action.ghost{background:var(--table-th-bg);color:var(--text-color);border:1px solid var(--border-color)}
+
+/* yükleniyor penceresi */
+.loading-box{min-width:min(360px,90vw)}
+.progress-track{height:8px;background:#334155;border-radius:99px;overflow:hidden;margin:12px 0 8px}
+.progress-track i{display:block;height:100%;width:0;background:linear-gradient(90deg,#38bdf8,#10b981);transition:width .12s linear}
+#loadingText{min-height:16px}
+.btn-cancel-opt{margin-top:12px;background:transparent;color:#cbd5e1;border:1px solid #475569;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:bold;cursor:pointer}
+.btn-cancel-opt:hover{background:#334155}
+
+/* bildirim */
+#toastBox{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:9999999;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;width:min(92vw,440px)}
+.toast{background:#0f172a;color:#fff;border-left:4px solid #38bdf8;padding:10px 14px;border-radius:10px;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.35);animation:toastIn .25s ease-out;transition:opacity .3s,transform .3s;width:100%}
+.toast.ok{border-color:#10b981}.toast.warn{border-color:#f59e0b}.toast.err{border-color:#ef4444}
+.toast.out{opacity:0;transform:translateY(8px)}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* modallar */
+#quoteModal,#pasteModal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.75);backdrop-filter:blur(4px);z-index:999999;align-items:center;justify-content:center;padding:12px}
+.popup-card.wide{max-width:480px;text-align:left;max-height:92vh;overflow:auto}
+.popup-card.wide .popup-title{text-align:center}
+.popup-card .check{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;margin:10px 0;cursor:pointer}
+.popup-card .check input{width:auto}
+.paste-info{font-size:12px;font-weight:700;color:var(--ok);min-height:16px;margin-top:4px}
+.paste-tools{display:flex;gap:8px;align-items:center;margin-top:6px;flex-wrap:wrap}
+
+/* mobil sabit buton */
+.fab-calc{display:none}
+@media(max-width:900px){
+  .fab-calc{display:flex;position:fixed;right:14px;bottom:14px;z-index:9990;background:linear-gradient(135deg,#059669,#047857);color:#fff;border:none;border-radius:99px;padding:14px 20px;font-weight:bold;font-size:14px;box-shadow:0 8px 22px rgba(5,150,105,.5);align-items:center;gap:6px;cursor:pointer}
+  footer{padding-bottom:80px}
+  .brand h1{font-size:14px}
+  .btn-label,.btn-pdf,.btn-quote{padding:8px 9px}
+}
+@media(max-width:480px){.header-btns{width:100%;justify-content:space-between}.header-btns .btn-label,.header-btns .btn-quote,.header-btns .btn-pdf{flex:1;justify-content:center}}
+
+/* etiket — isteğe bağlı QR */
+.lbl-main{display:flex;align-items:center;gap:1.5mm;flex:1;min-height:0;margin-top:.5mm}
+.lbl-main .lbl-body{flex:1;margin:0;min-width:0}
+.lbl-qr{width:13mm;height:13mm;flex:none}.lbl-qr svg{width:100%;height:100%;display:block}
+.lbl-sheet{font-size:6.5px;color:#475569;font-weight:bold;margin-top:1px}
+
+/* fiyat teklifi çıktısı */
+#quotePrintArea{display:none}
+.q-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;border-bottom:3px solid #0f172a;padding-bottom:12px;margin-bottom:16px}
+.q-brand{display:flex;gap:12px;align-items:center}.q-brand svg{height:52px;width:auto}
+.q-company{font-size:20px;font-weight:900;color:#0f172a;letter-spacing:.5px}.q-sub{font-size:11px;color:#475569}
+.q-meta{text-align:right;font-size:12px;color:#0f172a;line-height:1.6}.q-title{font-size:22px;font-weight:900;color:#0284c7;letter-spacing:1px}
+.q-customer{display:flex;gap:12px;align-items:baseline;background:#f1f5f9;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:#0f172a}.q-customer span{color:#475569;font-size:11px;text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+.q-table{width:100%;border-collapse:collapse;font-size:12px;color:#0f172a;table-layout:auto}
+.q-table th{background:#0f172a;color:#fff;padding:8px 10px;text-align:right;font-size:11px;white-space:normal}.q-table td{padding:8px 10px;border-bottom:1px solid #e2e8f0;text-align:right;white-space:normal}
+.q-table tfoot td{border-bottom:0;font-weight:700}.q-table .q-grand td{background:#0284c7;color:#fff;font-size:15px;font-weight:900}
+.q-parts th,.q-parts td{text-align:center;padding:5px 8px;font-size:11px}.q-parts td:first-child{text-align:left}.q-parts th:first-child{text-align:left}
+.q-h3{font-size:13px;margin:22px 0 8px;color:#0f172a}.q-note{margin-top:14px;font-size:12px;color:#0f172a;background:#fff7df;border:1px solid #f0d98c;border-radius:8px;padding:10px 12px}
+.q-foot{margin-top:22px;font-size:10px;color:#64748b;text-align:center;border-top:1px solid #e2e8f0;padding-top:10px}
+@media print{
+  body.print-quote #quotePrintArea{display:block!important;padding:6mm 4mm;background:#fff;color:#000}
+  body.print-quote header,body.print-quote .portal-bar,body.print-quote main,body.print-quote footer,body.print-quote .no-print,body.print-quote #toastBox,body.print-quote .fab-calc{display:none!important}
+  body.print-quote .q-table th{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body.print-quote .q-grand td,body.print-quote .q-customer{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body.print-labels .fab-calc,body.print-labels #toastBox{display:none!important}
+  .fab-calc,#toastBox,.stale-banner,.empty-state,.cut-progress,.lb-note{display:none!important}
+  .plan-head{justify-content:center}.plan-chips{display:none}
+  .job-table th{background:#f1f5f9!important;color:#000!important}
+}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
 </style>
 </head>
 <body>
@@ -458,7 +619,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
       <polygon points="250,40 360,200 320,200 250,95 210,155 225,178 240,155" fill="#ffffff"/>
     </svg>
     <h2>ACANLAR MOBİLYA</h2>
-    <div class="splash-sub">Plaka Optimizasyon Sistemi v1.99.37</div>
+    <div class="splash-sub">Plaka Optimizasyon Sistemi v2.0.0</div>
     <div class="splash-spinner"></div>
   </div>
 </div>
@@ -467,11 +628,51 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
   <div class="loading-box">
     <div class="big-spinner"></div>
     <h3>HESAPLANIYOR VE OPTİMİZE EDİLİYOR</h3>
-    <p>Minimum fire ve maksimum doluluk için kombinasyonlar taranıyor...</p>
+    <div class="progress-track"><i id="loadingBar"></i></div>
+    <p id="loadingText">Hazırlanıyor…</p>
+    <button class="btn-cancel-opt" onclick="cancelOptimization()">Erken bitir (şu anki en iyiyi göster)</button>
   </div>
 </div>
 
 <div id="labelPrintArea"></div>
+<div id="quotePrintArea"></div>
+<div id="toastBox" aria-live="polite"></div>
+
+<div id="quoteModal">
+  <div class="popup-card wide">
+    <button class="btn-close-popup" onclick="closeQuoteModal()">✕</button>
+    <div class="popup-title">💵 Fiyat Teklifi Oluştur</div>
+    <div class="muted" style="margin:6px 0 10px;text-align:center">Teklif, "Maliyet" bölümündeki güncel hesaptan üretilir.</div>
+    <label>Müşteri / Proje</label><input id="qCustomer" type="text">
+    <label>İletişim (telefon / adres — teklifte görünür)</label><input id="qContact" type="text" placeholder="Örn: 0 5xx xxx xx xx">
+    <div class="row">
+      <div><label>Kâr marjı (%)</label><input id="qMargin" type="number" step="1" value="0"></div>
+      <div><label>KDV (%)</label><input id="qVat" type="number" step="1" value="20"></div>
+    </div>
+    <div class="row">
+      <div><label>Ek işçilik / montaj (₺)</label><input id="qExtra" type="number" step="1" value="0"></div>
+      <div><label>Geçerlilik (gün)</label><input id="qValid" type="number" step="1" value="7"></div>
+    </div>
+    <label>Not</label><textarea id="qNote" rows="3" placeholder="Teslim süresi, ödeme koşulu vb."></textarea>
+    <label class="check"><input type="checkbox" id="qParts" checked> Parça listesini de ekle</label>
+    <div class="popup-action-group"><button class="btn-pop-action print-confirm" onclick="printQuote()">🖨️ YAZDIR / PDF KAYDET</button></div>
+  </div>
+</div>
+
+<div id="pasteModal">
+  <div class="popup-card wide">
+    <button class="btn-close-popup" onclick="closePasteModal()">✕</button>
+    <div class="popup-title">📋 Listeden Parça Ekle</div>
+    <div class="muted" style="margin:6px 0 8px;text-align:center">Excel'den kopyalayıp yapıştır. Sütunlar: <b>Ad · Boy · En · Adet · Boy1 · Boy2 · En1 · En2 · Bant(mm)</b>. Sadece "Boy En Adet" de olur. Bant sütunlarına 1 / x / evet yaz.</div>
+    <textarea id="pasteText" rows="9" oninput="pasteLiveInfo()" placeholder="Yan 1&#9;72&#9;56&#9;2&#9;x&#9;&#9;&#9;&#10;Raf&#9;56&#9;34&#9;4"></textarea>
+    <div class="paste-info" id="pasteInfo"></div>
+    <div class="paste-tools">
+      <label class="btn-action load" style="cursor:pointer;flex:0 0 auto">📂 CSV / TXT seç<input type="file" accept=".csv,.txt,.tsv" style="display:none" onchange="pasteFileChosen(event)"></label>
+      <label class="check" style="margin:0"><input type="checkbox" id="pasteReplace"> Mevcut listeyi sil</label>
+    </div>
+    <div class="popup-action-group"><button class="btn-pop-action print-confirm" onclick="confirmPaste()">➕ LİSTEYE EKLE</button></div>
+  </div>
+</div>
 
 <div id="labelSettingsModal">
   <div class="popup-card">
@@ -483,6 +684,8 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
       <label>Kağıtta Kaçıncı Etiket Dolu / Boş Başla (1 - 24):</label>
       <input id="labelStartIndex" type="number" min="1" max="24" value="1" style="font-size: 16px; font-weight: bold; text-align: center; padding: 10px;">
     </div>
+    <label class="check" style="text-align:left"><input type="checkbox" id="labelQr"> Etikete QR kod ekle (telefonla okutunca parça açılır, "kesildi" işaretlenir)</label>
+    <div class="muted" style="text-align:left">QR için: program bir web adresinde açık olmalı ve proje bulut hesabına kaydedilmiş olmalı.</div>
 
     <div class="popup-action-group">
       <button class="btn-pop-action print-confirm" onclick="executePrintLabels()">🖨️ YAZDIRMAYA BAŞLA</button>
@@ -496,6 +699,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     <div class="popup-title" id="popPartName">[ Parça Adı ]</div>
     <div class="popup-seq" id="popPartSeq">Grup Sırası: -</div>
     <div class="popup-dim" id="popPartDim">0 × 0 cm</div>
+    <div class="popup-sub" id="popBandType"></div>
     <div class="popup-bands">
       <div id="popBandB1" class="popup-band-item">Boy 1: Yok</div>
       <div id="popBandB2" class="popup-band-item">Boy 2: Yok</div>
@@ -518,13 +722,15 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA</h1>
-      <div class="author">Mesut ACAN — v1.99.37</div>
+      <div class="author">Mesut ACAN — v2.0.0</div>
     </div>
   </div>
   <div class="header-btns no-print">
     <button id="cutAccountButton" type="button" data-state="disconnected" onclick="cutAccount()" title="Bulut hesabına bağlan" aria-label="Bulut hesabına bağlan">☁ Bulut</button>
     <span id="cutCloudStatus" class="cut-status-sr" role="status" aria-live="polite">Atölye hesabınla giriş yaparak projelerini eşitle.</span>
     <button id="btnThemeToggle" class="btn-theme" onclick="toggleTheme()" title="Gece/Gündüz Modu">🌙</button>
+    <button id="btnInstall" class="btn-install" onclick="installApp()">📲 Yükle</button>
+    <button class="btn-quote" onclick="openQuoteModal()">💵 TEKLİF</button>
     <button class="btn-label" onclick="openLabelModal()">🏷️ ETİKET (TW-2033)</button>
     <button class="btn-pdf" onclick="window.print()">🖨️ YAZDIR</button>
   </div>
@@ -587,12 +793,23 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 
 <label>Yerleşim Algoritması / Motoru Seçimi</label>
 <select id="globalDir" onchange="checkShuffleBtn()">
-<option value="otomatik_hibrit" selected>🚀 1. Motor: Gelişmiş Hibrit Giyotin (Maksimum Doluluk & Sıfır Fire)</option>
+<option value="otomatik_hibrit" selected>🚀 1. Motor: Çok Denemeli Akıllı Arama (En Az Plaka) — önerilen</option>
 <option value="otomatik_klasik">🎲 2. Motor: Klasik Otomatik (Şerit Bazlı & Alternatif Dene)</option>
 <option value="boyuna">📐 3. Motor: Boyuna (Dikey Kesim Öncelikli)</option>
 <option value="enine">📐 4. Motor: Enine (Yatay Kesim Öncelikli)</option>
 <option value="siper_dostu">🎯 5. Motor: Siper Dostu / Grup Sıralı (Aynı Ölçüleri Peş Peşe Kes)</option>
 </select>
+
+<div id="searchBudgetArea" style="margin-top:6px;">
+  <label>⏱️ Arama süresi (uzun = daha çok yerleşim denenir)</label>
+  <select id="searchBudget">
+    <option value="800">Hızlı (~1 sn)</option>
+    <option value="1500" selected>Normal (~1.5 sn)</option>
+    <option value="4000">Derin (~4 sn)</option>
+    <option value="9000">Çok derin (~9 sn)</option>
+  </select>
+</div>
+<label class="check" style="margin-top:8px"><input type="checkbox" id="grainOnly"> 🪵 Damar yönü sabit (hiçbir parça döndürülmez)</label>
 
 <div id="dirPreferenceArea" style="margin-top:6px;">
   <label>📐 Kesim Yönü Eğilimi / Önceliği</label>
@@ -642,19 +859,18 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
       </div>
     </div>
 
+    <div class="row" style="margin-top:6px;">
+      <div><label>0.45 mm PVC Bant ₺/m</label><input id="priceBand045" type="number" step="0.1" value="30" onchange="calculateCosts()"></div>
+      <div><label>2.00 mm PVC Bant ₺/m</label><input id="priceBand2" type="number" step="0.1" value="90" onchange="calculateCosts()"></div>
+    </div>
+    <div class="row" style="margin-top:6px;">
+      <div><label>Bant kesim payı (cm / kenar)</label><input id="bandAllowance" type="number" step="0.5" value="0" onchange="updateTotalBandsAndCosts()"></div>
+      <div></div>
+    </div>
     <div class="cost-summary-box">
-      <div class="cost-row">
-        <span>Plaka Malzeme (<b id="costSheetCount">0</b> Adet):</span>
-        <b id="costSheetTotal">0 ₺</b>
-      </div>
-      <div class="cost-row">
-        <span>Kesim İşçiliği (<b id="costCuttingCount">0</b> Plaka × 500₺):</span>
-        <b id="costCuttingTotal">0 ₺</b>
-      </div>
-      <div class="cost-row">
-        <span>0.80mm PVC Bant (<b id="costBandMeters">0 m</b>):</span>
-        <b id="costBandTotal">0 ₺</b>
-      </div>
+      <div class="cost-row"><span>Plaka malzeme (<b id="costSheetCount">0</b> adet):</span><b id="costSheetTotal">0 ₺</b></div>
+      <div class="cost-row"><span>Kesim işçiliği (<b id="costCuttingCount">0</b> plaka × <span id="costCuttingFeeLabel">0 ₺</span>):</span><b id="costCuttingTotal">0 ₺</b></div>
+      <div id="costBandRows"></div>
       <div class="cost-row total">
         <span>TOPLAM TAHMİNİ MALİYET:</span>
         <b id="costGrandTotal">0 ₺</b>
@@ -681,6 +897,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
     <th class="col-band" title="Boy Kenar 2">Boy2</th>
     <th class="col-band" title="En Kenar 1">En1</th>
     <th class="col-band" title="En Kenar 2">En2</th>
+    <th class="col-bt" title="Bant kalınlığı (mm)">Bant</th>
     <th class="col-del"></th>
   </tr>
 </thead>
@@ -692,6 +909,10 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 
 <div class="actions">
 <button class="btn-action add" onclick="addPart()">➕ Satır Ekle</button>
+<button id="btnUndo" class="btn-action ghost" onclick="undoParts()" title="Geri al (Ctrl+Z)" disabled>↶ Geri Al</button>
+<button id="btnRedo" class="btn-action ghost" onclick="redoParts()" title="İleri al (Ctrl+Y)" disabled>↷ İleri</button>
+<button class="btn-action load" onclick="openPasteModal()">📋 Excel / Liste Yapıştır</button>
+<button class="btn-action load" onclick="exportCsv()">📊 CSV İndir</button>
 <button class="btn-action save" onclick="exportData()">💾 Dosya Olarak İndir (JSON)</button>
 <label class="btn-action load" style="cursor:pointer">
   📂 Dosyadan Yükle
@@ -734,6 +955,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 </label>
 
 <div class="stock-waste-list" id="stockWasteContainer"></div>
+<div class="muted" id="stockSummary" style="margin-top:6px"></div>
 </div>
 </section>
 
@@ -757,6 +979,7 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 </div>
 
 <div class="card">
+<div id="resultsTop"></div>
 <h2 class="no-print">Kesim Haritası ve Detaylar</h2>
 
 <!-- MOBİL İÇİN HIZLI FARKLI YERLEŞİM DENE BUTONU -->
@@ -768,19 +991,23 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
   <ul id="unplacedList"></ul>
 </div>
 
+<div id="staleBanner" class="stale-banner no-print"><span>⚠️ Parça listesi değişti; aşağıdaki plan eski olabilir.</span><button onclick="startOptimization()">Yeniden hesapla</button></div>
 <div class="metrics">
-<div class="metric"><b id="sheetCount">0</b><span>PLAKA</span></div>
-<div class="metric"><b id="used">0%</b><span>DOLULUK</span></div>
-<div class="metric"><b id="waste">0%</b><span>FİRE</span></div>
-<div class="metric"><b id="pieceCount">0</b><span>TOPLAM PARÇA</span></div>
-<div class="metric" style="background:#e0f2fe; border-color:#38bdf8;"><b id="bandMeters" style="color:#0369a1;">0 m</b><span style="color:#0369a1; font-weight:bold;">0.80mm PVC BANT</span></div>
+<div class="metric"><b id="sheetCount">0</b><span>PLAKA</span><small id="sheetStockNote"></small></div>
+<div class="metric"><b id="used">0%</b><span>DOLULUK</span><small id="usedUsable"></small></div>
+<div class="metric" id="metricWaste"><b id="waste">0%</b><span>FİRE</span><small>toplam plakaya göre</small></div>
+<div class="metric"><b id="pieceCount">0</b><span>TOPLAM PARÇA</span><small></small></div>
+<div class="metric band"><b id="bandMeters">0 m</b><span>PVC BANT</span><small>tüm kalınlıklar</small></div>
 </div>
+<div id="lbNote" class="lb-note no-print"></div>
+<div id="cutProgress" class="cut-progress no-print"><span id="cutProgText">Kesim ilerlemesi</span><div class="bar"><i id="cutProgFill"></i></div></div>
 <div class="legend no-print">
 <span><i class="dot"></i> Parça</span>
 <span style="color:#0284c7; font-weight:bold;">━ Kalın Mavi Kenar Bandı</span>
 <span style="color:#d32f2f">--- Ana Giyotin Kesim</span>
 <span style="color:#10b981; font-weight:bold;">📱 Tıklanan Parça: KESİLDİ</span>
 </div>
+<div id="emptyState" class="empty-state no-print"><div class="big">📐</div><b>Henüz kesim planı yok</b>Parçaları gir ve <b style="display:inline">HESAPLA VE OPTİMİZE ET</b> düğmesine bas.</div>
 <div id="plans"></div>
 
 <button id="btnSaveCurrentWastes" class="btn-save-wastes no-print" onclick="saveCurrentWastesToDepot()" style="display:none">
@@ -817,24 +1044,503 @@ footer {text-align: center; padding: 15px 0; color: var(--muted-color); font-siz
 </div>
 </main>
 
+<button id="fabCalc" class="fab-calc no-print" onclick="startOptimization()">🚀 HESAPLA</button>
 <footer class="no-print">
   Acanlar Mobilya Dekorasyon — Mesut ACAN | Plaka Optimizasyon Programı | 2026
 </footer>
 
 <script>
+/* ====================================================================
+   MOTOR: Giyotin yerleştirme + çok denemeli arama (DOM'dan bağımsız)
+   ==================================================================== */
+const ENG_EPS = 0.01;
+
+function engRng(a) {
+  return function () {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function engNewSheet(W, H, meta) {
+  return Object.assign({ W: W, H: H, freeRects: [{ x: 0, y: 0, w: W, h: H, d: 0 }], placed: [], cuts: [] }, meta || {});
+}
+
+/* Bir ölçü boş alana sığıyor mu? Artan pay ya sıfır (tam oturma) ya da en az bir
+   bıçak payı (kerf) kadar olmalı; aksi halde fiziksel olarak kesilemez. */
+function engFit(avail, need, K) {
+  if (need > avail + ENG_EPS) return false;
+  const d = avail - need;
+  return d <= ENG_EPS || d >= K - ENG_EPS;
+}
+
+function engFindSpot(sheet, item, K, fit) {
+  let best = null;
+  const fr = sheet.freeRects;
+  for (let i = 0; i < fr.length; i++) {
+    const r = fr[i];
+    for (let o = 0; o < 2; o++) {
+      if (o === 1 && (!item.rot || item.w === item.h)) continue;
+      const pw = o ? item.h : item.w, ph = o ? item.w : item.h;
+      if (!engFit(r.w, pw, K) || !engFit(r.h, ph, K)) continue;
+      const dw = Math.max(0, r.w - pw), dh = Math.max(0, r.h - ph);
+      let s;
+      if (fit === 'baf') s = (r.w * r.h - pw * ph) * 100 + Math.min(dw, dh);
+      else if (fit === 'blsf') s = Math.max(dw, dh) * 1000 + Math.min(dw, dh);
+      else s = Math.min(dw, dh) * 1000 + Math.max(dw, dh);
+      if (best === null || s < best.score) best = { idx: i, rot: o === 1, score: s };
+    }
+  }
+  return best;
+}
+
+function engPlace(sheet, spot, item, K, splitRule) {
+  const r = sheet.freeRects[spot.idx];
+  const pw = spot.rot ? item.h : item.w, ph = spot.rot ? item.w : item.h;
+  sheet.placed.push(Object.assign({}, item, { x: r.x, y: r.y, w: pw, h: ph, rot: spot.rot, canRot: item.rot }));
+  sheet.freeRects.splice(spot.idx, 1);
+
+  const dw = Math.max(0, r.w - pw), dh = Math.max(0, r.h - ph);
+  const hasR = dw > ENG_EPS, hasB = dh > ENG_EPS;
+  let horiz;
+  if (splitRule === 'H') horiz = true;
+  else if (splitRule === 'V') horiz = false;
+  else if (splitRule === 'SAS') horiz = dw < dh;
+  else if (splitRule === 'LAS') horiz = dw >= dh;
+  else {
+    const rw = Math.max(0, dw - K), bh = Math.max(0, dh - K);
+    const hMax = Math.max(r.w * bh, rw * ph), vMax = Math.max(rw * r.h, pw * bh);
+    horiz = hMax >= vMax;
+  }
+  const MIN = 0.5;
+  const d = r.d || 0;
+  const add = (x, y, w, h, dd) => { if (w > MIN && h > MIN) sheet.freeRects.push({ x: x, y: y, w: w, h: h, d: dd }); };
+
+  if (horiz) {
+    const stripD = hasB ? d + 1 : d;
+    if (hasB) {
+      sheet.cuts.push({ x1: r.x, y1: r.y + ph, x2: r.x + r.w, y2: r.y + ph, type: 'main', axis: 'H', depth: d + 1, dist: ph, rw: r.w, rh: r.h });
+      add(r.x, r.y + ph + K, r.w, dh - K, d + 1);
+    }
+    if (hasR) {
+      sheet.cuts.push({ x1: r.x + pw, y1: r.y, x2: r.x + pw, y2: r.y + ph, type: 'sub', axis: 'V', depth: stripD + 1, dist: pw, rw: r.w, rh: ph });
+      add(r.x + pw + K, r.y, dw - K, ph, stripD + 1);
+    }
+  } else {
+    const stripD = hasR ? d + 1 : d;
+    if (hasR) {
+      sheet.cuts.push({ x1: r.x + pw, y1: r.y, x2: r.x + pw, y2: r.y + r.h, type: 'main', axis: 'V', depth: d + 1, dist: pw, rw: r.w, rh: r.h });
+      add(r.x + pw + K, r.y, dw - K, r.h, d + 1);
+    }
+    if (hasB) {
+      sheet.cuts.push({ x1: r.x, y1: r.y + ph, x2: r.x + pw, y2: r.y + ph, type: 'sub', axis: 'H', depth: stripD + 1, dist: ph, rw: pw, rh: r.h });
+      add(r.x, r.y + ph + K, pw, dh - K, stripD + 1);
+    }
+  }
+}
+
+/* Kesim sırası: üst seviye (tüm plakayı kesen) kesimler önce. */
+function engFinalizeSheet(sheet) {
+  sheet.cuts.sort((a, b) => (a.depth - b.depth) || (a.y1 - b.y1) || (a.x1 - b.x1));
+  sheet.cuts.forEach((c, i) => { c.n = i + 1; });
+}
+
+function engSortItems(items, key, rnd, jitter) {
+  const k = {
+    area: it => it.w * it.h,
+    long: it => Math.max(it.w, it.h) * 1000 + Math.min(it.w, it.h),
+    short: it => Math.min(it.w, it.h) * 1000 + Math.max(it.w, it.h),
+    w: it => it.w * 1000 + it.h,
+    h: it => it.h * 1000 + it.w,
+    perim: it => it.w + it.h
+  }[key] || (it => it.w * it.h);
+  const arr = items.map(it => ({ it: it, v: k(it) * (jitter ? 1 + (rnd() - 0.5) * jitter : 1) }));
+  arr.sort((a, b) => b.v - a.v);
+  return arr.map(x => x.it);
+}
+
+/* Tek geçiş: verilen sıra ve ayarlarla yerleştirir. */
+function engRun(items, ctx, cfg) {
+  const K = ctx.K;
+  const sheets = [];
+  if (ctx.useStock) {
+    ctx.stocks.forEach(st => sheets.push(engNewSheet(st.w, st.h, { isStock: true, customW0: st.w, customH0: st.h, stockId: st.id, stockLabel: st.label })));
+  }
+  const unplaced = [];
+  let prevKey = null, prevSheet = null;
+
+  for (let n = 0; n < items.length; n++) {
+    const item = items[n];
+    let done = false;
+    const key = Math.max(item.w, item.h) + 'x' + Math.min(item.w, item.h);
+
+    if (cfg.stick && prevSheet && prevKey === key) {
+      const sp = engFindSpot(prevSheet, item, K, cfg.fit);
+      if (sp) { engPlace(prevSheet, sp, item, K, cfg.split); done = true; }
+    }
+    if (!done) {
+      const pools = [sheets.filter(s => s.isStock), sheets.filter(s => !s.isStock)];
+      for (let pi = 0; pi < pools.length && !done; pi++) {
+        const pool = pools[pi];
+        if (cfg.mode === 'bf') {
+          let bs = null, bsp = null;
+          for (let i = 0; i < pool.length; i++) {
+            const sp = engFindSpot(pool[i], item, K, cfg.fit);
+            if (sp && (bsp === null || sp.score < bsp.score)) { bs = pool[i]; bsp = sp; }
+          }
+          if (bs) { engPlace(bs, bsp, item, K, cfg.split); prevSheet = bs; done = true; }
+        } else {
+          for (let i = 0; i < pool.length; i++) {
+            const sp = engFindSpot(pool[i], item, K, cfg.fit);
+            if (sp) { engPlace(pool[i], sp, item, K, cfg.split); prevSheet = pool[i]; done = true; break; }
+          }
+        }
+      }
+    }
+    if (!done) {
+      const ns = engNewSheet(ctx.W, ctx.H, {});
+      const sp = engFindSpot(ns, item, K, cfg.fit);
+      if (sp) { engPlace(ns, sp, item, K, cfg.split); sheets.push(ns); prevSheet = ns; done = true; }
+      else unplaced.push(item);
+    }
+    prevKey = key;
+  }
+  const used = sheets.filter(s => s.placed.length > 0);
+  used.forEach(engFinalizeSheet);
+  return { sheets: used, unplaced: unplaced };
+}
+
+/* Sonuç kalitesi (küçük = iyi): yerleşemeyen, standart plaka sayısı, fire dağınıklığı. */
+function engKey(res) {
+  let sq = 0, std = 0;
+  res.sheets.forEach(s => {
+    if (!s.isStock) std++;
+    s.freeRects.forEach(f => { const a = f.w * f.h; sq += a * a; });
+  });
+  return [res.unplaced.length, std, -sq];
+}
+function engCmp(a, b) {
+  for (let i = 0; i < a.length; i++) { if (a[i] !== b[i]) return a[i] - b[i]; }
+  return 0;
+}
+function engSig(res) {
+  let h = 2166136261 >>> 0;
+  const feed = str => { for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } };
+  res.sheets.forEach(s => {
+    feed('#');
+    s.placed.map(p => p.uniqueInstanceId + '@' + Math.round(p.x * 10) + ',' + Math.round(p.y * 10) + (p.rot ? 'r' : ''))
+      .sort().forEach(feed);
+  });
+  return h;
+}
+
+/* Parça alanına göre teorik alt sınır (bıçak payı hesaba katılmadan). */
+function engLowerBound(items, ctx) {
+  let a = 0; items.forEach(it => { a += it.w * it.h; });
+  if (ctx.useStock) ctx.stocks.forEach(st => { a -= st.w * st.h; });
+  if (a <= 0) return 0;
+  return Math.ceil(a / (ctx.W * ctx.H) - 1e-9);
+}
+
+/* Parça parça (zaman dilimli) çalışan arama. step(ms) çağrılır, done olunca result(seed). */
+function engCreateSearch(items, ctx, opts) {
+  const rnd = engRng((opts.seed || 0) * 7919 + 12345);
+  const splits = opts.splitList && opts.splitList.length ? opts.splitList : ['SAS', 'LAS', 'MAXA', 'H', 'V'];
+  const fits = ['bssf', 'baf', 'blsf'];
+  const sorts = ['area', 'long', 'short', 'w', 'h', 'perim'];
+  const configs = [];
+  sorts.forEach(so => fits.forEach(fi => splits.forEach(sp => ['ff', 'bf'].forEach(mo => configs.push({ sort: so, fit: fi, split: sp, mode: mo })))));
+  const budget = opts.budgetMs || 1500;
+  const lb = engLowerBound(items, ctx);
+  const S = { ci: 0, trials: 0, spent: 0, best: null, bestKey: null, cands: [], done: false, total: configs.length };
+
+  function consider(res) {
+    const key = engKey(res);
+    if (S.bestKey === null || engCmp(key, S.bestKey) < 0) {
+      S.bestKey = key; S.best = res; S.cands = [];
+    }
+    if (key[0] === S.bestKey[0] && key[1] === S.bestKey[1]) {
+      const c = { key: key, res: res, sig: engSig(res) };
+      if (!S.cands.some(x => x.sig === c.sig)) {
+        if (S.cands.length < 80) S.cands.push(c);
+        else S.cands[Math.floor(rnd() * 80)] = c;
+      }
+    }
+  }
+
+  S.step = function (ms) {
+    const now = () => (typeof performance !== 'undefined' ? performance.now() : Date.now());
+    const t0 = now();
+    while (!S.done) {
+      let cfg, sorted;
+      if (S.ci < configs.length) {
+        cfg = configs[S.ci++];
+        sorted = engSortItems(items, cfg.sort, rnd, 0);
+      } else {
+        cfg = {
+          sort: sorts[Math.floor(rnd() * sorts.length)],
+          fit: fits[Math.floor(rnd() * fits.length)],
+          split: splits[Math.floor(rnd() * splits.length)],
+          mode: rnd() < 0.5 ? 'ff' : 'bf'
+        };
+        sorted = engSortItems(items, cfg.sort, rnd, 0.15 + rnd() * 0.5);
+      }
+      consider(engRun(sorted, ctx, cfg));
+      S.trials++;
+      const dt = now() - t0;
+      if (dt >= ms || S.spent + dt >= budget) break;
+    }
+    S.spent += now() - t0;
+    if (S.spent >= budget) S.done = true;
+    else if (S.bestKey && S.bestKey[0] === 0 && S.bestKey[1] <= lb && S.ci >= configs.length && S.trials >= configs.length + 150 && S.spent > 350) S.done = true;
+    return S.done;
+  };
+  S.progress = function () { return Math.min(1, S.spent / budget); };
+  S.result = function (seed) {
+    if (!S.cands.length) return S.best;
+    const sorted = S.cands.slice().sort((a, b) => engCmp(a.key, b.key));
+    return sorted[(seed || 0) % sorted.length].res;
+  };
+  S.lowerBound = lb;
+  return S;
+}
+
+/* Tek geçişli klasik motorlar */
+function engSinglePass(items, ctx, mode, subDirPref, seed) {
+  const splitFromPref = subDirPref === 'enine' ? 'H' : (subDirPref === 'boyuna' ? 'V' : null);
+  let sorted, cfg;
+  if (mode === 'boyuna') {
+    sorted = items.slice().sort((a, b) => (b.h - a.h) || (b.w - a.w));
+    cfg = { fit: 'bssf', split: 'V', mode: 'ff' };
+  } else if (mode === 'enine') {
+    sorted = items.slice().sort((a, b) => (b.w - a.w) || (b.h - a.h));
+    cfg = { fit: 'bssf', split: 'H', mode: 'ff' };
+  } else if (mode === 'siper_dostu') {
+    sorted = items.slice().sort((a, b) => {
+      const a1 = Math.max(a.h, a.w), a2 = Math.min(a.h, a.w), b1 = Math.max(b.h, b.w), b2 = Math.min(b.h, b.w);
+      if (subDirPref === 'boyuna') return (b.h - a.h) || (b.w - a.w);
+      if (subDirPref === 'enine') return (b.w - a.w) || (b.h - a.h);
+      return (b1 - a1) || (b2 - a2);
+    });
+    cfg = { fit: 'bssf', split: splitFromPref || 'MAXA', mode: 'ff', stick: true };
+  } else { // klasik: aynı ölçüleri grupla, grupları alana göre sırala
+    const groups = {};
+    items.forEach(it => { const k = Math.max(it.w, it.h) + 'x' + Math.min(it.w, it.h); (groups[k] = groups[k] || []).push(it); });
+    let keys = Object.keys(groups).sort((a, b) => {
+      const [aM, am] = a.split('x').map(Number), [bM, bm] = b.split('x').map(Number);
+      return (bM * bm) - (aM * am);
+    });
+    if (seed > 0) {
+      const r = engRng(seed * 104729 + 7);
+      for (let i = keys.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); const t = keys[i]; keys[i] = keys[j]; keys[j] = t; }
+    }
+    sorted = []; keys.forEach(k => groups[k].forEach(it => sorted.push(it)));
+    cfg = { fit: 'bssf', split: splitFromPref || (seed % 2 === 0 ? 'SAS' : 'MAXA'), mode: 'ff', stick: true };
+  }
+  return engRun(sorted, ctx, cfg);
+}
+
+/* ====================================================================
+   QR KOD ÜRETİCİ (bayt modu, sürüm 1-10, düzeltme seviyesi L/M)
+   ==================================================================== */
+const QR_ECC_PER_BLOCK = [
+  [-1, 7, 10, 15, 20, 26, 18, 20, 24, 30, 18],
+  [-1, 10, 16, 26, 18, 24, 16, 18, 22, 22, 26]
+];
+const QR_NUM_BLOCKS = [
+  [-1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 4],
+  [-1, 1, 1, 1, 2, 2, 4, 4, 4, 5, 5]
+];
+
+function qrRawModules(ver) {
+  let r = (16 * ver + 128) * ver + 64;
+  if (ver >= 2) {
+    const na = Math.floor(ver / 7) + 2;
+    r -= (25 * na - 10) * na - 55;
+    if (ver >= 7) r -= 36;
+  }
+  return r;
+}
+function qrDataCodewords(ver, ecc) {
+  return Math.floor(qrRawModules(ver) / 8) - QR_ECC_PER_BLOCK[ecc][ver] * QR_NUM_BLOCKS[ecc][ver];
+}
+function qrMul(x, y) {
+  let z = 0;
+  for (let i = 7; i >= 0; i--) { z = (z << 1) ^ ((z >>> 7) * 0x11D); z ^= ((y >>> i) & 1) * x; }
+  return z;
+}
+function qrDivisor(deg) {
+  const res = new Array(deg).fill(0); res[deg - 1] = 1;
+  let root = 1;
+  for (let i = 0; i < deg; i++) {
+    for (let j = 0; j < res.length; j++) { res[j] = qrMul(res[j], root); if (j + 1 < res.length) res[j] ^= res[j + 1]; }
+    root = qrMul(root, 2);
+  }
+  return res;
+}
+function qrRemainder(data, div) {
+  const res = div.map(() => 0);
+  data.forEach(b => {
+    const f = b ^ res.shift(); res.push(0);
+    div.forEach((c, i) => { res[i] ^= qrMul(c, f); });
+  });
+  return res;
+}
+
+function qrMake(text, eccIdx) {
+  eccIdx = eccIdx || 0;
+  const bytes = Array.from(new TextEncoder().encode(text));
+  let ver = 1;
+  for (; ver <= 10; ver++) {
+    const cap = qrDataCodewords(ver, eccIdx) * 8;
+    if (4 + (ver <= 9 ? 8 : 16) + bytes.length * 8 <= cap) break;
+  }
+  if (ver > 10) throw new Error('QR verisi çok uzun');
+  const bits = [];
+  const put = (v, n) => { for (let i = n - 1; i >= 0; i--) bits.push((v >>> i) & 1); };
+  put(4, 4); put(bytes.length, ver <= 9 ? 8 : 16);
+  bytes.forEach(b => put(b, 8));
+  const capBits = qrDataCodewords(ver, eccIdx) * 8;
+  put(0, Math.min(4, capBits - bits.length));
+  put(0, (8 - bits.length % 8) % 8);
+  for (let pad = 0xEC; bits.length < capBits; pad ^= 0xEC ^ 0x11) put(pad, 8);
+  const data = [];
+  for (let i = 0; i < bits.length; i += 8) { let v = 0; for (let j = 0; j < 8; j++) v = (v << 1) | bits[i + j]; data.push(v); }
+
+  // Hata düzeltme + serpiştirme
+  const nb = QR_NUM_BLOCKS[eccIdx][ver], bel = QR_ECC_PER_BLOCK[eccIdx][ver];
+  const raw = Math.floor(qrRawModules(ver) / 8);
+  const nShort = nb - raw % nb, shortLen = Math.floor(raw / nb);
+  const div = qrDivisor(bel), blocks = [];
+  for (let i = 0, k = 0; i < nb; i++) {
+    const dat = data.slice(k, k + shortLen - bel + (i < nShort ? 0 : 1)); k += dat.length;
+    const ec = qrRemainder(dat, div);
+    if (i < nShort) dat.push(0);
+    blocks.push(dat.concat(ec));
+  }
+  const all = [];
+  for (let i = 0; i < blocks[0].length; i++) blocks.forEach((bl, j) => { if (i !== shortLen - bel || j >= nShort) all.push(bl[i]); });
+
+  const size = ver * 4 + 17;
+  const mod = [], fn = [];
+  for (let y = 0; y < size; y++) { mod.push(new Array(size).fill(false)); fn.push(new Array(size).fill(false)); }
+  const setF = (x, y, d) => { mod[y][x] = d; fn[y][x] = true; };
+  const gb = (v, i) => ((v >>> i) & 1) !== 0;
+
+  for (let i = 0; i < size; i++) { setF(6, i, i % 2 === 0); setF(i, 6, i % 2 === 0); }
+  const finder = (cx, cy) => {
+    for (let dy = -4; dy <= 4; dy++) for (let dx = -4; dx <= 4; dx++) {
+      const d = Math.max(Math.abs(dx), Math.abs(dy)), xx = cx + dx, yy = cy + dy;
+      if (xx >= 0 && xx < size && yy >= 0 && yy < size) setF(xx, yy, d !== 2 && d !== 4);
+    }
+  };
+  finder(3, 3); finder(size - 4, 3); finder(3, size - 4);
+  let pos = [];
+  if (ver > 1) {
+    const na = Math.floor(ver / 7) + 2;
+    const step = Math.ceil((ver * 4 + 4) / (na * 2 - 2)) * 2;
+    pos = [6];
+    for (let p = size - 7; pos.length < na; p -= step) pos.splice(1, 0, p);
+  }
+  pos.forEach((px, i) => pos.forEach((py, j) => {
+    if ((i === 0 && j === 0) || (i === 0 && j === pos.length - 1) || (i === pos.length - 1 && j === 0)) return;
+    for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) setF(px + dx, py + dy, Math.max(Math.abs(dx), Math.abs(dy)) !== 1);
+  }));
+  const fmt = mask => {
+    const d = ((eccIdx === 0 ? 1 : 0) << 3) | mask;
+    let rem = d;
+    for (let i = 0; i < 10; i++) rem = (rem << 1) ^ ((rem >>> 9) * 0x537);
+    const b = ((d << 10) | rem) ^ 0x5412;
+    for (let i = 0; i <= 5; i++) setF(8, i, gb(b, i));
+    setF(8, 7, gb(b, 6)); setF(8, 8, gb(b, 7)); setF(7, 8, gb(b, 8));
+    for (let i = 9; i < 15; i++) setF(14 - i, 8, gb(b, i));
+    for (let i = 0; i < 8; i++) setF(size - 1 - i, 8, gb(b, i));
+    for (let i = 8; i < 15; i++) setF(8, size - 15 + i, gb(b, i));
+    setF(8, size - 8, true);
+  };
+  fmt(0);
+  if (ver >= 7) {
+    let rem = ver;
+    for (let i = 0; i < 12; i++) rem = (rem << 1) ^ ((rem >>> 11) * 0x1F25);
+    const b = (ver << 12) | rem;
+    for (let i = 0; i < 18; i++) {
+      const c = gb(b, i), a = size - 11 + i % 3, bb = Math.floor(i / 3);
+      setF(a, bb, c); setF(bb, a, c);
+    }
+  }
+  // Veri yerleştirme
+  let bi = 0;
+  for (let right = size - 1; right >= 1; right -= 2) {
+    if (right === 6) right = 5;
+    for (let vert = 0; vert < size; vert++) for (let j = 0; j < 2; j++) {
+      const x = right - j, up = ((right + 1) & 2) === 0, y = up ? size - 1 - vert : vert;
+      if (!fn[y][x] && bi < all.length * 8) { mod[y][x] = gb(all[bi >>> 3], 7 - (bi & 7)); bi++; }
+    }
+  }
+  const maskFn = [
+    (x, y) => (x + y) % 2 === 0, (x, y) => y % 2 === 0, (x, y) => x % 3 === 0, (x, y) => (x + y) % 3 === 0,
+    (x, y) => (Math.floor(x / 3) + Math.floor(y / 2)) % 2 === 0, (x, y) => x * y % 2 + x * y % 3 === 0,
+    (x, y) => (x * y % 2 + x * y % 3) % 2 === 0, (x, y) => ((x + y) % 2 + x * y % 3) % 2 === 0
+  ];
+  const applyMask = m => { for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) if (!fn[y][x] && maskFn[m](x, y)) mod[y][x] = !mod[y][x]; };
+  const penalty = () => {
+    let p = 0, dark = 0;
+    for (let y = 0; y < size; y++) {
+      let run = 1;
+      for (let x = 1; x < size; x++) { if (mod[y][x] === mod[y][x - 1]) { run++; if (run === 5) p += 3; else if (run > 5) p++; } else run = 1; }
+    }
+    for (let x = 0; x < size; x++) {
+      let run = 1;
+      for (let y = 1; y < size; y++) { if (mod[y][x] === mod[y - 1][x]) { run++; if (run === 5) p += 3; else if (run > 5) p++; } else run = 1; }
+    }
+    for (let y = 0; y < size - 1; y++) for (let x = 0; x < size - 1; x++) {
+      const c = mod[y][x];
+      if (c === mod[y][x + 1] && c === mod[y + 1][x] && c === mod[y + 1][x + 1]) p += 3;
+    }
+    mod.forEach(r => r.forEach(c => { if (c) dark++; }));
+    p += Math.floor(Math.abs(dark * 20 - size * size * 10) / (size * size)) * 10;
+    return p;
+  };
+  let bestM = 0, bestP = Infinity;
+  for (let m = 0; m < 8; m++) {
+    applyMask(m); fmt(m);
+    const p = penalty();
+    if (p < bestP) { bestP = p; bestM = m; }
+    applyMask(m);
+  }
+  applyMask(bestM); fmt(bestM);
+  return { size: size, modules: mod, version: ver };
+}
+
+/* SVG metni (quiet = sessiz bölge modül sayısı) */
+function qrSvg(text, quiet, eccIdx) {
+  const q = qrMake(text, eccIdx || 0), n = q.size, Q = quiet == null ? 1 : quiet;
+  let d = '';
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (q.modules[y][x]) d += 'M' + (x + Q) + ' ' + (y + Q) + 'h1v1h-1z';
+  const t = n + 2 * Q;
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + t + ' ' + t + '" shape-rendering="crispEdges" preserveAspectRatio="xMidYMid meet"><rect width="' + t + '" height="' + t + '" fill="#fff"/><path d="' + d + '" fill="#000"/></svg>';
+}
+
 let parts = [];
 let shuffleSeed = 0;
 let stockWastes = [];
 let currentDetectedWastes = [];
 
-let completedUniquePartIds = new Set(); 
+let completedUniquePartIds = new Set();
 let activePresetType = 'preset_280';
-let calculatedSheetCount = 0;
+let calculatedSheetCount = 0, calculatedCutSheetCount = 0;
 let calculatedBandMeters = 0;
 let activeSelectedPartForPopup = null;
 let activeSelectedSheetIndex = null;
 let lastActiveSheets = [];
 let lastSW0 = 0, lastSH0 = 0, lastEdge = 0, lastK = 0;
+let currentCloudId = null;
+let undoStack = [], redoStack = [], histCur = '[]';
+let optCancel = false, optRunId = 0, lastLowerBound = 0, lastSig = 0;
+let usedStockIds = [], depotSavedForCurrent = false;
+let pendingQr = null;
 
 let splashClosed = false;
 function closeSplashNow() {
@@ -886,246 +1592,333 @@ function selectSheetPreset(type, h, w) {
   }
   calculateCosts();
 }
+/* ====================================================================
+   MALİYET / BANT
+   ==================================================================== */
+const BAND_TYPES = [
+  { k: '0.45', label: '0.45 mm', priceId: 'priceBand045' },
+  { k: '0.8', label: '0.80 mm', priceId: 'priceBand080' },
+  { k: '2', label: '2.00 mm', priceId: 'priceBand2' }
+];
+let bandMetersByType = { '0.45': 0, '0.8': 0, '2': 0 };
+let lastCost = null;
 
-function calculateCosts() {
-  let unitPrice = 0;
-  if (activePresetType === 'preset_280') {
-    unitPrice = parseNum(document.getElementById("pricePreset280").value);
-  } else if (activePresetType === 'preset_366') {
-    unitPrice = parseNum(document.getElementById("pricePreset366").value);
-  } else if (activePresetType === 'preset_arkalik') {
-    unitPrice = parseNum(document.getElementById("pricePresetArkalik").value);
-  } else {
-    unitPrice = parseNum(document.getElementById("priceCustom").value);
-  }
+function fmtTL(n) { return (Math.round((n || 0) * 100) / 100).toLocaleString('tr-TR', { maximumFractionDigits: 2 }) + ' ₺'; }
+function fmt1(n) { return String(Math.round((Number(n) || 0) * 10) / 10); }
 
-  let cuttingFeeUnit = parseNum(document.getElementById("priceCuttingFee").value);
-  let bandUnitPrice = parseNum(document.getElementById("priceBand080").value);
-
-  let sheetTotal = calculatedSheetCount * unitPrice;
-  let cuttingTotal = calculatedSheetCount * cuttingFeeUnit;
-  let bandTotal = calculatedBandMeters * bandUnitPrice;
-  let grandTotal = sheetTotal + cuttingTotal + bandTotal;
-
-  document.getElementById("costSheetCount").textContent = calculatedSheetCount;
-  document.getElementById("costSheetTotal").textContent = sheetTotal.toLocaleString('tr-TR') + " ₺";
-  document.getElementById("costCuttingCount").textContent = calculatedSheetCount;
-  document.getElementById("costCuttingTotal").textContent = cuttingTotal.toLocaleString('tr-TR') + " ₺";
-  document.getElementById("costBandMeters").textContent = calculatedBandMeters;
-  document.getElementById("costBandTotal").textContent = bandTotal.toLocaleString('tr-TR') + " ₺";
-  document.getElementById("costGrandTotal").textContent = grandTotal.toLocaleString('tr-TR') + " ₺";
+function currentSheetUnitPrice() {
+  const id = { preset_280: 'pricePreset280', preset_366: 'pricePreset366', preset_arkalik: 'pricePresetArkalik' }[activePresetType] || 'priceCustom';
+  return parseNum(document.getElementById(id).value) || 0;
+}
+function presetLabel() {
+  const names = { preset_280: 'Küçük plaka 280×210 cm', preset_366: 'Büyük plaka 366×183 cm', preset_arkalik: 'Arkalık 211×171 cm' };
+  return names[activePresetType] || ('Özel plaka ' + document.getElementById('sh').value + '×' + document.getElementById('sw').value + ' cm');
+}
+function recountSheets() {
+  calculatedSheetCount = lastActiveSheets.filter(s => !s.isStock).length;
+  calculatedCutSheetCount = lastActiveSheets.length;
 }
 
-function toggleTheme() {
-  document.body.classList.toggle("dark-mode");
-  const btn = document.getElementById("btnThemeToggle");
-  if(document.body.classList.contains("dark-mode")) {
-    btn.innerHTML = "☀️";
-  } else {
-    btn.innerHTML = "🌙";
+function calculateCosts() {
+  const unit = currentSheetUnitPrice();
+  const fee = parseNum(document.getElementById('priceCuttingFee').value) || 0;
+  const sheetTotal = calculatedSheetCount * unit;
+  const cuttingTotal = calculatedCutSheetCount * fee;
+  const bands = []; let bandTotal = 0;
+  BAND_TYPES.forEach(t => {
+    const m = bandMetersByType[t.k] || 0;
+    const price = parseNum(document.getElementById(t.priceId).value) || 0;
+    if (m > 0) { const tot = m * price; bandTotal += tot; bands.push({ k: t.k, label: t.label, meters: m, price: price, total: tot }); }
+  });
+  const grand = sheetTotal + cuttingTotal + bandTotal;
+  const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+  set('costSheetCount', calculatedSheetCount);
+  set('costSheetTotal', fmtTL(sheetTotal));
+  set('costCuttingCount', calculatedCutSheetCount);
+  set('costCuttingFeeLabel', fmtTL(fee));
+  set('costCuttingTotal', fmtTL(cuttingTotal));
+  const rows = document.getElementById('costBandRows');
+  if (rows) {
+    rows.innerHTML = bands.length ? bands.map(b =>
+      `<div class="cost-row"><span>${b.label} PVC Bant (<b>${fmt1(b.meters)} m</b>):</span><b>${fmtTL(b.total)}</b></div>`).join('')
+      : `<div class="cost-row"><span>PVC Bant:</span><b>0 ₺</b></div>`;
   }
+  set('costGrandTotal', fmtTL(grand));
+  lastCost = { unit: unit, sheetCount: calculatedSheetCount, sheetTotal: sheetTotal, cutCount: calculatedCutSheetCount, fee: fee, cuttingTotal: cuttingTotal, bands: bands, bandTotal: bandTotal, grand: grand };
+}
+
+/* ====================================================================
+   TEMA
+   ==================================================================== */
+function applyTheme(dark) {
+  document.body.classList.toggle('dark-mode', dark);
+  const btn = document.getElementById('btnThemeToggle');
+  if (btn) btn.innerHTML = dark ? '☀️' : '🌙';
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', dark ? '#020617' : '#0d1117');
+}
+function toggleTheme() {
+  const dark = !document.body.classList.contains('dark-mode');
+  applyTheme(dark);
+  try { localStorage.setItem('acanlar_theme', dark ? 'dark' : 'light'); } catch (e) { }
+}
+function initTheme() {
+  let saved = null;
+  try { saved = localStorage.getItem('acanlar_theme'); } catch (e) { }
+  applyTheme(saved ? saved === 'dark' : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches));
+}
+
+/* ====================================================================
+   BİLDİRİM (toast)
+   ==================================================================== */
+function toast(msg, kind) {
+  const box = document.getElementById('toastBox');
+  if (!box) { alert(msg); return; }
+  const t = document.createElement('div');
+  t.className = 'toast ' + (kind || '');
+  t.textContent = msg;
+  box.appendChild(t);
+  setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 350); }, kind === 'err' ? 5200 : 3200);
+}
+
+/* ====================================================================
+   PARÇA AÇILIR PENCERESİ
+   ==================================================================== */
+function boyOf(p) { return p.rot ? p.w : p.h; }   // girilen (orijinal) boy
+function enOf(p) { return p.rot ? p.h : p.w; }    // girilen (orijinal) en
+function sheetTitle(s, idx) {
+  return s.isStock ? ('Depo plakası ' + (s.no || (idx + 1))) : ('Plaka ' + (s.no || (idx + 1)));
 }
 
 function openPartPopup(part, sheetIdx) {
   activeSelectedPartForPopup = part;
   activeSelectedSheetIndex = sheetIdx;
+  const s = lastActiveSheets[sheetIdx];
+  const done = completedUniquePartIds.has(part.uniqueInstanceId);
 
-  document.getElementById("popPartName").textContent = `[ ${part.name} ]`;
-  
-  if (part.seqStr) {
-    document.getElementById("popPartSeq").textContent = `Grup İçi Sırası: ${part.seqStr}`;
-    document.getElementById("popPartSeq").style.display = "block";
-  } else {
-    document.getElementById("popPartSeq").style.display = "none";
-  }
+  document.getElementById('popPartName').textContent = `[ ${part.name} ]`;
+  const seqEl = document.getElementById('popPartSeq');
+  seqEl.textContent = (s ? sheetTitle(s, sheetIdx) : '') + (part.seqStr ? ' · Grup sırası ' + part.seqStr : '');
+  seqEl.style.display = 'block';
+  document.getElementById('popPartDim').textContent = `Boy ${boyOf(part)} × En ${enOf(part)} cm` + (part.rot ? '  ↻' : '');
+  const bt = document.getElementById('popBandType');
+  if (bt) bt.textContent = (part.b1 || part.b2 || part.e1 || part.e2) ? ('Bant: ' + (part.bt || '0.8') + ' mm' + (part.rot ? ' · parça plakada döndürülmüş' : '')) : (part.rot ? 'Parça plakada döndürülmüş' : '');
 
-  document.getElementById("popPartDim").textContent = `${part.h} × ${part.w} cm ${part.rot ? '(Döndürüldü)' : ''}`;
-
-  document.getElementById("popBandB1").textContent = `Boy 1: ${part.b1 ? '✅ BANTLI' : 'Yok'}`;
-  document.getElementById("popBandB1").className = `popup-band-item ${part.b1 ? 'active' : ''}`;
-  document.getElementById("popBandB2").textContent = `Boy 2: ${part.b2 ? '✅ BANTLI' : 'Yok'}`;
-  document.getElementById("popBandB2").className = `popup-band-item ${part.b2 ? 'active' : ''}`;
-  document.getElementById("popBandE1").textContent = `En 1: ${part.e1 ? '✅ BANTLI' : 'Yok'}`;
-  document.getElementById("popBandE1").className = `popup-band-item ${part.e1 ? 'active' : ''}`;
-  document.getElementById("popBandE2").textContent = `En 2: ${part.e2 ? '✅ BANTLI' : 'Yok'}`;
-  document.getElementById("popBandE2").className = `popup-band-item ${part.e2 ? 'active' : ''}`;
-
-  let actionGroup = document.querySelector(".popup-action-group");
-  actionGroup.innerHTML = `
-    <button class="btn-pop-action mark-done" onclick="setCutStatusFromPopup(true)">✅ KESİLDİ İŞARETLE</button>
-    <button class="btn-pop-action mark-pending" onclick="setCutStatusFromPopup(false)">⏳ BEKLİYOR YAP</button>
-  `;
-
-  document.getElementById("partPopupModal").style.display = "flex";
+  [['popBandB1', 'Boy 1', part.b1], ['popBandB2', 'Boy 2', part.b2], ['popBandE1', 'En 1', part.e1], ['popBandE2', 'En 2', part.e2]].forEach(([id, lbl, on]) => {
+    const el = document.getElementById(id);
+    el.textContent = `${lbl}: ${on ? '✅ BANTLI' : 'Yok'}`;
+    el.className = 'popup-band-item' + (on ? ' active' : '');
+  });
+  document.querySelector('#partPopupModal .popup-action-group').innerHTML = `
+    <button class="btn-pop-action mark-done" onclick="setCutStatusFromPopup(true)">${done ? '✅ KESİLDİ (tekrar işaretle)' : '✅ KESİLDİ İŞARETLE'}</button>
+    <button class="btn-pop-action mark-pending" onclick="setCutStatusFromPopup(false)">⏳ BEKLİYOR YAP</button>`;
+  document.getElementById('partPopupModal').style.display = 'flex';
 }
 
 function setCutStatusFromPopup(isCut) {
   if (!activeSelectedPartForPopup) return;
-  let uId = activeSelectedPartForPopup.uniqueInstanceId;
-  if (isCut) {
-    completedUniquePartIds.add(uId);
-  } else {
-    completedUniquePartIds.delete(uId);
-  }
-  
+  const uId = activeSelectedPartForPopup.uniqueInstanceId;
+  if (isCut) completedUniquePartIds.add(uId); else completedUniquePartIds.delete(uId);
   closePartPopup();
-  const proj = document.getElementById("projName").value || "Plaka Kesim Projesi";
-  const dateStr = new Date().toLocaleDateString('tr-TR');
-  renderJobTable(proj, dateStr, lastActiveSheets);
+  refreshCutViews();
+  autoSaveCompleted();
+}
+function refreshCutViews() {
+  const proj = document.getElementById('projName').value || 'Plaka Kesim Projesi';
+  renderJobTable(proj, new Date().toLocaleDateString('tr-TR'), lastActiveSheets);
   drawPlans(lastActiveSheets, lastSW0 - 2 * lastEdge, lastSH0 - 2 * lastEdge, lastSW0, lastSH0, lastEdge, lastK);
 }
-
 function closePartPopup() {
-  document.getElementById("partPopupModal").style.display = "none";
+  document.getElementById('partPopupModal').style.display = 'none';
   activeSelectedPartForPopup = null;
   activeSelectedSheetIndex = null;
 }
 
+/* Kesildi durumu bulut kaydına da işlensin (telefon/QR ile işaretleme için) */
+function autoSaveCompleted() {
+  try {
+    if (!cutUser || !currentCloudId) return;
+    const old = cutRecords[currentCloudId];
+    if (!old || old.deleted || !old.data) return;
+    const data = cutClone(old.data);
+    data.completedParts = Array.from(completedUniquePartIds);
+    const rec = cutQueue(old.name, data, old);
+    const next = Object.assign({}, cutRecords, { [rec.id]: rec });
+    cutPersist(cutUser.uid, next); Object.assign(cutRecords, next);
+    renderSavedProjectsList();
+    void cutFlush();
+  } catch (e) { console.warn('Kesim durumu buluta işlenemedi', e); }
+}
+
+/* ====================================================================
+   ETİKET (Tanex TW-2033) — isteğe bağlı QR kod
+   ==================================================================== */
 function openLabelModal() {
-  document.getElementById("labelSettingsModal").style.display = "flex";
+  try { document.getElementById('labelQr').checked = localStorage.getItem('acanlar_label_qr') === '1'; } catch (e) { }
+  document.getElementById('labelSettingsModal').style.display = 'flex';
+}
+function closeLabelModal() { document.getElementById('labelSettingsModal').style.display = 'none'; }
+
+function qrProjectKey() {
+  if (cutUser && currentCloudId && cutRecords[currentCloudId] && !cutRecords[currentCloudId].deleted) return currentCloudId;
+  return null;
 }
 
-function closeLabelModal() {
-  document.getElementById("labelSettingsModal").style.display = "none";
-}
-
-function executePrintLabels() {
-  let startIndex = parseInt(document.getElementById("labelStartIndex").value) || 1;
-  if (startIndex < 1) startIndex = 1;
-  if (startIndex > 24) startIndex = 24;
-  
-  closeLabelModal();
-
-  const proj = document.getElementById("projName").value || "Müşteri / Proje Belirtilmedi";
-  const labelContainer = document.getElementById("labelPrintArea");
-  labelContainer.innerHTML = "";
-
-  for (let b = 1; b < startIndex; b++) {
-    let emptyCard = document.createElement("div");
-    emptyCard.className = "label-card";
-    emptyCard.style.border = "none";
-    emptyCard.innerHTML = "";
-    labelContainer.appendChild(emptyCard);
-  }
-
-  let labelGroupCounters = {};
+function buildLabelEntries() {
+  const list = [];
   if (lastActiveSheets && lastActiveSheets.length > 0) {
-    lastActiveSheets.forEach(s => {
-      s.placed.forEach(p => {
-        let groupKey = `${p.name}_${Math.max(p.h, p.w)}x${Math.min(p.h, p.w)}`;
-        if (!labelGroupCounters[groupKey]) {
-          labelGroupCounters[groupKey] = { total: 0, current: 0 };
-        }
-        labelGroupCounters[groupKey].total++;
-      });
-    });
-  }
-
-  let count = 0;
-  
-  if (lastActiveSheets && lastActiveSheets.length > 0) {
-    lastActiveSheets.forEach(s => {
-      s.placed.forEach(p => {
-        count++;
-        let groupKey = `${p.name}_${Math.max(p.h, p.w)}x${Math.min(p.h, p.w)}`;
-        labelGroupCounters[groupKey].current++;
-        let curSeq = labelGroupCounters[groupKey].current;
-        let totSeq = labelGroupCounters[groupKey].total;
-        let seqText = totSeq > 1 ? ` (${curSeq}/${totSeq})` : "";
-
-        let card = document.createElement("div");
-        card.className = "label-card";
-
-        let leftBand, rightBand, topBand, botBand;
-        if (!p.rot) {
-          leftBand = p.b1;   
-          rightBand = p.b2;  
-          topBand = p.e1;    
-          botBand = p.e2;    
-        } else {
-          topBand = p.b1;
-          botBand = p.b2;
-          leftBand = p.e1;
-          rightBand = p.e2;
-        }
-
-        let lines = "";
-        if (topBand)   lines += `<line x1="1" y1="2" x2="99" y2="2" stroke="#0284c7" stroke-width="5" stroke-linecap="square"/>`;
-        if (botBand)   lines += `<line x1="1" y1="98" x2="99" y2="98" stroke="#0284c7" stroke-width="5" stroke-linecap="square"/>`;
-        if (rightBand) lines += `<line x1="98" y1="1" x2="98" y2="99" stroke="#0284c7" stroke-width="5" stroke-linecap="square"/>`;
-        if (leftBand)  lines += `<line x1="2" y1="1" x2="2" y2="99" stroke="#0284c7" stroke-width="5" stroke-linecap="square"/>`;
-
-        let svgOverlay = "";
-        if (lines !== "") {
-          svgOverlay = `<svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:99;">${lines}</svg>`;
-        }
-
-        card.innerHTML = `
-          ${svgOverlay}
-          <div class="lbl-header">
-            <div class="lbl-company">ACANLAR MOBİLYA</div>
-            <div class="lbl-project"><b>Müşteri:</b> ${esc(proj)}</div>
-          </div>
-          <div class="lbl-body">
-            <div class="lbl-part-name">${esc(p.name)}${seqText}</div>
-            <div class="lbl-dimensions">
-              <span class="lbl-dim-tag">En:</span> ${p.w} <span style="font-size:10px; color:#475569;">×</span> <span class="lbl-dim-tag">Boy:</span> ${p.h} <span style="font-size:8px;">cm</span>
-            </div>
-          </div>
-        `;
-        labelContainer.appendChild(card);
-      });
-    });
+    const counters = {};
+    lastActiveSheets.forEach(s => s.placed.forEach(p => {
+      const k = p.name + '_' + Math.max(p.h, p.w) + 'x' + Math.min(p.h, p.w);
+      counters[k] = counters[k] || { total: 0, cur: 0 }; counters[k].total++;
+    }));
+    lastActiveSheets.forEach((s, si) => s.placed.forEach(p => {
+      const k = p.name + '_' + Math.max(p.h, p.w) + 'x' + Math.min(p.h, p.w);
+      counters[k].cur++;
+      list.push({ name: p.name, boy: boyOf(p), en: enOf(p), b1: p.b1, b2: p.b2, e1: p.e1, e2: p.e2, uid: p.uniqueInstanceId,
+        seq: counters[k].total > 1 ? ` (${counters[k].cur}/${counters[k].total})` : '', sheet: sheetTitle(s, si) });
+    }));
   } else {
-    parts.forEach(p => {
-      if (p.w && p.h) {
-        let q = p.q || 1;
-        for (let n = 0; n < q; n++) {
-          count++;
-          let seqText = q > 1 ? ` (${n+1}/${q})` : "";
-          let card = document.createElement("div");
-          card.className = "label-card";
-
-          let lines = "";
-          if (p.b1) lines += `<line x1="2" y1="1" x2="2" y2="99" stroke="#0284c7" stroke-width="5" stroke-linecap="square"/>`;
-          if (p.b2) lines += `<line x1="98" y1="1" x2="98" y2="99" stroke="#0284c7" stroke-width="5" stroke-linecap="square"/>`;
-          if (p.e1) lines += `<line x1="1" y1="2" x2="99" y2="2" stroke="#0284c7" stroke-width="5" stroke-linecap="square"/>`;
-          if (p.e2) lines += `<line x1="1" y1="98" x2="99" y2="98" stroke="#0284c7" stroke-width="5" stroke-linecap="square"/>`;
-
-          let svgOverlay = "";
-          if (lines !== "") {
-            svgOverlay = `<svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:99;">${lines}</svg>`;
-          }
-
-          card.innerHTML = `
-            ${svgOverlay}
-            <div class="lbl-header">
-              <div class="lbl-company">ACANLAR MOBİLYA</div>
-              <div class="lbl-project"><b>Müşteri:</b> ${esc(proj)}</div>
-            </div>
-            <div class="lbl-body">
-              <div class="lbl-part-name">${esc(p.name)}${seqText}</div>
-              <div class="lbl-dimensions">
-                <span class="lbl-dim-tag">En:</span> ${p.w} <span style="font-size:10px; color:#475569;">×</span> <span class="lbl-dim-tag">Boy:</span> ${p.h} <span style="font-size:8px;">cm</span>
-              </div>
-            </div>
-          `;
-          labelContainer.appendChild(card);
-        }
+    parts.forEach((p, ri) => {
+      const w = parseNum(p.w), h = parseNum(p.h);
+      if (w > 0 && h > 0) {
+        const q = Math.max(1, Math.round(parseNum(p.q) || 1));
+        for (let n = 0; n < q; n++) list.push({ name: p.name, boy: h, en: w, b1: p.b1, b2: p.b2, e1: p.e1, e2: p.e2, uid: null, seq: q > 1 ? ` (${n + 1}/${q})` : '', sheet: '' });
       }
     });
   }
+  return list;
+}
 
-  if (count === 0) {
-    alert("Yazdırılacak parça bulunamadı! Lütfen önce optimizasyonu çalıştırın.");
-    return;
+function executePrintLabels() {
+  let startIndex = parseInt(document.getElementById('labelStartIndex').value) || 1;
+  startIndex = Math.min(24, Math.max(1, startIndex));
+  const wantQr = document.getElementById('labelQr').checked;
+  try { localStorage.setItem('acanlar_label_qr', wantQr ? '1' : '0'); } catch (e) { }
+
+  let prefix = null;
+  if (wantQr) {
+    if (!/^https?:$/.test(location.protocol)) { toast('QR için programı bir web adresinde (örn. GitHub Pages) aç; dosya olarak açıkken QR çalışmaz.', 'err'); return; }
+    syncCurrentToCloud();
+    const key = qrProjectKey();
+    if (!key) { toast('QR için önce projeyi bulut hesabına kaydet (Kayıtlı Kesim Projeleri → Projeyi Kaydet).', 'err'); return; }
+    prefix = key.replace(/^p_/, '').slice(0, 8);
   }
+  const entries = buildLabelEntries();
+  if (entries.length === 0) { toast('Yazdırılacak parça bulunamadı! Önce parça girip hesaplayın.', 'err'); return; }
+  closeLabelModal();
 
-  document.body.classList.add("print-labels");
+  const proj = document.getElementById('projName').value || 'Müşteri / Proje Belirtilmedi';
+  const base = location.href.split('#')[0].split('?')[0];
+  const container = document.getElementById('labelPrintArea');
+  container.innerHTML = '';
+  for (let b = 1; b < startIndex; b++) {
+    const empty = document.createElement('div');
+    empty.className = 'label-card'; empty.style.border = 'none';
+    container.appendChild(empty);
+  }
+  entries.forEach(e => {
+    const card = document.createElement('div');
+    card.className = 'label-card';
+    let lines = '';
+    if (e.e1) lines += `<line x1="1" y1="2" x2="99" y2="2" stroke="#0284c7" stroke-width="5" stroke-linecap="square"/>`;
+    if (e.e2) lines += `<line x1="1" y1="98" x2="99" y2="98" stroke="#0284c7" stroke-width="5" stroke-linecap="square"/>`;
+    if (e.b2) lines += `<line x1="98" y1="1" x2="98" y2="99" stroke="#0284c7" stroke-width="5" stroke-linecap="square"/>`;
+    if (e.b1) lines += `<line x1="2" y1="1" x2="2" y2="99" stroke="#0284c7" stroke-width="5" stroke-linecap="square"/>`;
+    const overlay = lines ? `<svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:99;">${lines}</svg>` : '';
+    let qr = '';
+    if (prefix && e.uid) { try { qr = `<div class="lbl-qr">${qrSvg(base + '?q=' + prefix + '~' + e.uid, 1, 0)}</div>`; } catch (err) { qr = ''; } }
+    card.innerHTML = `${overlay}
+      <div class="lbl-header">
+        <div class="lbl-company">ACANLAR MOBİLYA</div>
+        <div class="lbl-project"><b>Müşteri:</b> ${esc(proj)}</div>
+      </div>
+      <div class="lbl-main">
+        <div class="lbl-body">
+          <div class="lbl-part-name">${esc(e.name)}${e.seq}</div>
+          <div class="lbl-dimensions"><span class="lbl-dim-tag">En:</span> ${e.en} <span style="font-size:10px;color:#475569;">×</span> <span class="lbl-dim-tag">Boy:</span> ${e.boy} <span style="font-size:8px;">cm</span></div>
+          ${e.sheet ? `<div class="lbl-sheet">${esc(e.sheet)}</div>` : ''}
+        </div>
+        ${qr}
+      </div>`;
+    container.appendChild(card);
+  });
+
+  document.body.classList.add('print-labels');
   window.print();
-  setTimeout(() => {
-    document.body.classList.remove("print-labels");
-  }, 1000);
+  setTimeout(() => document.body.classList.remove('print-labels'), 1000);
+}
+
+/* ====================================================================
+   FİYAT TEKLİFİ (yazdır / PDF)
+   ==================================================================== */
+function openQuoteModal() {
+  if (!lastCost || (!calculatedSheetCount && !calculatedCutSheetCount)) { toast('Önce "HESAPLA" ile kesim planını oluştur; teklif bu hesaptan üretilir.', 'warn'); return; }
+  let q = {};
+  try { q = JSON.parse(localStorage.getItem('acanlar_quote_settings') || '{}'); } catch (e) { }
+  const set = (id, v) => { document.getElementById(id).value = v; };
+  set('qCustomer', document.getElementById('projName').value || '');
+  set('qContact', q.contact || '');
+  set('qMargin', q.margin != null ? q.margin : 0);
+  set('qExtra', q.extra != null ? q.extra : 0);
+  set('qVat', q.vat != null ? q.vat : 20);
+  set('qValid', q.valid != null ? q.valid : 7);
+  set('qNote', q.note || '');
+  document.getElementById('qParts').checked = q.parts !== false;
+  document.getElementById('quoteModal').style.display = 'flex';
+}
+function closeQuoteModal() { document.getElementById('quoteModal').style.display = 'none'; }
+
+function printQuote() {
+  const g = id => document.getElementById(id);
+  const margin = parseNum(g('qMargin').value) || 0, extra = parseNum(g('qExtra').value) || 0, vat = parseNum(g('qVat').value) || 0;
+  const valid = parseInt(g('qValid').value) || 7, contact = g('qContact').value.trim(), note = g('qNote').value.trim();
+  const customer = g('qCustomer').value.trim() || '-', withParts = g('qParts').checked;
+  try { localStorage.setItem('acanlar_quote_settings', JSON.stringify({ contact: contact, margin: margin, extra: extra, vat: vat, valid: valid, note: note, parts: withParts })); } catch (e) { }
+  calculateCosts();
+  const c = lastCost, f = 1 + margin / 100;
+  const lines = [];
+  if (c.sheetCount > 0) lines.push([`Plaka malzeme — ${presetLabel()}`, c.sheetCount + ' adet', c.unit * f, c.sheetTotal * f]);
+  if (c.cutCount > 0) lines.push(['Plaka kesim işçiliği', c.cutCount + ' plaka', c.fee * f, c.cuttingTotal * f]);
+  c.bands.forEach(b => lines.push([`PVC kenar bandı ${b.label}`, fmt1(b.meters) + ' m', b.price * f, b.total * f]));
+  let sub = lines.reduce((a, l) => a + l[3], 0);
+  if (extra > 0) { lines.push(['Montaj / nakliye / ek işçilik', '1', extra, extra]); sub += extra; }
+  const vatAmt = sub * vat / 100, grand = sub + vatAmt;
+  const now = new Date(), pad = n => String(n).padStart(2, '0');
+  const no = `T-${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}`;
+  const until = new Date(now.getTime() + valid * 86400000).toLocaleDateString('tr-TR');
+
+  let partsHtml = '';
+  if (withParts) {
+    const rows = parts.filter(p => parseNum(p.w) > 0 && parseNum(p.h) > 0).map(p => {
+      const bd = []; if (p.b1) bd.push('Boy1'); if (p.b2) bd.push('Boy2'); if (p.e1) bd.push('En1'); if (p.e2) bd.push('En2');
+      return `<tr><td>${esc(p.name)}</td><td>${parseNum(p.h)}</td><td>${parseNum(p.w)}</td><td>${Math.max(1, Math.round(parseNum(p.q) || 1))}</td><td>${bd.length ? bd.join(' · ') : '-'}</td></tr>`;
+    }).join('');
+    partsHtml = `<h3 class="q-h3">Parça Listesi</h3><table class="q-table q-parts"><thead><tr><th>Parça</th><th>Boy (cm)</th><th>En (cm)</th><th>Adet</th><th>Kenar Bandı</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }
+  g('quotePrintArea').innerHTML = `
+    <div class="q-head">
+      <div class="q-brand">
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg"><polygon points="160,40 270,200 230,200 160,95 90,200 40,200" fill="#C01018"/><polygon points="160,95 200,155 145,155" fill="#C01018"/><polygon points="250,40 360,200 320,200 250,95 210,155 225,178 240,155" fill="#282C37"/></svg>
+        <div><div class="q-company">ACANLAR MOBİLYA</div><div class="q-sub">Mobilya &amp; Dekorasyon — Mesut ACAN</div>${contact ? `<div class="q-sub">${esc(contact)}</div>` : ''}</div>
+      </div>
+      <div class="q-meta"><div class="q-title">FİYAT TEKLİFİ</div><div>Teklif No: <b>${no}</b></div><div>Tarih: <b>${now.toLocaleDateString('tr-TR')}</b></div><div>Geçerlilik: <b>${until}</b></div></div>
+    </div>
+    <div class="q-customer"><span>Müşteri / Proje</span><b>${esc(customer)}</b></div>
+    <table class="q-table"><thead><tr><th style="text-align:left">Kalem</th><th>Miktar</th><th>Birim Fiyat</th><th>Tutar</th></tr></thead>
+    <tbody>${lines.map(l => `<tr><td style="text-align:left">${esc(l[0])}</td><td>${esc(l[1])}</td><td>${fmtTL(l[2])}</td><td>${fmtTL(l[3])}</td></tr>`).join('')}</tbody>
+    <tfoot>
+      <tr><td colspan="3" style="text-align:right">Ara Toplam</td><td>${fmtTL(sub)}</td></tr>
+      <tr><td colspan="3" style="text-align:right">KDV (%${vat})</td><td>${fmtTL(vatAmt)}</td></tr>
+      <tr class="q-grand"><td colspan="3" style="text-align:right">GENEL TOPLAM</td><td>${fmtTL(grand)}</td></tr>
+    </tfoot></table>
+    ${note ? `<div class="q-note"><b>Not:</b> ${esc(note).replace(/\n/g, '<br>')}</div>` : ''}
+    ${partsHtml}
+    <div class="q-foot">Bu teklif ${valid} gün geçerlidir. Fiyatlar malzeme ve işçilik değişikliklerine göre güncellenebilir.</div>`;
+  closeQuoteModal();
+  document.body.classList.add('print-quote');
+  window.print();
+  setTimeout(() => document.body.classList.remove('print-quote'), 1000);
 }
 
 // Acanlar: account-scoped project cache and Firestore synchronization.
@@ -1161,7 +1954,7 @@ function getSavedProjectsFromStorage() {
 function cutCapture(name) {
   return cutClone({projName:name, parts, presetType:activePresetType,
     sh:cutEl('sh').value, sw:cutEl('sw').value, kerf:cutEl('kerf').value,
-    edge:cutEl('edge').value, shuffleSeed, savedSheets:lastActiveSheets,
+    edge:cutEl('edge').value, grain:cutEl('grainOnly').checked, bandAllowance:cutEl('bandAllowance').value, shuffleSeed, savedSheets:lastActiveSheets,
     completedParts:Array.from(completedUniquePartIds),
     savedDate:new Date().toLocaleString('tr-TR')});
 }
@@ -1187,7 +1980,7 @@ async function saveProjectToLocalStorage() {
     } else {
       const old = Object.values(cutRecords).find(r=>!r.deleted && r.name===name);
       if(old && !confirm('Bu isimdeki proje güncellensin mi?')) return;
-      const record = cutQueue(name,data,old);
+      const record = cutQueue(name,data,old); currentCloudId = record.id;
       const next = {...cutRecords,[record.id]:record};
       cutPersist(cutUser.uid,next); Object.assign(cutRecords,next);
       cutStatus('✓ Cihaz kopyası kaydedildi. Buluta gönderilmesi bekleniyor…');
@@ -1199,6 +1992,7 @@ async function saveProjectToLocalStorage() {
 function loadProjectFromLocalStorage(key) {
   const data = cutUser ? cutRecords[key]?.data : getSavedProjectsFromStorage()[key];
   if(!data) return;
+  currentCloudId = cutUser ? key : null;
   cutApplyProject(cutClone(data),cutUser ? cutRecords[key].name : key);
   cutEl('saveLocalName').value=cutUser ? cutRecords[key].name : key;
 }
@@ -1352,7 +2146,7 @@ function cutStartCloud() {
       cutRecords=u?cutRead(u.uid):{};
       cutEl('cutAccountButton').textContent='☁ Bulut';
       renderSavedProjectsList();
-      if(!u) return cutStatus('Cihaz kayıtları açık. Her yerden erişmek için atölye hesabına bağlan.');
+      if(!u) { currentCloudId=null; if(pendingQr) toast('QR ile parçayı açmak için önce ☁ Bulut düğmesinden giriş yap.','warn'); return cutStatus('Cihaz kayıtları açık. Her yerden erişmek için atölye hesabına bağlan.'); }
       cutStatus('☁ Bulut projeleri alınıyor…');
       const epoch=cutEpoch;
       cutStop=cutDB.collection('acanlar_cut_projects').doc(u.uid).collection('items').onSnapshot(snap=>{
@@ -1363,7 +2157,7 @@ function cutStartCloud() {
             if(current?.pending) continue;
             if(!current || (remote.rev||0)>=(current.baseRev||0)) cutRecords[doc.id]=cutFromRemote(doc.id,remote);
           }
-          cutPersist(u.uid,cutRecords); renderSavedProjectsList();
+          cutPersist(u.uid,cutRecords); renderSavedProjectsList(); liveRefreshFromCloud(); qrTryResolve();
           if(!Object.values(cutRecords).some(r=>r.pending)) cutStatus(navigator.onLine===false?'Çevrimdışı · Bu cihazdaki hesap kopyası açık.':'☁ Bulut projeleri güncel.');
           void cutFlush();
         } catch(e) { cutStatus('Bazı kayıtlar okunamadı veya cihaza yazılamadı: '+e.message,true); }
@@ -1379,33 +2173,49 @@ window.addEventListener('storage',event=>{
 });
 setInterval(()=>void cutFlush(),15000);
 
+function normalizeSavedSheets(sheets) {
+  let a = 0, b = 0;
+  sheets.forEach(s => {
+    if (!s.freeRects) s.freeRects = [];
+    if (!s.cuts) s.cuts = [];
+    if (s.isStock) s.no = s.no || ++b; else s.no = s.no || ++a;
+  });
+  return sheets;
+}
+
 function cutApplyProject(projectData, projNameKey) {
-  document.getElementById("projName").value = projectData.projName || projNameKey;
-  parts = projectData.parts || [];
+  document.getElementById('projName').value = projectData.projName || projNameKey || '';
+  parts = (projectData.parts || []).map(p => Object.assign({ bt: '0.8', rot: true }, p));
   shuffleSeed = projectData.shuffleSeed || 0;
-  
+
   selectSheetPreset(projectData.presetType || 'custom', projectData.sh || 280, projectData.sw || 210);
-  if(projectData.sh) document.getElementById("sh").value = projectData.sh;
-  if(projectData.sw) document.getElementById("sw").value = projectData.sw;
-  if(projectData.kerf != null) document.getElementById("kerf").value = projectData.kerf;
-  if(projectData.edge != null) document.getElementById("edge").value = projectData.edge;
+  if (projectData.sh) document.getElementById('sh').value = projectData.sh;
+  if (projectData.sw) document.getElementById('sw').value = projectData.sw;
+  if (projectData.kerf != null) document.getElementById('kerf').value = projectData.kerf;
+  if (projectData.edge != null) document.getElementById('edge').value = projectData.edge;
+  document.getElementById('grainOnly').checked = !!projectData.grain;
+  if (projectData.bandAllowance != null) document.getElementById('bandAllowance').value = projectData.bandAllowance;
 
   completedUniquePartIds = new Set(projectData.completedParts || []);
 
-  lastSW0 = parseNum(document.getElementById("sw").value);
-  lastSH0 = parseNum(document.getElementById("sh").value);
-  lastEdge = parseNum(document.getElementById("edge").value);
-  lastK = parseNum(document.getElementById("kerf").value);
+  lastSW0 = parseNum(document.getElementById('sw').value);
+  lastSH0 = parseNum(document.getElementById('sh').value);
+  lastEdge = parseNum(document.getElementById('edge').value);
+  lastK = parseNum(document.getElementById('kerf').value);
+  lastActiveSheets = [];
   renderParts();
+  resetHistory();
+  const sb = document.getElementById('staleBanner'); if (sb) sb.style.display = 'none';
 
-  if(projectData.savedSheets && projectData.savedSheets.length > 0) {
-    lastActiveSheets = projectData.savedSheets;
-    calculatedSheetCount = lastActiveSheets.length;
-    calculateCosts();
-    const proj = document.getElementById("projName").value || "Plaka Kesim Projesi";
+  if (projectData.savedSheets && projectData.savedSheets.length > 0) {
+    lastActiveSheets = normalizeSavedSheets(projectData.savedSheets);
+    lastLowerBound = 0; usedStockIds = []; depotSavedForCurrent = false;
+    recountSheets();
+    updateTotalBandsAndCosts();
+    const proj = document.getElementById('projName').value || 'Plaka Kesim Projesi';
     const dateStr = new Date().toLocaleDateString('tr-TR');
-    document.getElementById("printProjName").innerHTML = `<b>Proje:</b> ${esc(proj)}`;
-    document.getElementById("printDate").innerHTML = `<b>Tarih:</b> ${dateStr}`;
+    document.getElementById('printProjName').innerHTML = `<b>Proje:</b> ${esc(proj)}`;
+    document.getElementById('printDate').innerHTML = `<b>Tarih:</b> ${dateStr}`;
     renderJobTable(proj, dateStr, lastActiveSheets);
     drawPlans(lastActiveSheets, lastSW0 - 2 * lastEdge, lastSH0 - 2 * lastEdge, lastSW0, lastSH0, lastEdge, lastK);
   } else {
@@ -1413,283 +2223,210 @@ function cutApplyProject(projectData, projNameKey) {
   }
 }
 
+/* ====================================================================
+   BULUT: açık projeyi güncelle / canlı yenile / QR ile açma
+   ==================================================================== */
+function syncCurrentToCloud() {
+  if (!cutUser || !currentCloudId) return false;
+  const old = cutRecords[currentCloudId];
+  if (!old || old.deleted) return false;
+  try {
+    const data = cutCapture(old.name);
+    const rec = cutQueue(old.name, data, old);
+    const next = Object.assign({}, cutRecords, { [rec.id]: rec });
+    cutPersist(cutUser.uid, next); Object.assign(cutRecords, next);
+    renderSavedProjectsList();
+    void cutFlush();
+    return true;
+  } catch (e) { toast(e.message, 'err'); return false; }
+}
+
+function liveRefreshFromCloud() {
+  if (!currentCloudId) return;
+  const r = cutRecords[currentCloudId];
+  if (!r || r.pending || r.deleted || !r.data || !lastActiveSheets.length) return;
+  const remote = r.data.completedParts || [];
+  if (remote.length === completedUniquePartIds.size && remote.every(x => completedUniquePartIds.has(x))) return;
+  completedUniquePartIds = new Set(remote);
+  refreshCutViews();
+}
+
+function qrReadParam() {
+  try {
+    const q = new URLSearchParams(location.search).get('q');
+    if (q && q.includes('~')) {
+      const i = q.indexOf('~');
+      pendingQr = { prefix: q.slice(0, i), uid: q.slice(i + 1), t0: Date.now() };
+      history.replaceState(null, '', location.pathname + location.hash);
+    }
+  } catch (e) { }
+}
+
+function qrTryResolve() {
+  if (!pendingQr || !cutUser) return;
+  const id = Object.keys(cutRecords).find(k => !cutRecords[k].deleted && cutRecords[k].data && k.replace(/^p_/, '').startsWith(pendingQr.prefix));
+  if (!id) {
+    if (Date.now() - pendingQr.t0 > 9000) { toast('QR koduna ait proje bu hesapta bulunamadı.', 'err'); pendingQr = null; }
+    return;
+  }
+  const uid = pendingQr.uid; pendingQr = null;
+  loadProjectFromLocalStorage(id);
+  let found = null, si = -1;
+  lastActiveSheets.forEach((s, i) => s.placed.forEach(p => { if (p.uniqueInstanceId === uid) { found = p; si = i; } }));
+  if (found) {
+    const idx = lastActiveSheets[si].placed.indexOf(found);
+    found.seqStr = found.seqStr || null;
+    openPartPopup(found, si);
+    toast(`QR: ${found.name} · ${sheetTitle(lastActiveSheets[si], si)} · parça ${idx + 1}`, 'ok');
+  } else toast('Bu QR etiketi projenin güncel planında yok. Plan değişmiş olabilir; etiketleri yeniden yazdır.', 'warn');
+}
+setInterval(() => { if (pendingQr) qrTryResolve(); }, 1500);
+
+/* ====================================================================
+   PWA (kurulabilir uygulama)
+   ==================================================================== */
+(function () {
+  try {
+    const icon = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" rx="72" fill="#0d1117"/><g transform="translate(0,50)"><polygon points="160,40 270,200 230,200 160,95 90,200 40,200" fill="#C01018"/><polygon points="160,95 200,155 145,155" fill="#C01018"/><polygon points="250,40 360,200 320,200 250,95 210,155 225,178 240,155" fill="#fff"/></g></svg>');
+    const base = location.href.split('#')[0].split('?')[0];
+    const m = { name: 'Acanlar Plaka Optimizasyon', short_name: 'Acanlar Kesim', start_url: base, scope: base.replace(/[^/]*$/, ''), display: 'standalone', background_color: '#0d1117', theme_color: '#0d1117', lang: 'tr', icons: [{ src: icon, sizes: 'any', type: 'image/svg+xml', purpose: 'any' }] };
+    const l = document.createElement('link'); l.rel = 'manifest';
+    l.href = URL.createObjectURL(new Blob([JSON.stringify(m)], { type: 'application/manifest+json' }));
+    document.head.appendChild(l);
+  } catch (e) { }
+})();
+
+/* ====================================================================
+   FİRE PLAKA DEPOSU
+   ==================================================================== */
 function loadStockWastesFromStorage() {
   try {
-    let saved = localStorage.getItem("acanlar_stock_wastes");
-    if(saved) stockWastes = JSON.parse(saved);
-  } catch(e){}
+    const saved = localStorage.getItem('acanlar_stock_wastes');
+    if (saved) stockWastes = JSON.parse(saved);
+  } catch (e) { }
   renderStockWasteList();
 }
-
 function saveStockWastesToStorage() {
-  localStorage.setItem("acanlar_stock_wastes", JSON.stringify(stockWastes));
+  try { localStorage.setItem('acanlar_stock_wastes', JSON.stringify(stockWastes)); } catch (e) { }
   renderStockWasteList();
 }
-
 function addManualStock() {
-  let w = parseNum(document.getElementById("stockW").value);
-  let h = parseNum(document.getElementById("stockH").value);
-  let label = document.getElementById("stockName").value || "Fire Plaka";
-  if(w && h) {
-    stockWastes.push({ w, h, label, id: Date.now() });
-    document.getElementById("stockW").value = "";
-    document.getElementById("stockH").value = "";
-    document.getElementById("stockName").value = "";
-    saveStockWastesToStorage();
-  }
+  const w = parseNum(document.getElementById('stockW').value);
+  const h = parseNum(document.getElementById('stockH').value);
+  const label = document.getElementById('stockName').value.trim() || 'Fire Plaka';
+  if (!(w > 0 && h > 0)) { toast('Fire plakanın en ve boy ölçüsünü gir.', 'warn'); return; }
+  stockWastes.push({ w: w, h: h, label: label, id: Date.now() + Math.random() });
+  document.getElementById('stockW').value = '';
+  document.getElementById('stockH').value = '';
+  document.getElementById('stockName').value = '';
+  saveStockWastesToStorage();
+  toast('Fire plaka depoya eklendi.', 'ok');
 }
-
 function removeStockWaste(id) {
   stockWastes = stockWastes.filter(item => item.id !== id);
   saveStockWastesToStorage();
 }
-
 function renderStockWasteList() {
-  const container = document.getElementById("stockWasteContainer");
-  if(stockWastes.length === 0) {
+  const container = document.getElementById('stockWasteContainer');
+  const sum = document.getElementById('stockSummary');
+  if (stockWastes.length === 0) {
     container.innerHTML = `<div class="muted" style="text-align:center;padding:5px">Depoda kayıtlı fire yok.</div>`;
+    if (sum) sum.textContent = '';
     return;
   }
-  container.innerHTML = "";
-  stockWastes.forEach(item => {
-    container.innerHTML += `
-      <div class="stock-waste-item">
-        <span><b>${item.w} x ${item.h} cm</b> (${item.label})</span>
-        <button style="background:#ef4444;color:#fff;border:none;border-radius:4px;padding:2px 6px;cursor:pointer;font-size:10px" onclick="removeStockWaste(${item.id})">Sil</button>
-      </div>
-    `;
-  });
+  let area = 0;
+  container.innerHTML = stockWastes.map(item => {
+    area += item.w * item.h;
+    return `<div class="stock-waste-item">
+      <span><b>${item.w} x ${item.h} cm</b> (${esc(item.label)})</span>
+      <button class="btn-mini del-proj" onclick="removeStockWaste(${item.id})">Sil</button>
+    </div>`;
+  }).join('');
+  if (sum) sum.textContent = `${stockWastes.length} parça · toplam ${(area / 10000).toFixed(2)} m²`;
 }
 
+/* ====================================================================
+   GERİ AL / İLERİ AL
+   ==================================================================== */
+function updateUndoButtons() {
+  const u = document.getElementById('btnUndo'), r = document.getElementById('btnRedo');
+  if (u) u.disabled = undoStack.length === 0;
+  if (r) r.disabled = redoStack.length === 0;
+}
+function resetHistory() { undoStack = []; redoStack = []; histCur = JSON.stringify(parts); updateUndoButtons(); }
+function commitParts() {
+  const cur = JSON.stringify(parts);
+  if (cur === histCur) return;
+  undoStack.push(histCur);
+  if (undoStack.length > 80) undoStack.shift();
+  redoStack = []; histCur = cur;
+  updateUndoButtons(); markStale();
+}
+function undoParts() {
+  if (!undoStack.length) return;
+  redoStack.push(histCur); histCur = undoStack.pop(); parts = JSON.parse(histCur);
+  renderParts(); updateUndoButtons(); markStale();
+}
+function redoParts() {
+  if (!redoStack.length) return;
+  undoStack.push(histCur); histCur = redoStack.pop(); parts = JSON.parse(histCur);
+  renderParts(); updateUndoButtons(); markStale();
+}
+function markStale() {
+  const b = document.getElementById('staleBanner');
+  if (b) b.style.display = lastActiveSheets.length ? 'flex' : 'none';
+}
+
+/* ====================================================================
+   MOTOR SEÇİMİ / HESAPLAMA AKIŞI
+   ==================================================================== */
 function checkShuffleBtn() {
-  let dir = document.getElementById("globalDir").value;
-  let isAuto = dir.includes("otomatik");
-  
-  let btnShuffleDesk = document.getElementById("btnShuffle");
-  let btnShuffleMob = document.getElementById("btnShuffleMobile");
-  
-  if(btnShuffleDesk) btnShuffleDesk.style.display = isAuto ? "block" : "none";
-  if(btnShuffleMob) btnShuffleMob.style.display = isAuto ? "block" : "none";
-  
-  document.getElementById("dirPreferenceArea").style.display = (isAuto || dir === "siper_dostu") ? "block" : "none";
+  const dir = document.getElementById('globalDir').value;
+  const isAuto = dir.includes('otomatik');
+  const d = document.getElementById('btnShuffle'), m = document.getElementById('btnShuffleMobile');
+  if (d) d.style.display = isAuto ? 'block' : 'none';
+  if (m) m.style.display = isAuto ? 'block' : 'none';
+  document.getElementById('dirPreferenceArea').style.display = (isAuto || dir === 'siper_dostu') ? 'block' : 'none';
+  const sb = document.getElementById('searchBudgetArea');
+  if (sb) sb.style.display = dir === 'otomatik_hibrit' ? 'block' : 'none';
 }
+function shuffleAndOptimize() { shuffleSeed++; startOptimization(); }
 
-function shuffleAndOptimize() {
-  shuffleSeed++;
-  startOptimization();
+function setProgress(p, text) {
+  const bar = document.getElementById('loadingBar'), txt = document.getElementById('loadingText');
+  if (bar) bar.style.width = Math.round(Math.max(0, Math.min(1, p)) * 100) + '%';
+  if (txt && text) txt.textContent = text;
 }
+function cancelOptimization() { optCancel = true; }
 
-function startOptimization() {
-  const overlay = document.getElementById("loadingOverlay");
-  overlay.style.display = "flex";
-
-  setTimeout(() => {
-    try {
-      optimize();
-    } finally {
-      overlay.style.display = "none";
-    }
-  }, 120);
-}
-
-function addPart(p) {
-  if(!p) {
-    p = {
-      name: String(parts.length + 1),
-      h: "",
-      w: "",
-      q: 1,
-      rot: true,
-      b1: false,
-      b2: false,
-      e1: false,
-      e2: false
-    };
-  }
-  parts.push({...p, id: Date.now() + Math.random()});
-  renderParts();
-  
-  setTimeout(()=>{
-    let isMobile = window.innerWidth <= 900;
-    if(isMobile) {
-      let cards = document.querySelectorAll("#partCards .part-card");
-      let lastInput = cards[cards.length-1]?.querySelector("input[data-k='h']");
-      if(lastInput) { lastInput.focus(); lastInput.select(); }
-    } else {
-      let rows = document.querySelectorAll("#parts tr");
-      let lastInput = rows[rows.length-1]?.querySelector("input[data-k='h']");
-      if(lastInput) { lastInput.focus(); lastInput.select(); }
-    }
-  }, 30);
-}
-
-function toggleBand(i, key) {
-  parts[i][key] = !parts[i][key];
-  renderParts();
-}
-
-function renderParts() {
-  const tb = document.getElementById("parts");
-  tb.innerHTML = "";
-  parts.forEach((p, i) => {
-    tb.innerHTML += `<tr>
-    <td class="col-rot"><input type="checkbox" ${p.rot ? "checked" : ""} data-i="${i}" data-k="rot"></td>
-    <td class="col-name"><input type="text" value="${esc(p.name)}" placeholder="No" data-i="${i}" data-k="name"></td>
-    <td class="col-num"><input type="number" step="0.1" value="${p.h !== undefined ? p.h : ''}" placeholder="Boy" data-i="${i}" data-k="h"></td>
-    <td class="col-num"><input type="number" step="0.1" value="${p.w !== undefined ? p.w : ''}" placeholder="En" data-i="${i}" data-k="w"></td>
-    <td class="col-num"><input type="number" min="1" value="${p.q || 1}" data-i="${i}" data-k="q"></td>
-    <td class="col-band"><input type="checkbox" ${p.b1 ? "checked" : ""} data-i="${i}" data-k="b1" title="Boy Kenar 1"></td>
-    <td class="col-band"><input type="checkbox" ${p.b2 ? "checked" : ""} data-i="${i}" data-k="b2" title="Boy Kenar 2"></td>
-    <td class="col-band"><input type="checkbox" ${p.e1 ? "checked" : ""} data-i="${i}" data-k="e1" title="En Kenar 1"></td>
-    <td class="col-band"><input type="checkbox" ${p.e2 ? "checked" : ""} data-i="${i}" data-k="e2" title="En Kenar 2"></td>
-    <td class="col-del"><button class="secondary" style="padding:2px 4px;font-size:10px;cursor:pointer" onclick="parts.splice(${i},1);renderParts()">×</button></td>
-    </tr>`;
-  });
-
-  const cardContainer = document.getElementById("partCards");
-  cardContainer.innerHTML = "";
-  parts.forEach((p, i) => {
-    cardContainer.innerHTML += `
-      <div class="part-card">
-        <div class="part-card-header">
-          <input type="text" value="${esc(p.name)}" placeholder="Parça Adı" data-i="${i}" data-k="name">
-          <button class="btn-card-del" onclick="parts.splice(${i},1);renderParts()">×</button>
-        </div>
-        <div class="part-card-grid">
-          <div class="part-card-field">
-            <label>Boy (cm)</label>
-            <input type="number" step="0.1" value="${p.h !== undefined ? p.h : ''}" placeholder="Boy" data-i="${i}" data-k="h">
-          </div>
-          <div class="part-card-field">
-            <label>En (cm)</label>
-            <input type="number" step="0.1" value="${p.w !== undefined ? p.w : ''}" placeholder="En" data-i="${i}" data-k="w">
-          </div>
-          <div class="part-card-field">
-            <label>Adet</label>
-            <input type="number" min="1" value="${p.q || 1}" data-i="${i}" data-k="q">
-          </div>
-        </div>
-        <div class="part-card-bands">
-          <button class="band-btn ${p.b1 ? 'active' : ''}" onclick="toggleBand(${i}, 'b1')">Boy1</button>
-          <button class="band-btn ${p.b2 ? 'active' : ''}" onclick="toggleBand(${i}, 'b2')">Boy2</button>
-          <button class="band-btn ${p.e1 ? 'active' : ''}" onclick="toggleBand(${i}, 'e1')">En1</button>
-          <button class="band-btn ${p.e2 ? 'active' : ''}" onclick="toggleBand(${i}, 'e2')">En2</button>
-        </div>
-      </div>
-    `;
-  });
-
-  document.querySelectorAll("input[data-i]").forEach(el => {
-    el.addEventListener("change", () => {
-      let i = +el.dataset.i, k = el.dataset.k;
-      parts[i][k] = el.type === "checkbox" ? el.checked : (["w","h","q"].includes(k) ? (el.value ? parseNum(el.value) : "") : el.value);
-      updateTotalBandsAndCosts();
-    });
-    
-    el.addEventListener("keydown", e => {
-      if(e.key === "Enter") { 
-        e.preventDefault(); 
-        addPart(); 
-      }
-    });
-  });
-  updateTotalBandsAndCosts();
-}
-
-function updateTotalBandsAndCosts() {
-  let totalBandCm = 0;
-  parts.forEach(p => {
-    let q = p.q || 1;
-    if(p.b1) totalBandCm += parseNum(p.h) * q;
-    if(p.b2) totalBandCm += parseNum(p.h) * q;
-    if(p.e1) totalBandCm += parseNum(p.w) * q;
-    if(p.e2) totalBandCm += parseNum(p.w) * q;
-  });
-  calculatedBandMeters = Math.ceil(totalBandCm / 100);
-  let bmEl = document.getElementById("bandMeters");
-  if(bmEl) bmEl.textContent = calculatedBandMeters + " m";
-  calculateCosts();
-}
-
-function esc(s) { return String(s ?? "").replace(/"/g, "&quot;").replace(/</g, "&lt;"); }
-
-function exportData() {
-  const projName = document.getElementById("projName").value || "Kesim_Listesi";
-  const exportPayload = {
-    projName: projName,
-    parts: parts,
-    presetType: activePresetType,
-    sh: document.getElementById("sh").value,
-    sw: document.getElementById("sw").value,
-    kerf: document.getElementById("kerf").value,
-    edge: document.getElementById("edge").value,
-    shuffleSeed: shuffleSeed,
-    savedSheets: lastActiveSheets,
-    completedParts: Array.from(completedUniquePartIds)
+function readJob() {
+  const SW0 = parseNum(document.getElementById('sw').value), SH0 = parseNum(document.getElementById('sh').value);
+  const edge = parseNum(document.getElementById('edge').value) || 0, K = parseNum(document.getElementById('kerf').value) || 0;
+  const SW = SW0 - 2 * edge, SH = SH0 - 2 * edge;
+  if (!(SW > 0 && SH > 0)) { toast('Plaka ölçüsü veya kenar fire değeri geçersiz.', 'err'); return null; }
+  return {
+    SW0: SW0, SH0: SH0, edge: edge, K: K, SW: SW, SH: SH,
+    globalDir: document.getElementById('globalDir').value,
+    subDirPref: document.getElementById('subDirPref').value,
+    useStock: document.getElementById('useStockWastes').checked,
+    grain: document.getElementById('grainOnly').checked,
+    budget: parseInt(document.getElementById('searchBudget').value) || 1500,
+    seed: shuffleSeed
   };
-
-  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportPayload, null, 2));
-  const dlAnchor = document.createElement('a');
-  dlAnchor.setAttribute("href", dataStr);
-  dlAnchor.setAttribute("download", `${projName}_Acanlar.json`);
-  document.body.appendChild(dlAnchor);
-  dlAnchor.click();
-  dlAnchor.remove();
 }
 
-function importData(ev) {
-  const f = ev.target.files[0];
-  if(!f) return;
-  const r = new FileReader();
-  r.onload = () => {
-    try {
-      const loaded = JSON.parse(r.result);
-      if(Array.isArray(loaded)) {
-        parts = loaded;
-        renderParts();
-        startOptimization();
-      } else if(loaded.parts) {
-        parts = loaded.parts;
-        if(loaded.projName) document.getElementById("projName").value = loaded.projName;
-        if(loaded.sh) document.getElementById("sh").value = loaded.sh;
-        if(loaded.sw) document.getElementById("sw").value = loaded.sw;
-        if(loaded.kerf) document.getElementById("kerf").value = loaded.kerf;
-        if(loaded.edge) document.getElementById("edge").value = loaded.edge;
-        if(loaded.shuffleSeed !== undefined) shuffleSeed = loaded.shuffleSeed;
-        if(loaded.completedParts) completedUniquePartIds = new Set(loaded.completedParts);
-        if(loaded.presetType) selectSheetPreset(loaded.presetType, loaded.sh || 280, loaded.sw || 210);
-
-        renderParts();
-
-        if(loaded.savedSheets && loaded.savedSheets.length > 0) {
-          lastActiveSheets = loaded.savedSheets;
-          calculatedSheetCount = lastActiveSheets.length;
-          calculateCosts();
-          const proj = document.getElementById("projName").value || "Plaka Kesim Projesi";
-          const dateStr = new Date().toLocaleDateString('tr-TR');
-          document.getElementById("printProjName").innerHTML = `<b>Proje:</b> ${esc(proj)}`;
-          document.getElementById("printDate").innerHTML = `<b>Tarih:</b> ${dateStr}`;
-          renderJobTable(proj, dateStr, lastActiveSheets);
-          drawPlans(lastActiveSheets, parseNum(document.getElementById("sw").value) - 2 * parseNum(document.getElementById("edge").value), parseNum(document.getElementById("sh").value) - 2 * parseNum(document.getElementById("edge").value), parseNum(document.getElementById("sw").value), parseNum(document.getElementById("sh").value), parseNum(document.getElementById("edge").value), parseNum(document.getElementById("kerf").value));
-        } else {
-          startOptimization();
-        }
-      }
-    } catch(e) {
-      alert("Hatalı dosya biçimi!");
-    }
-  };
-  r.readAsText(f);
-}
-
-function expand() {
-  let a = [];
+/* Parça satırlarını tek tek parçalara açar (w = En, h = Boy) */
+function expand(grain) {
+  const a = [];
   parts.forEach((p, rowIndex) => {
-    if(p.w && p.h) {
-      let q = p.q || 1;
-      for(let n = 0; n < q; n++) {
+    const w = parseNum(p.w), h = parseNum(p.h);
+    if (w > 0 && h > 0) {
+      const q = Math.max(1, Math.round(parseNum(p.q) || 1));
+      for (let n = 0; n < q; n++) {
         a.push({
-          ...p,
+          name: String(p.name == null ? '' : p.name), w: w, h: h,
+          rot: grain ? false : p.rot !== false,
+          b1: !!p.b1, b2: !!p.b2, e1: !!p.e1, e2: !!p.e2, bt: p.bt || '0.8',
           uniqueInstanceId: `r${rowIndex}_i${n}`
         });
       }
@@ -1698,724 +2435,750 @@ function expand() {
   return a;
 }
 
-const groupColors = [
-  "#fef3c7", "#e0e7ff", "#ffe4e6", "#f3e8ff", "#e0f2fe", 
-  "#fed7aa", "#fae8ff", "#ccfbf1", "#fef08a", "#ede9fe"
-];
+function startOptimization() {
+  const job = readJob();
+  if (!job) return;
+  const items = expand(job.grain);
+  if (!items.length) { toast('Önce en az bir parçanın boy ve en ölçüsünü gir.', 'warn'); return; }
 
+  const overlay = document.getElementById('loadingOverlay');
+  overlay.style.display = 'flex';
+  optCancel = false;
+  const run = ++optRunId;
+  setProgress(0, 'Hazırlanıyor…');
+
+  const stocks = stockWastes.map(s => ({ w: s.w, h: s.h, id: s.id, label: s.label })).sort((a, b) => a.w * a.h - b.w * b.h);
+  const ctx = { W: job.SW, H: job.SH, K: job.K, useStock: job.useStock && stocks.length > 0, stocks: stocks };
+
+  const finish = (res, lb) => {
+    if (run !== optRunId) return;
+    try { applyResult(res, job, items, lb); }
+    catch (e) { console.error(e); toast('Hesaplama sırasında hata: ' + e.message, 'err'); }
+    finally { overlay.style.display = 'none'; }
+    scrollToResults();
+  };
+
+  if (job.globalDir !== 'otomatik_hibrit') {
+    setTimeout(() => {
+      let res;
+      try { res = engSinglePass(items, ctx, job.globalDir, job.subDirPref, job.seed); }
+      catch (e) { overlay.style.display = 'none'; toast('Hesaplama hatası: ' + e.message, 'err'); return; }
+      finish(res, 0);
+    }, 40);
+    return;
+  }
+
+  const splitList = job.subDirPref === 'enine' ? ['H'] : (job.subDirPref === 'boyuna' ? ['V'] : null);
+  const search = engCreateSearch(items, ctx, { seed: job.seed, budgetMs: job.budget, splitList: splitList });
+  const tick = () => {
+    if (run !== optRunId) return;
+    let done;
+    try { done = search.step(35) || optCancel; }
+    catch (e) { overlay.style.display = 'none'; console.error(e); toast('Hesaplama hatası: ' + e.message, 'err'); return; }
+    const bestStd = search.bestKey ? search.bestKey[1] : '-';
+    setProgress(search.progress(), `${search.trials} yerleşim denendi · şu ana kadar en iyi: ${bestStd} plaka`);
+    if (done) finish(search.result(job.seed), search.lowerBound);
+    else setTimeout(tick, 0);
+  };
+  setTimeout(tick, 40);
+}
+
+function scrollToResults() {
+  if (window.innerWidth <= 900) {
+    const t = document.getElementById('resultsTop');
+    if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function applyResult(res, job, items, lb) {
+  const std = res.sheets.filter(s => !s.isStock), stk = res.sheets.filter(s => s.isStock);
+  std.forEach((s, i) => { s.no = i + 1; });
+  stk.forEach((s, i) => { s.no = i + 1; });
+  const sheets = std.concat(stk);
+
+  lastSW0 = job.SW0; lastSH0 = job.SH0; lastEdge = job.edge; lastK = job.K;
+  lastActiveSheets = sheets;
+  lastLowerBound = lb || 0;
+  usedStockIds = stk.map(s => s.stockId);
+  depotSavedForCurrent = false;
+  recountSheets();
+
+  const sig = engSig({ sheets: sheets });
+  if (job.seed > 0 && sig === lastSig) toast('Bu iş için aynı kalitede başka bir yerleşim bulunamadı.', 'warn');
+  lastSig = sig;
+
+  const alertBox = document.getElementById('unplacedAlert'), alertList = document.getElementById('unplacedList');
+  if (res.unplaced.length > 0) {
+    const counts = {};
+    res.unplaced.forEach(u => { const k = `[ ${esc(u.name)} ] — ${u.h} x ${u.w} cm`; counts[k] = (counts[k] || 0) + 1; });
+    alertList.innerHTML = Object.keys(counts).map(k => `<li>${k} -> <b>${counts[k]} Adet Sığmadı / Yerleşemedi</b></li>`).join('');
+    alertBox.style.display = 'block';
+  } else alertBox.style.display = 'none';
+
+  const proj = document.getElementById('projName').value || 'Plaka Kesim Projesi';
+  const dateStr = new Date().toLocaleDateString('tr-TR');
+  document.getElementById('printProjName').innerHTML = `<b>Proje:</b> ${esc(proj)}`;
+  document.getElementById('printDate').innerHTML = `<b>Tarih:</b> ${dateStr}`;
+  markStale();
+  updateTotalBandsAndCosts();
+  renderJobTable(proj, dateStr, sheets);
+  drawPlans(sheets, job.SW, job.SH, job.SW0, job.SH0, job.edge, job.K);
+}
+
+/* ====================================================================
+   PARÇA LİSTESİ
+   ==================================================================== */
+function newPart() {
+  return { id: Date.now() + Math.random(), name: String(parts.length + 1), h: '', w: '', q: 1, rot: true, b1: false, b2: false, e1: false, e2: false, bt: '0.8' };
+}
+function addPart(p, focus) {
+  if (!p) p = newPart();
+  parts.push(Object.assign({ bt: '0.8' }, p, { id: Date.now() + Math.random() }));
+  renderParts();
+  commitParts();
+  if (focus === false) return;
+  setTimeout(() => {
+    const sel = window.innerWidth <= 900 ? '#partCards .part-card' : '#parts tr';
+    const rows = document.querySelectorAll(sel);
+    const inp = rows[rows.length - 1] && rows[rows.length - 1].querySelector("input[data-k='h']");
+    if (inp) { inp.focus(); inp.select(); }
+  }, 30);
+}
+function delPart(i) { parts.splice(i, 1); renderParts(); commitParts(); }
+function dupPart(i) {
+  const c = JSON.parse(JSON.stringify(parts[i])); c.id = Date.now() + Math.random();
+  parts.splice(i + 1, 0, c); renderParts(); commitParts();
+}
+function toggleBand(i, key) { parts[i][key] = !parts[i][key]; renderParts(); commitParts(); updateTotalBandsAndCosts(); }
+
+function btOptions(sel) {
+  return BAND_TYPES.map(t => `<option value="${t.k}" ${(sel || '0.8') === t.k ? 'selected' : ''}>${t.label.replace(' mm', '')}</option>`).join('');
+}
+
+function renderParts() {
+  const tb = document.getElementById('parts');
+  tb.innerHTML = parts.map((p, i) => `<tr>
+    <td class="col-rot"><input type="checkbox" ${p.rot !== false ? 'checked' : ''} data-i="${i}" data-k="rot" title="Plakada döndürülebilir"></td>
+    <td class="col-name"><input type="text" value="${esc(p.name)}" placeholder="No" data-i="${i}" data-k="name"></td>
+    <td class="col-num"><input type="number" step="0.1" value="${p.h !== undefined ? p.h : ''}" placeholder="Boy" data-i="${i}" data-k="h"></td>
+    <td class="col-num"><input type="number" step="0.1" value="${p.w !== undefined ? p.w : ''}" placeholder="En" data-i="${i}" data-k="w"></td>
+    <td class="col-num"><input type="number" min="1" value="${p.q || 1}" data-i="${i}" data-k="q"></td>
+    <td class="col-band"><input type="checkbox" ${p.b1 ? 'checked' : ''} data-i="${i}" data-k="b1" title="Boy Kenar 1"></td>
+    <td class="col-band"><input type="checkbox" ${p.b2 ? 'checked' : ''} data-i="${i}" data-k="b2" title="Boy Kenar 2"></td>
+    <td class="col-band"><input type="checkbox" ${p.e1 ? 'checked' : ''} data-i="${i}" data-k="e1" title="En Kenar 1"></td>
+    <td class="col-band"><input type="checkbox" ${p.e2 ? 'checked' : ''} data-i="${i}" data-k="e2" title="En Kenar 2"></td>
+    <td class="col-bt"><select data-i="${i}" data-k="bt" title="Bant kalınlığı (mm)">${btOptions(p.bt)}</select></td>
+    <td class="col-del"><button class="row-btn" title="Satırı kopyala" onclick="dupPart(${i})">⧉</button><button class="row-btn del" title="Satırı sil" onclick="delPart(${i})">×</button></td>
+    </tr>`).join('');
+
+  document.getElementById('partCards').innerHTML = parts.map((p, i) => `
+    <div class="part-card">
+      <div class="part-card-header">
+        <input type="text" value="${esc(p.name)}" placeholder="Parça Adı" data-i="${i}" data-k="name">
+        <button class="btn-card-dup" title="Kopyala" onclick="dupPart(${i})">⧉</button>
+        <button class="btn-card-del" title="Sil" onclick="delPart(${i})">×</button>
+      </div>
+      <div class="part-card-grid">
+        <div class="part-card-field"><label>Boy (cm)</label><input type="number" step="0.1" inputmode="decimal" value="${p.h !== undefined ? p.h : ''}" placeholder="Boy" data-i="${i}" data-k="h"></div>
+        <div class="part-card-field"><label>En (cm)</label><input type="number" step="0.1" inputmode="decimal" value="${p.w !== undefined ? p.w : ''}" placeholder="En" data-i="${i}" data-k="w"></div>
+        <div class="part-card-field"><label>Adet</label><input type="number" min="1" inputmode="numeric" value="${p.q || 1}" data-i="${i}" data-k="q"></div>
+      </div>
+      <div class="part-card-bands">
+        <button class="band-btn ${p.b1 ? 'active' : ''}" onclick="toggleBand(${i}, 'b1')">Boy1</button>
+        <button class="band-btn ${p.b2 ? 'active' : ''}" onclick="toggleBand(${i}, 'b2')">Boy2</button>
+        <button class="band-btn ${p.e1 ? 'active' : ''}" onclick="toggleBand(${i}, 'e1')">En1</button>
+        <button class="band-btn ${p.e2 ? 'active' : ''}" onclick="toggleBand(${i}, 'e2')">En2</button>
+      </div>
+      <div class="part-card-extra">
+        <button class="band-btn rot ${p.rot !== false ? 'active' : ''}" onclick="toggleBand(${i}, 'rot')" title="Plakada döndürülebilir">↻ Döndür</button>
+        <label class="bt-label">Bant <select data-i="${i}" data-k="bt">${btOptions(p.bt)}</select> mm</label>
+      </div>
+    </div>`).join('');
+
+  document.querySelectorAll('[data-i]').forEach(el => {
+    el.addEventListener('change', () => {
+      const i = +el.dataset.i, k = el.dataset.k;
+      if (!parts[i]) return;
+      parts[i][k] = el.type === 'checkbox' ? el.checked : (['w', 'h', 'q'].includes(k) ? (el.value ? parseNum(el.value) : '') : el.value);
+      commitParts();
+      updateTotalBandsAndCosts();
+    });
+    if (el.tagName === 'INPUT' && el.type !== 'checkbox') {
+      el.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addPart(); } });
+    }
+  });
+  updateTotalBandsAndCosts();
+}
+
+function updateTotalBandsAndCosts() {
+  const allow = parseNum(document.getElementById('bandAllowance').value) || 0;
+  const cm = { '0.45': 0, '0.8': 0, '2': 0 };
+  parts.forEach(p => {
+    const q = Math.max(1, Math.round(parseNum(p.q) || 1)), t = cm[p.bt] !== undefined ? p.bt : '0.8';
+    const h = parseNum(p.h) || 0, w = parseNum(p.w) || 0;
+    const add = (on, len) => { if (on && len > 0) cm[t] += (len + allow) * q; };
+    add(p.b1, h); add(p.b2, h); add(p.e1, w); add(p.e2, w);
+  });
+  let total = 0;
+  Object.keys(cm).forEach(k => { bandMetersByType[k] = Math.ceil(cm[k] / 10) / 10; total += bandMetersByType[k]; });
+  calculatedBandMeters = Math.round(total * 10) / 10;
+  const bm = document.getElementById('bandMeters');
+  if (bm) bm.textContent = fmt1(calculatedBandMeters) + ' m';
+  calculateCosts();
+}
+
+function esc(s) {
+  return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+/* ====================================================================
+   DOSYA / LİSTEDEN İÇE-DIŞA AKTARMA
+   ==================================================================== */
+function exportData() {
+  const projName = document.getElementById('projName').value || 'Kesim_Listesi';
+  const payload = {
+    projName: projName, parts: parts, presetType: activePresetType,
+    sh: document.getElementById('sh').value, sw: document.getElementById('sw').value,
+    kerf: document.getElementById('kerf').value, edge: document.getElementById('edge').value,
+    grain: document.getElementById('grainOnly').checked,
+    shuffleSeed: shuffleSeed, savedSheets: lastActiveSheets, completedParts: Array.from(completedUniquePartIds)
+  };
+  downloadText(`${projName}_Acanlar.json`, JSON.stringify(payload, null, 2), 'application/json');
+}
+function downloadText(name, text, mime) {
+  const blob = new Blob([text], { type: mime + ';charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = name.replace(/[\\/:*?"<>|]+/g, '_');
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+function importData(ev) {
+  const f = ev.target.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const loaded = JSON.parse(r.result);
+      currentCloudId = null;
+      if (Array.isArray(loaded)) cutApplyProject({ parts: loaded }, '');
+      else if (loaded && loaded.parts) cutApplyProject(loaded, loaded.projName || '');
+      else throw new Error('parça listesi yok');
+      toast('Dosya yüklendi.', 'ok');
+    } catch (e) { toast('Hatalı dosya biçimi!', 'err'); }
+    ev.target.value = '';
+  };
+  r.readAsText(f);
+}
+
+function openPasteModal() {
+  document.getElementById('pasteText').value = '';
+  document.getElementById('pasteInfo').textContent = '';
+  document.getElementById('pasteModal').style.display = 'flex';
+}
+function closePasteModal() { document.getElementById('pasteModal').style.display = 'none'; }
+
+function parsePartsText(text) {
+  const lines = String(text).split(/\r?\n/).map(l => l.replace(/\s+$/, '')).filter(l => l.trim());
+  if (!lines.length) return [];
+  const delim = lines.some(l => l.includes('\t')) ? '\t' : (lines.some(l => l.includes(';')) ? ';' : ',');
+  const isNum = v => v !== undefined && v !== '' && /^[\d.,]+$/.test(String(v).trim()) && parseNum(v) > 0;
+  const truthy = v => /^(1|x|evet|e|true|var|✓|✔|\+)$/i.test(String(v || '').trim());
+  const btNorm = v => {
+    const n = parseNum(String(v || '').replace(/mm/i, '').trim());
+    if (Math.abs(n - 0.45) < 0.01) return '0.45';
+    if (Math.abs(n - 2) < 0.01) return '2';
+    return '0.8';
+  };
+  const out = [];
+  lines.forEach(l => {
+    const c = l.split(delim).map(x => x.trim().replace(/^"(.*)"$/, '$1'));
+    let name, boy, en, q, bands, bt;
+    if (c.length <= 3 && c.every(isNum)) { name = String(parts.length + out.length + 1); boy = c[0]; en = c[1]; q = c[2]; bands = []; }
+    else { name = c[0]; boy = c[1]; en = c[2]; q = c[3]; bands = c.slice(4, 8); bt = c[8]; }
+    if (!isNum(boy) || !isNum(en)) return; // başlık / geçersiz satır
+    out.push({
+      id: Date.now() + Math.random(), name: name || String(parts.length + out.length + 1), h: parseNum(boy), w: parseNum(en),
+      q: isNum(q) ? Math.max(1, Math.round(parseNum(q))) : 1, rot: true,
+      b1: truthy(bands[0]), b2: truthy(bands[1]), e1: truthy(bands[2]), e2: truthy(bands[3]), bt: btNorm(bt)
+    });
+  });
+  return out;
+}
+function pasteLiveInfo() {
+  const n = parsePartsText(document.getElementById('pasteText').value).length;
+  document.getElementById('pasteInfo').textContent = n ? `✓ ${n} satır algılandı` : 'Henüz geçerli satır yok';
+}
+function pasteFileChosen(ev) {
+  const f = ev.target.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    let txt;
+    try { txt = new TextDecoder('utf-8', { fatal: true }).decode(r.result); }
+    catch (e) { txt = new TextDecoder('windows-1254').decode(r.result); }
+    document.getElementById('pasteText').value = txt;
+    pasteLiveInfo();
+    ev.target.value = '';
+  };
+  r.readAsArrayBuffer(f);
+}
+function confirmPaste() {
+  const rows = parsePartsText(document.getElementById('pasteText').value);
+  if (!rows.length) { toast('Geçerli satır bulunamadı. Sütun sırası: Ad, Boy, En, Adet', 'err'); return; }
+  if (document.getElementById('pasteReplace').checked) parts = [];
+  rows.forEach(r => parts.push(r));
+  renderParts(); commitParts(); closePasteModal();
+  toast(`${rows.length} satır eklendi.`, 'ok');
+}
+
+function exportCsv() {
+  if (!parts.length) { toast('Dışa aktarılacak parça yok.', 'warn'); return; }
+  const where = buildWhere(lastActiveSheets);
+  const q = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+  const rows = [['Parça', 'Boy (cm)', 'En (cm)', 'Adet', 'Boy1', 'Boy2', 'En1', 'En2', 'Bant (mm)', 'Plaka', 'Kesilen'].map(q).join(';')];
+  parts.forEach((p, ri) => {
+    const w = parseNum(p.w), h = parseNum(p.h);
+    if (!(w > 0 && h > 0)) return;
+    const n = Math.max(1, Math.round(parseNum(p.q) || 1));
+    const sh = [], dep = []; let cut = 0, tot = 0;
+    for (let k = 0; k < n; k++) {
+      const id = `r${ri}_i${k}`, loc = where[id];
+      if (loc) { tot++; if (loc.s.isStock) { if (!dep.includes(loc.s.no)) dep.push(loc.s.no); } else if (!sh.includes(loc.s.no || loc.si + 1)) sh.push(loc.s.no || loc.si + 1); if (completedUniquePartIds.has(id)) cut++; }
+    }
+    const place = sh.map(x => 'P' + x).concat(dep.map(x => 'Depo' + x)).join(' ');
+    rows.push([q(p.name), h, w, n, p.b1 ? 1 : '', p.b2 ? 1 : '', p.e1 ? 1 : '', p.e2 ? 1 : '', p.bt || '0.8', q(place), tot ? `${cut}/${tot}` : ''].join(';'));
+  });
+  downloadText(`${document.getElementById('projName').value || 'Kesim_Listesi'}.csv`, '﻿' + rows.join('\r\n'), 'text/csv');
+}
+
+/* ====================================================================
+   İŞ EMRİ TABLOSU
+   ==================================================================== */
+const groupColors = ['#fef3c7', '#e0e7ff', '#ffe4e6', '#f3e8ff', '#e0f2fe', '#fed7aa', '#fae8ff', '#ccfbf1', '#fef08a', '#ede9fe'];
 function getGroupColor(h, w, name) {
-  let key = `${name}_${Math.max(h, w)}x${Math.min(h, w)}`;
+  const key = `${name}_${Math.max(h, w)}x${Math.min(h, w)}`;
   let hash = 0;
   for (let i = 0; i < key.length; i++) hash = key.charCodeAt(i) + ((hash << 5) - hash);
-  let index = Math.abs(hash) % groupColors.length;
-  return groupColors[index];
+  return groupColors[Math.abs(hash) % groupColors.length];
 }
 
 function formatSheetNumbers(sheetIndices, hasDepot) {
-  let result = [];
+  const result = [];
   if (sheetIndices.length > 0) {
     sheetIndices.sort((a, b) => a - b);
-    let ranges = [];
-    let start = sheetIndices[0];
-    let end = start;
-
+    const ranges = [];
+    let start = sheetIndices[0], end = start;
     for (let i = 1; i < sheetIndices.length; i++) {
-      if (sheetIndices[i] === end + 1) {
-        end = sheetIndices[i];
-      } else {
-        ranges.push(start === end ? `${start}` : `${start}-${end}`);
-        start = sheetIndices[i];
-        end = start;
-      }
+      if (sheetIndices[i] === end + 1) end = sheetIndices[i];
+      else { ranges.push(start === end ? `${start}` : `${start}-${end}`); start = sheetIndices[i]; end = start; }
     }
     ranges.push(start === end ? `${start}` : `${start}-${end}`);
-    result.push(ranges.join(", ") + ". Plaka" + (sheetIndices.length > 1 ? "lar" : ""));
+    result.push(ranges.join(', ') + '. Plaka' + (sheetIndices.length > 1 ? 'lar' : ''));
   }
+  if (hasDepot) result.push('Depo');
+  return result.join(', ');
+}
 
-  if (hasDepot) result.push("Depo");
-  return result.join(", ");
+function buildWhere(sheets) {
+  const where = {};
+  sheets.forEach((s, si) => s.placed.forEach(it => { where[it.uniqueInstanceId] = { s: s, si: si }; }));
+  return where;
 }
 
 function renderJobTable(proj, dateStr, sheets) {
-  const jb = document.getElementById("jobTableBody");
-  document.getElementById("jobProjName").innerHTML = `<b>Proje / Müşteri:</b> ${esc(proj)}`;
-  document.getElementById("jobDate").innerHTML = `<b>Tarih:</b> ${dateStr}`;
-
-  jb.innerHTML = "";
+  document.getElementById('jobProjName').innerHTML = `<b>Proje / Müşteri:</b> ${esc(proj)}`;
+  document.getElementById('jobDate').innerHTML = `<b>Tarih:</b> ${dateStr}`;
+  const where = buildWhere(sheets);
+  let html = '';
   parts.forEach((p, rowIndex) => {
-    if(p.w && p.h) {
-      let bandStr = [];
-      if(p.b1) bandStr.push("Boy1");
-      if(p.b2) bandStr.push("Boy2");
-      if(p.e1) bandStr.push("En1");
-      if(p.e2) bandStr.push("En2");
-
-      let standardSheetIndices = [];
-      let hasDepot = false;
-      let totalCutCount = 0;
-      let totalPlacedCount = 0;
-      let q = p.q || 1;
-
-      for(let n = 0; n < q; n++) {
-        let targetId = `r${rowIndex}_i${n}`;
-        let foundInSheet = false;
-
-        sheets.forEach((s, sIdx) => {
-          s.placed.forEach(item => {
-            if(item.uniqueInstanceId === targetId) {
-              foundInSheet = true;
-              totalPlacedCount++;
-              if(s.isStock) {
-                hasDepot = true;
-              } else {
-                let pNo = sIdx + 1;
-                if(!standardSheetIndices.includes(pNo)) standardSheetIndices.push(pNo);
-              }
-              if(completedUniquePartIds.has(targetId)) {
-                totalCutCount++;
-              }
-            }
-          });
-        });
-      }
-
-      let sheetText = (standardSheetIndices.length > 0 || hasDepot) ? formatSheetNumbers(standardSheetIndices, hasDepot) : "<span style='color:#ef4444;font-weight:bold'>SIĞMADI</span>";
-      
-      let cutStatusText = "<span style='color:#64748b'>Bekliyor</span>";
-      if(totalPlacedCount > 0) {
-        if(totalCutCount === totalPlacedCount) {
-          cutStatusText = `<span style='color:#10b981;font-weight:bold'>✓ Tamamı Kesildi (${totalCutCount}/${totalPlacedCount})</span>`;
-        } else if(totalCutCount > 0) {
-          cutStatusText = `<span style='color:#f59e0b;font-weight:bold'>⏳ Kesiliyor (${totalCutCount}/${totalPlacedCount})</span>`;
-        }
-      }
-
-      jb.innerHTML += `<tr style="${totalCutCount === totalPlacedCount && totalPlacedCount > 0 ? 'background:#f0fdf4' : ''}">
-        <td><b>[ ${esc(p.name)} ]</b></td>
-        <td><b style="color:${sheetText.includes('Depo') ? '#8b5cf6' : (sheetText.includes('Plaka') ? '#0284c7' : '#ef4444')}">${sheetText}</b></td>
-        <td>${p.h} cm</td>
-        <td>${p.w} cm</td>
-        <td><b>${q} Adet</b></td>
-        <td>${bandStr.length > 0 ? bandStr.join(" - ") : "-"}</td>
-        <td>${cutStatusText}</td>
-      </tr>`;
+    const w = parseNum(p.w), h = parseNum(p.h);
+    if (!(w > 0 && h > 0)) return;
+    const bandStr = [];
+    if (p.b1) bandStr.push('Boy1'); if (p.b2) bandStr.push('Boy2'); if (p.e1) bandStr.push('En1'); if (p.e2) bandStr.push('En2');
+    const std = []; let hasDepot = false, cut = 0, placed = 0;
+    const q = Math.max(1, Math.round(parseNum(p.q) || 1));
+    for (let n = 0; n < q; n++) {
+      const id = `r${rowIndex}_i${n}`, loc = where[id];
+      if (!loc) continue;
+      placed++;
+      if (loc.s.isStock) hasDepot = true;
+      else { const no = loc.s.no || (loc.si + 1); if (!std.includes(no)) std.push(no); }
+      if (completedUniquePartIds.has(id)) cut++;
     }
+    const sheetText = (std.length > 0 || hasDepot) ? formatSheetNumbers(std, hasDepot) : "<span style='color:#ef4444;font-weight:bold'>SIĞMADI</span>";
+    let status = "<span style='color:#64748b'>Bekliyor</span>";
+    if (placed > 0) {
+      if (cut === placed) status = `<span style='color:#10b981;font-weight:bold'>✓ Tamamı Kesildi (${cut}/${placed})</span>`;
+      else if (cut > 0) status = `<span style='color:#f59e0b;font-weight:bold'>⏳ Kesiliyor (${cut}/${placed})</span>`;
+    }
+    html += `<tr style="${cut === placed && placed > 0 ? 'background:#f0fdf4' : ''}">
+      <td><b>[ ${esc(p.name)} ]</b></td>
+      <td><b style="color:${sheetText.includes('Depo') ? '#8b5cf6' : (sheetText.includes('Plaka') ? '#0284c7' : '#ef4444')}">${sheetText}</b></td>
+      <td>${h} cm</td><td>${w} cm</td><td><b>${q} Adet</b></td>
+      <td>${bandStr.length ? bandStr.join(' - ') + ` <span class="muted">(${esc(p.bt || '0.8')} mm)</span>` : '-'}</td>
+      <td>${status}</td></tr>`;
   });
+  document.getElementById('jobTableBody').innerHTML = html;
 }
 
+/* ====================================================================
+   FİRE DEPOSUNA KAYDET
+   ==================================================================== */
 function saveCurrentWastesToDepot() {
-  if(currentDetectedWastes.length === 0) return;
+  if (depotSavedForCurrent) return;
+  let removed = 0;
+  if (usedStockIds.length) {
+    const before = stockWastes.length;
+    stockWastes = stockWastes.filter(s => !usedStockIds.includes(s.id));
+    removed = before - stockWastes.length;
+    usedStockIds = [];
+  }
   currentDetectedWastes.forEach(w => {
-    stockWastes.push({
-      w: parseFloat(w.w.toFixed(1)),
-      h: parseFloat(w.h.toFixed(1)),
-      label: "Artan Fire Plaka",
-      id: Date.now() + Math.random()
-    });
+    stockWastes.push({ w: parseFloat(w.w.toFixed(1)), h: parseFloat(w.h.toFixed(1)), label: 'Artan Fire Plaka', id: Date.now() + Math.random() });
   });
+  const added = currentDetectedWastes.length;
+  depotSavedForCurrent = true;
   saveStockWastesToStorage();
-  alert(`${currentDetectedWastes.length} adet büyük fire plaka depoya başarıyla eklendi!`);
-  document.getElementById("btnSaveCurrentWastes").style.display = "none";
+  document.getElementById('btnSaveCurrentWastes').style.display = 'none';
+  toast(`Depo güncellendi: ${added} fire eklendi` + (removed ? `, kullanılan ${removed} depo plakası düşüldü.` : '.'), 'ok');
 }
 
-function optimize() {
-  const SW0 = parseNum(document.getElementById("sw").value);
-  const SH0 = parseNum(document.getElementById("sh").value);
-  const edge = parseNum(document.getElementById("edge").value);
-  const K = parseNum(document.getElementById("kerf").value);
-  const SW = SW0 - 2 * edge, SH = SH0 - 2 * edge;
-  const globalDir = document.getElementById("globalDir").value;
-  const subDirPref = document.getElementById("subDirPref").value;
-  const useStock = document.getElementById("useStockWastes").checked;
-
-  lastSW0 = SW0; lastSH0 = SH0; lastEdge = edge; lastK = K;
-
-  checkShuffleBtn();
-  currentDetectedWastes = [];
-
-  const proj = document.getElementById("projName").value || "Plaka Kesim Projesi";
-  const dateStr = new Date().toLocaleDateString('tr-TR');
-  document.getElementById("printProjName").innerHTML = `<b>Proje:</b> ${esc(proj)}`;
-  document.getElementById("printDate").innerHTML = `<b>Tarih:</b> ${dateStr}`;
-
-  updateTotalBandsAndCosts();
-
-  let rawItems = expand();
-  let unplacedItems = [];
-  let sheets = [];
-
-  if (globalDir === "siper_dostu") {
-    rawItems.sort((a, b) => {
-      let dimA1 = Math.max(a.h, a.w), dimA2 = Math.min(a.h, a.w);
-      let dimB1 = Math.max(b.h, b.w), dimB2 = Math.min(b.h, b.w);
-      
-      if (subDirPref === "boyuna") {
-        if (b.h !== a.h) return b.h - a.h;
-        return b.w - a.w;
-      } else if (subDirPref === "enine") {
-        if (b.w !== a.w) return b.w - a.w;
-        return b.h - a.h;
-      } else {
-        if (dimB1 !== dimA1) return dimB1 - dimA1;
-        return dimB2 - dimA2;
-      }
-    });
-
-    rawItems.forEach(item => {
-      let placed = false;
-      for (let s of sheets) {
-        if (tryPlaceHybridGuillotine(s, item, K, subDirPref)) {
-          placed = true;
-          break;
-        }
-      }
-      if (!placed) {
-        let fitsStandard = (item.w <= SW && item.h <= SH) || (item.rot && item.h <= SW && item.w <= SH);
-        if (!fitsStandard) {
-          unplacedItems.push(item);
-        } else {
-          let newSheet = { freeRects: [{ x: 0, y: 0, w: SW, h: SH }], placed: [], cuts: [] };
-          if (tryPlaceHybridGuillotine(newSheet, item, K, subDirPref)) {
-            sheets.push(newSheet);
-          } else {
-            unplacedItems.push(item);
-          }
-        }
-      }
-    });
-
-  } else if(globalDir === "otomatik_hibrit") {
-    rawItems.sort((a, b) => {
-      let areaA = a.w * a.h, areaB = b.w * b.h;
-      let maxDimA = Math.max(a.w, a.h), maxDimB = Math.max(b.w, b.h);
-      if(Math.abs(areaB - areaA) > 50) return areaB - areaA;
-      return maxDimB - maxDimA;
-    });
-
-    if(shuffleSeed > 0) {
-      for (let i = rawItems.length - 1; i > 0; i--) {
-        let j = Math.floor(Math.abs(Math.sin(shuffleSeed * (i + 1))) * (i + 1));
-        [rawItems[i], rawItems[j]] = [rawItems[j], rawItems[i]];
-      }
-    }
-
-    rawItems.forEach(item => {
-      let placed = false;
-      for(let s of sheets) {
-        if(tryPlaceHybridGuillotine(s, item, K, subDirPref)) {
-          placed = true;
-          break;
-        }
-      }
-      if(!placed) {
-        let fitsStandard = (item.w <= SW && item.h <= SH) || (item.rot && item.h <= SW && item.w <= SH);
-        if(!fitsStandard) {
-          unplacedItems.push(item);
-        } else {
-          let newSheet = { freeRects: [{ x: 0, y: 0, w: SW, h: SH }], placed: [], cuts: [] };
-          if(tryPlaceHybridGuillotine(newSheet, item, K, subDirPref)) {
-            sheets.push(newSheet);
-          } else {
-            unplacedItems.push(item);
-          }
-        }
-      }
-    });
-
-  } else {
-    let groups = {};
-    rawItems.forEach(item => {
-      let key = `${Math.max(item.w, item.h)}x${Math.min(item.w, item.h)}`;
-      if(!groups[key]) groups[key] = [];
-      groups[key].push(item);
-    });
-
-    let sortedGroupKeys = Object.keys(groups).sort((a, b) => {
-      let [aMax, aMin] = a.split('x').map(Number);
-      let [bMax, bMin] = b.split('x').map(Number);
-      return (bMax * bMin) - (aMax * aMin);
-    });
-
-    if(globalDir === "otomatik_klasik" && shuffleSeed > 0) {
-      for (let i = sortedGroupKeys.length - 1; i > 0; i--) {
-        let j = Math.floor(Math.abs(Math.sin(shuffleSeed * (i + 1))) * (i + 1));
-        [sortedGroupKeys[i], sortedGroupKeys[j]] = [sortedGroupKeys[j], sortedGroupKeys[i]];
-      }
-    }
-
-    sortedGroupKeys.forEach(key => {
-      let groupItems = groups[key];
-      groupItems.forEach(item => {
-        let placed = false;
-        for(let s of sheets) {
-          if(tryPlaceNearSameGroup(s, item, SW, SH, K, globalDir, subDirPref)) {
-            placed = true;
-            break;
-          }
-        }
-        if(!placed) {
-          for(let s of sheets) {
-            if(tryPlaceInSheet(s, item, SW, SH, K, globalDir, subDirPref)) {
-              placed = true;
-              break;
-            }
-          }
-        }
-        if(!placed) {
-          let fitsStandard = (item.w <= SW && item.h <= SH) || (item.rot && item.h <= SW && item.w <= SH);
-          if(!fitsStandard) {
-            unplacedItems.push(item);
-          } else {
-            let newSheet = { freeRects: [{ x: 0, y: 0, w: SW, h: SH }], placed: [], cuts: [] };
-            if(tryPlaceInSheet(newSheet, item, SW, SH, K, globalDir, subDirPref)) {
-              sheets.push(newSheet);
-            } else {
-              unplacedItems.push(item);
-            }
-          }
-        }
-      });
-    });
-  }
-
-  const alertBox = document.getElementById("unplacedAlert");
-  const alertList = document.getElementById("unplacedList");
-  if(unplacedItems.length > 0) {
-    let counts = {};
-    unplacedItems.forEach(u => {
-      let key = `[ ${u.name} ] — ${u.h} x ${u.w} cm`;
-      counts[key] = (counts[key] || 0) + 1;
-    });
-    alertList.innerHTML = "";
-    Object.keys(counts).forEach(k => {
-      alertList.innerHTML += `<li>${k} -> <b>${counts[k]} Adet Sığmadı / Yerleşemedi</b></li>`;
-    });
-    alertBox.style.display = "block";
-  } else {
-    alertBox.style.display = "none";
-  }
-
-  sheets = sheets.filter(s => s.placed.length > 0);
-  lastActiveSheets = sheets;
-  calculatedSheetCount = sheets.length;
-
-  calculateCosts();
-  renderJobTable(proj, dateStr, sheets);
-  drawPlans(sheets, SW, SH, SW0, SH0, edge, K);
-}
-
-function tryPlaceHybridGuillotine(sheet, item, K, subDirPref) {
-  let bestIdx = -1, bestRot = false, bestScore = Infinity, bestSplitHoriz = true;
-
-  for(let i = 0; i < sheet.freeRects.length; i++) {
-    let r = sheet.freeRects[i];
-    let options = [
-      { w: item.w, h: item.h, rot: false },
-      { w: item.h, h: item.w, rot: true }
-    ];
-
-    for(let opt of options) {
-      if(opt.rot && !item.rot) continue;
-      
-      if(subDirPref === "enine" && opt.w < opt.h && item.rot) continue;
-      if(subDirPref === "boyuna" && opt.h < opt.w && item.rot) continue;
-
-      if(opt.w <= r.w && opt.h <= r.h) {
-        let leftoverW = r.w - opt.w;
-        let leftoverH = r.h - opt.h;
-        let score = Math.min(leftoverW, leftoverH);
-
-        if(score < bestScore) {
-          bestScore = score;
-          bestIdx = i;
-          bestRot = opt.rot;
-          bestSplitHoriz = (subDirPref === "enine") ? true : ((subDirPref === "boyuna") ? false : leftoverW > leftoverH);
-        }
-      }
-    }
-  }
-
-  if(bestIdx !== -1) {
-    let r = sheet.freeRects[bestIdx];
-    let pw = bestRot ? item.h : item.w;
-    let ph = bestRot ? item.w : item.h;
-
-    sheet.placed.push({ ...item, x: r.x, y: r.y, w: pw, h: ph, rot: bestRot });
-    sheet.freeRects.splice(bestIdx, 1);
-
-    if(bestSplitHoriz) {
-      if(r.w - pw - K > 0.5) sheet.freeRects.push({ x: r.x + pw + K, y: r.y, w: r.w - pw - K, h: ph });
-      if(r.h - ph - K > 0.5) sheet.freeRects.push({ x: r.x, y: r.y + ph + K, w: r.w, h: r.h - ph - K });
-      sheet.cuts.push({ x1: r.x, y1: r.y + ph, x2: r.x + r.w, y2: r.y + ph, type: "main" });
-      if(r.w - pw > 0) sheet.cuts.push({ x1: r.x + pw, y1: r.y, x2: r.x + pw, y2: r.y + ph, type: "sub" });
-    } else {
-      if(r.h - ph - K > 0.5) sheet.freeRects.push({ x: r.x, y: r.y + ph + K, w: pw, h: r.h - ph - K });
-      if(r.w - pw - K > 0.5) sheet.freeRects.push({ x: r.x + pw + K, y: r.y, w: r.w - pw - K, h: r.h });
-      sheet.cuts.push({ x1: r.x + pw, y1: r.y, x2: r.x + pw, y2: r.y + r.h, type: "main" });
-      if(r.h - ph > 0) sheet.cuts.push({ x1: r.x, y1: r.y + ph, x2: r.x + pw, y2: r.y + ph, type: "sub" });
-    }
-
-    sheet.freeRects.sort((a, b) => (b.w * b.h) - (a.w * a.h));
-    return true;
-  }
-  return false;
-}
-
-function tryPlaceNearSameGroup(sheet, item, SW, SH, K, globalDir, subDirPref) {
-  let samePlaced = sheet.placed.filter(p => 
-    (Math.max(p.w, p.h) === Math.max(item.w, item.h)) && 
-    (Math.min(p.w, p.h) === Math.min(item.w, item.h))
-  );
-  if(samePlaced.length === 0) return false;
-  return tryPlaceInSheet(sheet, item, SW, SH, K, globalDir, subDirPref);
-}
-
-function tryPlaceInSheet(sheet, item, SW, SH, K, globalDir, subDirPref) {
-  let bestIdx = -1, bestRot = false, bestScore = Infinity;
-
-  for(let i = 0; i < sheet.freeRects.length; i++) {
-    let r = sheet.freeRects[i];
-    let options = [
-      { w: item.w, h: item.h, rot: false },
-      { w: item.h, h: item.w, rot: true }
-    ];
-
-    for(let opt of options) {
-      if(opt.rot && !item.rot) continue;
-
-      let effectiveDir = globalDir;
-      if(globalDir === "otomatik_klasik") {
-        effectiveDir = (subDirPref !== "auto") ? subDirPref : ((shuffleSeed % 2 === 0) ? "boyuna" : "enine");
-      }
-
-      if(effectiveDir === "boyuna" && opt.h < opt.w && item.rot) continue;
-      if(effectiveDir === "enine" && opt.w < opt.h && item.rot) continue;
-
-      if(opt.w <= r.w && opt.h <= r.h) {
-        let leftoverX = r.w - opt.w;
-        let leftoverY = r.h - opt.h;
-        let score = Math.min(leftoverX, leftoverY);
-
-        if(score < bestScore) {
-          bestScore = score;
-          bestIdx = i;
-          bestRot = opt.rot;
-        }
-      }
-    }
-  }
-
-  if(bestIdx !== -1) {
-    let r = sheet.freeRects[bestIdx];
-    let pw = bestRot ? item.h : item.w;
-    let ph = bestRot ? item.w : item.h;
-
-    let effectiveDir = globalDir;
-    if(globalDir === "otomatik_klasik") {
-      effectiveDir = (subDirPref !== "auto") ? subDirPref : ((shuffleSeed % 2 === 0) ? "boyuna" : "enine");
-    }
-
-    sheet.placed.push({ ...item, x: r.x, y: r.y, w: pw, h: ph, rot: bestRot });
-    sheet.freeRects.splice(bestIdx, 1);
-
-    if(effectiveDir === "enine") {
-      if(r.w - pw > 0) sheet.freeRects.push({ x: r.x + pw + K, y: r.y, w: r.w - pw - K, h: ph });
-      if(r.h - ph > 0) sheet.freeRects.push({ x: r.x, y: r.y + ph + K, w: r.w, h: r.h - ph - K });
-      sheet.cuts.push({ x1: r.x, y1: r.y + ph, x2: r.x + r.w, y2: r.y + ph, type: "main" });
-      if(r.w - pw > 0) sheet.cuts.push({ x1: r.x + pw, y1: r.y, x2: r.x + pw, y2: r.y + ph, type: "sub" });
-    } else {
-      if(r.h - ph > 0) sheet.freeRects.push({ x: r.x, y: r.y + ph + K, w: pw, h: r.h - ph - K });
-      if(r.w - pw > 0) sheet.freeRects.push({ x: r.x + pw + K, y: r.y, w: r.w - pw - K, h: r.h });
-      sheet.cuts.push({ x1: r.x + pw, y1: r.y, x2: r.x + pw, y2: r.y + r.h, type: "main" });
-      if(r.h - ph > 0) sheet.cuts.push({ x1: r.x, y1: r.y + ph, x2: r.x + pw, y2: r.y + ph, type: "sub" });
-    }
-
-    sheet.freeRects = sheet.freeRects.filter(fr => fr.w > 0.5 && fr.h > 0.5);
-    return true;
-  }
-  return false;
-}
-
+/* ====================================================================
+   ÇİZİM
+   ==================================================================== */
 function handleCanvasClick(e, sheet, sheetIdx, canvasElement) {
-  let rect = canvasElement.getBoundingClientRect();
-  let clientX = e.clientX;
-  let clientY = e.clientY;
-
-  if (e.changedTouches && e.changedTouches.length > 0) {
-    clientX = e.changedTouches[0].clientX;
-    clientY = e.changedTouches[0].clientY;
-  }
+  const rect = canvasElement.getBoundingClientRect();
+  let clientX = e.clientX, clientY = e.clientY;
+  if (e.changedTouches && e.changedTouches.length > 0) { clientX = e.changedTouches[0].clientX; clientY = e.changedTouches[0].clientY; }
   if (clientX === undefined || clientY === undefined) return;
-
-  let scaleX = canvasElement.width / rect.width;
-  let scaleY = canvasElement.height / rect.height;
-
-  let canvasClickX = (clientX - rect.left) * scaleX;
-  let canvasClickY = (clientY - rect.top) * scaleY;
-
-  let curW0 = sheet.isStock ? sheet.customW0 : lastSW0;
-  let curH0 = sheet.isStock ? sheet.customH0 : lastSH0;
-  let curEdge = sheet.isStock ? 0 : lastEdge;
-
-  let sx = (canvasElement.width - 36) / curW0;
-  let sy = (canvasElement.height - 36) / curH0;
-  let OX = 18, OY = 18;
-
-  let clickedPart = null;
+  const scaleX = canvasElement.width / rect.width, scaleY = canvasElement.height / rect.height;
+  const cx = (clientX - rect.left) * scaleX, cy = (clientY - rect.top) * scaleY;
+  const curW0 = sheet.isStock ? sheet.customW0 : lastSW0, curH0 = sheet.isStock ? sheet.customH0 : lastSH0;
+  const curEdge = sheet.isStock ? 0 : lastEdge;
+  const sx = (canvasElement.width - 36) / curW0, sy = (canvasElement.height - 36) / curH0;
+  let hit = null;
   sheet.placed.forEach(p => {
-    let px = OX + (curEdge + p.x) * sx;
-    let py = OY + (curEdge + p.y) * sy;
-    let pw = p.w * sx;
-    let ph = p.h * sy;
-
-    if (canvasClickX >= px && canvasClickX <= px + pw && canvasClickY >= py && canvasClickY <= py + ph) {
-      clickedPart = p;
-    }
+    const px = 18 + (curEdge + p.x) * sx, py = 18 + (curEdge + p.y) * sy;
+    if (cx >= px && cx <= px + p.w * sx && cy >= py && cy <= py + p.h * sy) hit = p;
   });
+  if (hit) openPartPopup(hit, sheetIdx);
+}
 
-  if (clickedPart) {
-    openPartPopup(clickedPart, sheetIdx);
+let hatchPattern = null;
+function getHatch(ctx) {
+  if (!hatchPattern) {
+    const c = document.createElement('canvas'); c.width = c.height = 16;
+    const x = c.getContext('2d');
+    x.fillStyle = '#f8fafc'; x.fillRect(0, 0, 16, 16);
+    x.strokeStyle = '#cfd8e3'; x.lineWidth = 1.5; x.beginPath();
+    x.moveTo(0, 16); x.lineTo(16, 0); x.moveTo(-4, 4); x.lineTo(4, -4); x.moveTo(12, 20); x.lineTo(20, 12); x.stroke();
+    hatchPattern = c;
   }
+  return ctx.createPattern(hatchPattern, 'repeat');
+}
+
+function cutStepsHtml(s, curEdge) {
+  if (!s.cuts || !s.cuts.length || s.cuts[0].n === undefined) return '';
+  const trim = (!s.isStock && curEdge > 0) ? `<p class="cut-trim">0) Kenar temizliği: plakanın 4 kenarından ${fmt1(curEdge)} cm kes (fire).</p>` : '';
+  const li = s.cuts.map(c => {
+    const dir = c.axis === 'H' ? 'Enine (yatay)' : 'Boyuna (dikey)';
+    const from = c.axis === 'H' ? 'üst kenardan' : 'sol kenardan';
+    return `<li><b>${dir}</b> — ${fmt1(c.rw)}×${fmt1(c.rh)} cm alanda ${from} <b>${fmt1(c.dist)} cm</b></li>`;
+  }).join('');
+  return `<details class="cut-steps"><summary>✂️ Kesim sırası (${s.cuts.length} kesim) — kırmızı numaralar plan üzerinde</summary>${trim}<ol>${li}</ol></details>`;
+}
+
+/* ---- Parça yazısı yerleşimi: uzun kenara göre çevirir, sığmazsa küçültür/kısaltır ---- */
+function fitFont(ctx, text, maxLen, maxThick, maxF, minF) {
+  let f = Math.min(maxF, Math.floor(maxThick / 1.15));
+  if (f < minF || maxLen <= 0) return 0;
+  ctx.font = `bold ${f}px Arial`;
+  const w = ctx.measureText(text).width;
+  if (w > maxLen) f = Math.floor(f * maxLen / w);
+  return f >= minF ? f : 0;
+}
+function fitOrTruncate(ctx, text, maxLen, maxThick, maxF, minF) {
+  let f = fitFont(ctx, text, maxLen, maxThick, maxF, minF);
+  if (f) return { text: text, f: f };
+  let t = text;
+  while (t.length > 2) {
+    t = t.slice(0, -1);
+    const tt = t.replace(/\s+$/, '') + '…';
+    f = fitFont(ctx, tt, maxLen, maxThick, maxF, minF);
+    if (f) return { text: tt, f: f };
+  }
+  return null;
+}
+function putText(ctx, text, cx, cy, vertical, f, color) {
+  ctx.save(); ctx.translate(cx, cy); if (vertical) ctx.rotate(-Math.PI / 2);
+  ctx.font = `bold ${f}px Arial`; ctx.fillStyle = color;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(text, 0, 0); ctx.restore();
+}
+function drawBadge(ctx, cx, cy, r, text, color) {
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fillStyle = color; ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `bold ${Math.max(7, Math.round(r * (text.length > 2 ? 0.7 : 0.9)))}px Arial`;
+  ctx.fillText(text, cx, cy + 0.5);
+}
+function drawPartLabel(ctx, p, x, y, w, h, idx, seqStr, done) {
+  const m = Math.min(w, h), M = Math.max(w, h), vertical = h > w * 1.15;
+  const nameCol = done ? '#166534' : '#0f172a', dimCol = done ? '#15803d' : '#000';
+  const name = (done ? '✓ ' : '') + `[ ${p.name} ]` + (seqStr ? ' ' + seqStr : '');
+  const dims = `${p.w} × ${p.h}`;
+  const cx = x + w / 2, cy = y + h / 2, badgeCol = done ? '#16a34a' : '#0f172a', badgeTxt = (done ? '✓' : '') + (idx + 1);
+
+  if (m >= 90 && M >= 130) {                       // BÜYÜK: dört kenarda ölçü + ortada ad
+    const df = Math.max(14, Math.min(32, Math.round(m / 3)));
+    ctx.font = `bold ${df}px Arial`;
+    const tw = ctx.measureText(`${p.w}`).width, th = ctx.measureText(`${p.h}`).width;
+    putText(ctx, `${p.w}`, cx, y + 6 + df * 0.55, false, df, dimCol);
+    putText(ctx, `${p.w}`, cx, y + h - 6 - df * 0.55, false, df, dimCol);
+    putText(ctx, `${p.h}`, x + df * 0.8, cy, true, df, dimCol);
+    putText(ctx, `${p.h}`, x + w - df * 0.8, cy, true, df, dimCol);
+    const side = df * 1.7, tb = df * 1.4 + 10;
+    const nameFit = vertical
+      ? fitOrTruncate(ctx, name, h - 2 * tb, w - 2 * side, 30, 9)
+      : fitOrTruncate(ctx, name, w - 2 * side, h - 2 * tb, 30, 9);
+    if (nameFit) putText(ctx, nameFit.text, cx, cy, vertical, nameFit.f, nameCol);
+    const br = Math.max(11, Math.min(17, Math.round(m / 7)));
+    const bx = x + br + 8, by = y + br + 8;
+    const clashTop = (w / 2 - tw / 2) < (2 * br + 18) && df + 6 > 8;
+    const clashLeft = (h / 2 - th / 2) < (2 * br + 18) && df * 1.6 > br;
+    if (!clashTop && !clashLeft) drawBadge(ctx, bx, by, br, badgeTxt, badgeCol);
+    return;
+  }
+
+  if (m >= 26) {                                   // ORTA / KÜÇÜK: ad + ölçü, uzun kenar boyunca
+    const withBadge = m >= 48 && M >= 96, br = 9;
+    const reserve = withBadge ? 2 * (2 * br + 10) : 0;
+    const maxLen = M - 10 - reserve;
+    const nm = fitOrTruncate(ctx, name, maxLen, (m - 6) / 2, 22, 8);
+    const dm = fitFont(ctx, dims, maxLen, (m - 6) / 2, 22, 8);
+    if (nm && dm) {
+      const f = Math.min(nm.f, dm);
+      const off = f * 0.62;
+      if (vertical) { putText(ctx, nm.text, cx - off, cy, true, f, nameCol); putText(ctx, dims, cx + off, cy, true, f, dimCol); }
+      else { putText(ctx, nm.text, cx, cy - off, false, f, nameCol); putText(ctx, dims, cx, cy + off, false, f, dimCol); }
+    } else {
+      const one = fitOrTruncate(ctx, name + '  ' + dims, maxLen, m - 4, 20, 7) || fitOrTruncate(ctx, name, maxLen, m - 4, 20, 7);
+      if (one) putText(ctx, one.text, cx, cy, vertical, one.f, nameCol);
+    }
+    if (withBadge) drawBadge(ctx, x + br + 5, y + br + 5, br, badgeTxt, badgeCol);
+    return;
+  }
+  // ÇOK KÜÇÜK: sadece sığıyorsa ad (ayrıntı için parçaya dokun)
+  const t = fitOrTruncate(ctx, name, M - 4, m - 2, 14, 7) || fitOrTruncate(ctx, String(p.name), M - 4, m - 2, 14, 7);
+  if (t) putText(ctx, t.text, cx, cy, vertical, t.f, nameCol);
 }
 
 function drawPlans(sheets, SW, SH, SW0, SH0, edge, K) {
-  let totalArea = 0, count = 0;
-  sheets.forEach(s => s.placed.forEach(p => { totalArea += p.w * p.h; count++; }));
-  
-  document.getElementById("sheetCount").textContent = sheets.length;
-  document.getElementById("pieceCount").textContent = count;
-  let cap = SW * SH * sheets.length, pct = cap ? Math.round(totalArea / cap * 100) : 0;
-  document.getElementById("used").textContent = pct + "%";
-  document.getElementById("waste").textContent = (100 - pct) + "%";
-
-  let groupCounters = {};
+  currentDetectedWastes = [];
+  let partsArea = 0, count = 0, platesArea = 0, usableArea = 0;
   sheets.forEach(s => {
-    s.placed.forEach(p => {
-      let groupKey = `${p.name}_${Math.max(p.h, p.w)}x${Math.min(p.h, p.w)}`;
-      if (!groupCounters[groupKey]) {
-        groupCounters[groupKey] = { total: 0, current: 0 };
-      }
-      groupCounters[groupKey].total++;
-    });
+    const w0 = s.isStock ? s.customW0 : SW0, h0 = s.isStock ? s.customH0 : SH0;
+    platesArea += w0 * h0;
+    usableArea += s.isStock ? w0 * h0 : SW * SH;
+    s.placed.forEach(p => { partsArea += p.w * p.h; count++; });
   });
+  const stdCount = sheets.filter(s => !s.isStock).length, stockCount = sheets.length - stdCount;
+  const pct = platesArea ? partsArea / platesArea * 100 : 0;
+  const pctUsable = usableArea ? partsArea / usableArea * 100 : 0;
 
-  const box = document.getElementById("plans");
-  box.innerHTML = "";
+  document.getElementById('sheetCount').textContent = stdCount;
+  const sn = document.getElementById('sheetStockNote');
+  if (sn) sn.textContent = stockCount ? `+ ${stockCount} depo plakası` : '';
+  document.getElementById('pieceCount').textContent = count;
+  document.getElementById('used').textContent = '%' + pct.toFixed(1);
+  document.getElementById('waste').textContent = '%' + (sheets.length ? (100 - pct).toFixed(1) : '0.0');
+  const uu = document.getElementById('usedUsable');
+  if (uu) uu.textContent = sheets.length ? `kenar firesiz alana göre %${pctUsable.toFixed(1)}` : '';
+  const mw = document.getElementById('metricWaste');
+  if (mw) { mw.classList.remove('good', 'warn', 'bad'); if (sheets.length) mw.classList.add(100 - pct < 15 ? 'good' : (100 - pct < 30 ? 'warn' : 'bad')); }
+
+  const lbn = document.getElementById('lbNote');
+  if (lbn) {
+    lbn.style.display = (sheets.length && lastLowerBound > 0) ? 'block' : 'none';
+    lbn.textContent = `🎯 Parça alanına göre teorik alt sınır: ${lastLowerBound} plaka (bıçak payı hariç) · bulunan: ${stdCount} plaka.`;
+  }
+  const done = sheets.reduce((a, s) => a + s.placed.filter(p => completedUniquePartIds.has(p.uniqueInstanceId)).length, 0);
+  const cp = document.getElementById('cutProgress');
+  if (cp) {
+    cp.style.display = count ? 'flex' : 'none';
+    document.getElementById('cutProgFill').style.width = (count ? done / count * 100 : 0) + '%';
+    document.getElementById('cutProgText').textContent = `Kesim ilerlemesi: ${done} / ${count} parça`;
+  }
+  const empty = document.getElementById('emptyState');
+  if (empty) empty.style.display = sheets.length ? 'none' : 'block';
+
+  const groupCounters = {};
+  sheets.forEach(s => s.placed.forEach(p => {
+    const k = `${p.name}_${Math.max(p.h, p.w)}x${Math.min(p.h, p.w)}`;
+    if (!groupCounters[k]) groupCounters[k] = { total: 0, current: 0 };
+    groupCounters[k].total++;
+  }));
+
+  const box = document.getElementById('plans');
+  box.innerHTML = '';
 
   sheets.forEach((s, si) => {
-    let curW0 = s.isStock ? s.customW0 : SW0;
-    let curH0 = s.isStock ? s.customH0 : SH0;
-    let curEdge = s.isStock ? 0 : edge;
+    const curW0 = s.isStock ? s.customW0 : SW0, curH0 = s.isStock ? s.customH0 : SH0;
+    const curEdge = s.isStock ? 0 : edge;
 
-    let div = document.createElement("div");
-    div.className = "plan";
-    div.innerHTML = `<h3>${s.isStock ? '♻️ DEPODAN HARCANAN FİRE PLAKA' : 'PLAKA ' + (si + 1)} — ${curW0} × ${curH0} cm</h3>`;
-    let c = document.createElement("canvas");
+    let sArea = 0; s.placed.forEach(p => { sArea += p.w * p.h; });
+    const fill = sArea / (curW0 * curH0) * 100;
+    let big = null;
+    s.freeRects.forEach(fr => { if (fr.w >= 20 && fr.h >= 20 && (!big || fr.w * fr.h > big.w * big.h)) big = fr; });
+    const fillCls = fill >= 85 ? 'good' : (fill >= 65 ? 'warn' : 'bad');
+
+    const div = document.createElement('div');
+    div.className = 'plan';
+    div.innerHTML = `<div class="plan-head">
+      <h3>${s.isStock ? '♻️ DEPODAN HARCANAN FİRE PLAKA' + (s.stockLabel ? ' · ' + esc(s.stockLabel) : '') + ' ' + (s.no || '') : 'PLAKA ' + (s.no || si + 1)} — ${curW0} × ${curH0} cm</h3>
+      <div class="plan-chips"><span class="chip">${s.placed.length} parça</span><span class="chip ${fillCls}">%${fill.toFixed(0)} dolu</span>${big ? `<span class="chip">en büyük fire ${fmt1(big.w)}×${fmt1(big.h)}</span>` : ''}</div>
+    </div>`;
+    const c = document.createElement('canvas');
     c.width = 1400;
     c.height = Math.round(1400 * curH0 / curW0);
 
-    let touchStartX = 0, touchStartY = 0;
-    let isSwiping = false;
-
-    c.ontouchstart = (e) => {
-      if (e.touches && e.touches.length > 0) {
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
-        isSwiping = false;
-      }
-    };
-    c.ontouchmove = (e) => {
-      if (e.touches && e.touches.length > 0) {
-        let diffX = Math.abs(e.touches[0].clientX - touchStartX);
-        let diffY = Math.abs(e.touches[0].clientY - touchStartY);
-        if (diffX > 8 || diffY > 8) isSwiping = true;
-      }
-    };
-    c.ontouchend = (e) => {
-      if (!isSwiping) handleCanvasClick(e, s, si, c);
-    };
-    c.onclick = (e) => handleCanvasClick(e, s, si, c);
+    let tsx = 0, tsy = 0, swiping = false;
+    c.ontouchstart = e => { if (e.touches && e.touches.length) { tsx = e.touches[0].clientX; tsy = e.touches[0].clientY; swiping = false; } };
+    c.ontouchmove = e => { if (e.touches && e.touches.length && (Math.abs(e.touches[0].clientX - tsx) > 8 || Math.abs(e.touches[0].clientY - tsy) > 8)) swiping = true; };
+    c.ontouchend = e => { if (!swiping) handleCanvasClick(e, s, si, c); };
+    c.onclick = e => handleCanvasClick(e, s, si, c);
 
     div.appendChild(c);
     box.appendChild(div);
 
-    let ctx = c.getContext("2d"), sx = (c.width - 36) / curW0, sy = (c.height - 36) / curH0, OX = 18, OY = 18;
-    
+    const ctx = c.getContext('2d'), sx = (c.width - 36) / curW0, sy = (c.height - 36) / curH0, OX = 18, OY = 18;
+    ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, c.width, c.height);
     ctx.lineWidth = 3;
-    ctx.strokeStyle = s.isStock ? "#8b5cf6" : "#111";
+    ctx.strokeStyle = s.isStock ? '#8b5cf6' : '#111';
     ctx.strokeRect(OX, OY, curW0 * sx, curH0 * sy);
 
-    if(!s.isStock) {
-      ctx.setLineDash([6, 4]);
-      ctx.lineWidth = 1;
-      ctx.strokeStyle = "#888";
+    if (!s.isStock) {
+      ctx.setLineDash([6, 4]); ctx.lineWidth = 1; ctx.strokeStyle = '#888';
       ctx.strokeRect(OX + curEdge * sx, OY + curEdge * sy, (curW0 - 2 * curEdge) * sx, (curH0 - 2 * curEdge) * sy);
       ctx.setLineDash([]);
     }
 
     s.freeRects.forEach(fr => {
-      if(fr.w >= 20 && fr.h >= 20) {
-        let fx = OX + (curEdge + fr.x) * sx;
-        let fy = OY + (curEdge + fr.y) * sy;
-        let fw = fr.w * sx;
-        let fh = fr.h * sy;
-
-        ctx.fillStyle = "#f1f5f9";
-        ctx.fillRect(fx, fy, fw, fh);
-        ctx.strokeStyle = "#cbd5e1";
-        ctx.lineWidth = 1;
-        ctx.strokeRect(fx, fy, fw, fh);
-
-        ctx.font = "bold 15px Arial";
-        ctx.fillStyle = "#0284c7";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(`+ Boş Fire (${fr.w.toFixed(1)} x ${fr.h.toFixed(1)})`, fx + fw / 2, fy + fh / 2);
-
-        if(!s.isStock) {
-          currentDetectedWastes.push({ w: fr.w, h: fr.h });
-        }
+      if (fr.w >= 20 && fr.h >= 20) {
+        const fx = OX + (curEdge + fr.x) * sx, fy = OY + (curEdge + fr.y) * sy, fw = fr.w * sx, fh = fr.h * sy;
+        ctx.fillStyle = getHatch(ctx); ctx.fillRect(fx, fy, fw, fh);
+        ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 1; ctx.strokeRect(fx, fy, fw, fh);
+        const label = `FİRE ${fmt1(fr.w)} × ${fmt1(fr.h)}`;
+        const fs = Math.max(11, Math.min(18, fw / (label.length * 0.62)));
+        ctx.font = `bold ${fs}px Arial`;
+        const tw = ctx.measureText(label).width;
+        ctx.fillStyle = 'rgba(255,255,255,0.88)'; ctx.fillRect(fx + fw / 2 - tw / 2 - 6, fy + fh / 2 - fs * 0.8, tw + 12, fs * 1.6);
+        ctx.fillStyle = '#0369a1'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(label, fx + fw / 2, fy + fh / 2);
+        currentDetectedWastes.push({ w: fr.w, h: fr.h });
       }
     });
 
     s.cuts.forEach(ct => {
       ctx.beginPath();
-      ctx.setLineDash(ct.type === "main" ? [10, 5] : [4, 4]);
-      ctx.lineWidth = ct.type === "main" ? 2.5 : 1.5;
-      ctx.strokeStyle = ct.type === "main" ? "#d32f2f" : "#0284c7";
-      let cx1 = OX + (curEdge + ct.x1) * sx;
-      let cy1 = OY + (curEdge + ct.y1) * sy;
-      let cx2 = OX + (curEdge + ct.x2) * sx;
-      let cy2 = OY + (curEdge + ct.y2) * sy;
-      ctx.moveTo(cx1, cy1);
-      ctx.lineTo(cx2, cy2);
+      ctx.setLineDash(ct.type === 'main' ? [10, 5] : [4, 4]);
+      ctx.lineWidth = ct.type === 'main' ? 2.5 : 1.5;
+      ctx.strokeStyle = ct.type === 'main' ? '#d32f2f' : '#0284c7';
+      ctx.moveTo(OX + (curEdge + ct.x1) * sx, OY + (curEdge + ct.y1) * sy);
+      ctx.lineTo(OX + (curEdge + ct.x2) * sx, OY + (curEdge + ct.y2) * sy);
       ctx.stroke();
     });
     ctx.setLineDash([]);
 
     s.placed.forEach((p, idx) => {
-      let groupKey = `${p.name}_${Math.max(p.h, p.w)}x${Math.min(p.h, p.w)}`;
+      const groupKey = `${p.name}_${Math.max(p.h, p.w)}x${Math.min(p.h, p.w)}`;
       groupCounters[groupKey].current++;
-      let currentSeq = groupCounters[groupKey].current;
-      let totalSeq = groupCounters[groupKey].total;
+      const currentSeq = groupCounters[groupKey].current, totalSeq = groupCounters[groupKey].total;
       p.seqStr = totalSeq > 1 ? `(${currentSeq}/${totalSeq})` : null;
 
-      let pad = 7;
-      let x = OX + (curEdge + p.x) * sx + pad, 
-          y = OY + (curEdge + p.y) * sy + pad, 
-          w = p.w * sx - (pad * 2), 
-          h = p.h * sy - (pad * 2);
-      
-      let isCompleted = completedUniquePartIds.has(p.uniqueInstanceId);
+      const pad = 7;
+      const x = OX + (curEdge + p.x) * sx + pad, y = OY + (curEdge + p.y) * sy + pad, w = p.w * sx - pad * 2, h = p.h * sy - pad * 2;
+      const isCompleted = completedUniquePartIds.has(p.uniqueInstanceId);
 
-      ctx.fillStyle = isCompleted ? "#dcfce7" : getGroupColor(p.h, p.w, p.name);
+      ctx.fillStyle = isCompleted ? '#dcfce7' : getGroupColor(p.h, p.w, p.name);
       ctx.fillRect(x, y, w, h);
-
-      ctx.strokeStyle = isCompleted ? "#16a34a" : "#0f172a";
+      ctx.strokeStyle = isCompleted ? '#16a34a' : '#0f172a';
       ctx.lineWidth = isCompleted ? 3 : 2;
       ctx.strokeRect(x, y, w, h);
 
       let leftBand, rightBand, topBand, botBand;
-      if (!p.rot) {
-        leftBand = p.b1;   
-        rightBand = p.b2;  
-        topBand = p.e1;    
-        botBand = p.e2;    
-      } else {
-        topBand = p.b1;
-        botBand = p.b2;
-        leftBand = p.e1;
-        rightBand = p.e2;
-      }
+      if (!p.rot) { leftBand = p.b1; rightBand = p.b2; topBand = p.e1; botBand = p.e2; }
+      else { topBand = p.b1; botBand = p.b2; leftBand = p.e1; rightBand = p.e2; }
 
-      ctx.font = "bold 13px Arial";
-      ctx.fillStyle = "#0284c7";
-      if(topBand)   { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x, y + 4); ctx.lineTo(x + w, y + 4); ctx.stroke(); ctx.fillText("Bant", x + 10, y + 24); }
-      if(botBand)   { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x, y + h - 4); ctx.lineTo(x + w, y + h - 4); ctx.stroke(); ctx.fillText("Bant", x + 10, y + h - 10); }
-      if(rightBand) { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + w - 4, y); ctx.lineTo(x + w - 4, y + h); ctx.stroke(); ctx.fillText("Bant", x + w - 40, y + 24); }
-      if(leftBand)  { ctx.lineWidth = 12; ctx.strokeStyle="#0284c7"; ctx.beginPath(); ctx.moveTo(x + 4, y); ctx.lineTo(x + 4, y + h); ctx.stroke(); ctx.fillText("Bant", x + 10, y + 24); }
+      const bw = Math.max(3, Math.min(12, Math.min(w, h) * 0.14)), hb = bw / 2;
+      ctx.strokeStyle = '#0284c7'; ctx.lineWidth = bw; ctx.lineCap = 'butt';
+      const bandLine = (x1, y1, x2, y2) => { ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); };
+      if (topBand) bandLine(x, y + hb, x + w, y + hb);
+      if (botBand) bandLine(x, y + h - hb, x + w, y + h - hb);
+      if (rightBand) bandLine(x + w - hb, y, x + w - hb, y + h);
+      if (leftBand) bandLine(x + hb, y, x + hb, y + h);
 
-      let minSideReal = Math.min(p.w, p.h);
-      let minSideCanvas = Math.min(w, h);
-      let dimFont = Math.max(14, Math.min(32, Math.round(minSideCanvas / 3)));
-      ctx.font = `bold ${dimFont}px Arial`;
-      ctx.fillStyle = isCompleted ? "#15803d" : "#000000";
-
-      if (w > 25) {
-        ctx.textAlign = "center";
-        ctx.textBaseline = "top";
-        ctx.fillText(`${p.w}`, x + w / 2, y + 6);
-        ctx.textBaseline = "bottom";
-        ctx.fillText(`${p.w}`, x + w / 2, y + h - 6);
-      }
-
-      if (h > 25) {
-        ctx.save();
-        ctx.translate(x + (dimFont * 0.8), y + h / 2);
-        ctx.rotate(-Math.PI / 2);
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(`${p.h}`, 0, 0);
-        ctx.restore();
-
-        ctx.save();
-        ctx.translate(x + w - (dimFont * 0.8), y + h / 2);
-        ctx.rotate(Math.PI / 2);
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(`${p.h}`, 0, 0);
-        ctx.restore();
-      }
-
-      if (minSideReal >= 25) {
-        let nameFont = Math.max(14, Math.min(30, Math.round(minSideCanvas / 3.5)));
-        ctx.font = `bold ${nameFont}px Arial`;
-        ctx.fillStyle = isCompleted ? "#166534" : "#0f172a";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        
-        let seqStr = totalSeq > 1 ? ` (${currentSeq}/${totalSeq})` : "";
-        let labelText = isCompleted ? `✓ [ ${p.name} ]${seqStr}` : `[ ${p.name} ]${seqStr}`;
-        ctx.fillText(labelText, x + w / 2, y + h / 2);
-      }
-
-      let badgeRadius = Math.max(12, Math.min(18, Math.round(minSideCanvas / 6)));
-      ctx.beginPath();
-      ctx.arc(x + badgeRadius + 8, y + badgeRadius + 8, badgeRadius, 0, Math.PI * 2);
-      ctx.fillStyle = isCompleted ? "#16a34a" : "#0f172a";
-      ctx.fill();
-      ctx.fillStyle = "#ffffff";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.font = `bold ${Math.round(badgeRadius * 0.85)}px Arial`;
-      
-      let badgeText = isCompleted ? `✓${idx + 1}` : `${idx + 1}`;
-      ctx.fillText(badgeText, x + badgeRadius + 8, y + badgeRadius + 8);
-
-      ctx.textAlign = "left";
-      ctx.textBaseline = "alphabetic";
+      drawPartLabel(ctx, p, x, y, w, h, idx, totalSeq > 1 ? `(${currentSeq}/${totalSeq})` : '', isCompleted);
+      ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
     });
 
-    let note = document.createElement("div");
-    note.className = "band-note no-print";
-    note.textContent = "📱 Parça üzerine tıklayarak kesildi durumunu güncelleyebilirsiniz.";
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+
+    const note = document.createElement('div');
+    note.className = 'band-note no-print';
+    note.textContent = '📱 Parça üzerine tıklayarak kesildi durumunu güncelleyebilirsiniz.';
     div.appendChild(note);
   });
 
-  let btnSave = document.getElementById("btnSaveCurrentWastes");
-  if(currentDetectedWastes.length > 0) {
-    btnSave.style.display = "block";
-    btnSave.textContent = `♻️ Bu Kesimden Kalan ${currentDetectedWastes.length} Adet Büyük Fireyi Depoma Kaydet`;
-  } else {
-    btnSave.style.display = "none";
-  }
+  const btnSave = document.getElementById('btnSaveCurrentWastes');
+  if (currentDetectedWastes.length > 0 && !depotSavedForCurrent) {
+    btnSave.style.display = 'block';
+    btnSave.textContent = usedStockIds.length
+      ? `♻️ Depoyu güncelle: kullanılan ${usedStockIds.length} fireyi düş, kalan ${currentDetectedWastes.length} büyük fireyi ekle`
+      : `♻️ Bu Kesimden Kalan ${currentDetectedWastes.length} Adet Büyük Fireyi Depoma Kaydet`;
+  } else btnSave.style.display = 'none';
 }
 
+/* ====================================================================
+   BAŞLANGIÇ
+   ==================================================================== */
+document.addEventListener('keydown', e => {
+  if (!(e.ctrlKey || e.metaKey)) return;
+  const t = e.target, typing = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT');
+  if (typing) return;
+  const k = e.key.toLowerCase();
+  if (k === 'z' && !e.shiftKey) { e.preventDefault(); undoParts(); }
+  else if (k === 'y' || (k === 'z' && e.shiftKey)) { e.preventDefault(); redoParts(); }
+});
+if (window.matchMedia) {
+  const mq = window.matchMedia('(max-width: 900px)');
+  const rerender = () => renderParts();
+  if (mq.addEventListener) mq.addEventListener('change', rerender);
+}
+
+let deferredInstall = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault(); deferredInstall = e;
+  const b = document.getElementById('btnInstall'); if (b) b.style.display = 'inline-flex';
+});
+function installApp() {
+  if (!deferredInstall) return;
+  deferredInstall.prompt();
+  deferredInstall.userChoice.finally(() => { deferredInstall = null; const b = document.getElementById('btnInstall'); if (b) b.style.display = 'none'; });
+}
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+  window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => { }); });
+}
+
+qrReadParam();
+initTheme();
 loadStockWastesFromStorage();
 renderSavedProjectsList();
 selectSheetPreset('preset_280', 280, 210);
-addPart();
+addPart(null, false);
+resetHistory();
 checkShuffleBtn();
+updateTotalBandsAndCosts();
+
 </script>
 <dialog id="cutLogin"><form onsubmit="window.cutLoginSubmit(event)"><h2>☁ Atölye hesabına bağlan</h2><p class="muted">Atölye programındaki mevcut hesabını kullan.</p><label for="cutEmail">E-posta</label><input id="cutEmail" type="email" autocomplete="username" required><label for="cutPassword">Şifre</label><input id="cutPassword" type="password" autocomplete="current-password" required><p id="cutLoginError" role="alert"></p><div class="cut-cloud-actions"><button id="cutLoginButton" class="btn-action save" type="submit">Bağlan</button><button class="btn-action load" type="button" onclick="document.getElementById('cutLogin').close()">Vazgeç</button></div></form></dialog>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js" defer onerror="cutStatus('Bulut bağlantısı yüklenemedi. İnterneti kontrol et; cihaz kayıtları açık.',true)"></script>
