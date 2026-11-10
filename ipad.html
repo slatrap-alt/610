@@ -6,7 +6,7 @@
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; base-uri 'none'; form-action 'none'">
 <meta name="theme-color" content="#121c27">
-<title>Acanlar Kesim · iPad Harita v2.0.2</title>
+<title>Acanlar Kesim · iPad Harita v2.0.3</title>
 <style>
 [hidden]{display:none!important}
 *{box-sizing:border-box}
@@ -39,6 +39,16 @@ button:disabled{opacity:.48;cursor:default}
 #plateTitle{margin:5px 0;font-size:19px}
 #map{display:block;width:auto;max-width:100%;height:auto;margin:0 auto;background:#fff}
 #detail{padding:9px;min-height:40px;background:#edf4f9;border-radius:8px}
+#partProgress{margin:5px 0;color:#435569;font-size:15px}
+#partOverlay{position:fixed;z-index:1;top:0;right:0;bottom:0;left:0;background:rgba(18,28,39,.64);display:flex;align-items:center;justify-content:center;padding:14px}
+#partPanel{width:100%;max-width:370px;padding:20px;text-align:left}
+#partPanel h2{font-size:22px;margin:0 0 8px;overflow-wrap:break-word}
+#partPanel p{margin:8px 0}
+#partAction{width:100%;min-height:52px;background:#167248;border-color:#167248}
+#partAction.secondary{background:#edf4f9;color:#23435a;border-color:#a3b6c5}
+#partClose{width:100%;margin-top:8px}
+#partMessage{color:#9b2c2c;font-size:15px}
+#partMessage:empty{display:none}
 #legend{font-size:14px;margin:8px 0 0;color:#435569}
 @media (max-width:480px){main{padding:9px}header{padding:12px} .card{padding:9px}}
 </style>
@@ -70,11 +80,22 @@ button:disabled{opacity:.48;cursor:default}
       <button id="next" type="button">Sonraki ›</button>
     </nav>
     <h2 id="plateTitle"></h2>
+    <p id="partProgress" aria-live="polite"></p>
     <canvas id="map" aria-label="Plaka kesim haritası"></canvas>
-    <p id="detail" role="status">Ölçüyü görmek için parçaya dokun.</p>
+    <p id="detail" role="status">Ölçüyü görmek veya kesim durumunu değiştirmek için parçaya dokun.</p>
     <p id="legend">Ölçüler cm · Kalın mavi çizgi: kenar bandı · Yeşil parça: kesildi</p>
   </section>
 </main>
+<div id="partOverlay" hidden>
+  <section id="partPanel" class="card" role="dialog" aria-modal="true" aria-labelledby="partName">
+    <h2 id="partName"></h2>
+    <p id="partSize"></p>
+    <p id="partState"></p>
+    <p id="partMessage" role="status"></p>
+    <button id="partAction" type="button">Kesildi olarak işaretle</button>
+    <button id="partClose" class="secondary" type="button">Kapat</button>
+  </section>
+</div>
 <noscript>Haritayı açmak için Safari’de JavaScript’i etkinleştir.</noscript>
 <script>
 (function () {
@@ -256,7 +277,7 @@ function drawIpadPlate(c, s, curW0, curH0, curEdge, completedUniquePartIds, sequ
       if (rightBand) bandLine(x + w - hb, y, x + w - hb, y + h);
       if (leftBand) bandLine(x + hb, y, x + hb, y + h);
 
-      hits.push({ x: x, y: y, w: w, h: h, part: p, seq: seq, done: isCompleted });
+      hits.push({ x: x - pad, y: y - pad, w: w + 2 * pad, h: h + 2 * pad, part: p, seq: seq });
       drawPartLabel(ctx, p, x, y, w, h, idx, seq, isCompleted);
       ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
     });
@@ -275,7 +296,8 @@ var refreshUrl = 'https://securetoken.googleapis.com/v1/token?key=' + apiKey;
 var root = 'https://firestore.googleapis.com/v1/projects/' + projectId + '/databases/(default)/documents/acanlar_cut_projects/';
 var storageKey = 'acanlar-cut-ipad-session-v1';
 var session = null, remembered = false, busy = false;
-var data = null, plateIndex = 0, hits = [], sequences = [], completed = new Set();
+var data = null, activeProject = '', plateIndex = 0, hits = [], sequences = [], completed = new Set();
+var selectedPart = null;
 
 function show(text, error) {
   $('status').textContent = text || '';
@@ -294,6 +316,7 @@ function request(method, url, body, contentType, token) {
       if (xhr.status >= 200 && xhr.status < 300 && result) return resolve(result);
       var error = new Error(result && result.error ? result.error.message : 'Sunucudan yanıt alınamadı.');
       error.status = xhr.status;
+      error.code = result && result.error && result.error.status;
       reject(error);
     };
     xhr.onerror = xhr.ontimeout = function () { reject(new Error('Bağlantı kurulamadı. İnterneti kontrol edip tekrar dene.')); };
@@ -326,16 +349,20 @@ async function tokenForRequest(force) {
     throw error;
   }
 }
-async function readCloud(suffix) {
+async function cloudRequest(method, suffix, body) {
   var token = await tokenForRequest(false);
   var url = root + encodeURIComponent(session.uid) + '/items' + suffix;
-  try { return await request('GET', url, null, null, token); }
+  var type = body ? 'application/json' : null;
+  try { return await request(method, url, body, type, token); }
   catch (error) {
     if (error.status !== 401) throw error;
-    return request('GET', url, null, null, await tokenForRequest(true));
+    return request(method, url, body, type, await tokenForRequest(true));
   }
 }
+function readCloud(suffix) { return cloudRequest('GET', suffix); }
 function signOut(clearStatus) {
+  closePart();
+  activeProject = '';
   session = null;
   remembered = false;
   storeSession();
@@ -414,12 +441,22 @@ async function loadProject(id, reset) {
   $('board').hidden = true;
   data = null;
   var doc = await readCloud('/' + encodeURIComponent(id));
-  var plan = JSON.parse(field(doc, 'payload', 'stringValue') || 'null');
-  if (!plan || field(doc, 'deleted', 'booleanValue') || !Array.isArray(plan.savedSheets) || !plan.savedSheets.length) {
+  var plan = savedPlan(doc);
+  if (!plan) {
     show('Bu projede hazır harita yok. Telefonda hesaplayıp yeniden gönder.');
     return;
   }
+  activeProject = id;
   if (reset) plateIndex = 0;
+  show('');
+  applyPlan(plan);
+}
+function savedPlan(doc) {
+  if (field(doc, 'deleted', 'booleanValue')) return null;
+  var plan = JSON.parse(field(doc, 'payload', 'stringValue') || 'null');
+  return plan && Array.isArray(plan.savedSheets) && plan.savedSheets.length ? plan : null;
+}
+function applyPlan(plan) {
   plateIndex = Math.min(plateIndex, plan.savedSheets.length - 1);
   completed = new Set(plan.completedParts || []);
   var total = Object.create(null), ordinal = Object.create(null);
@@ -435,7 +472,6 @@ async function loadProject(id, reset) {
     });
   });
   data = plan;
-  show('');
   showPlate();
 }
 function showPlate() {
@@ -451,21 +487,102 @@ function showPlate() {
   hits = drawIpadPlate($('map'), sheet, w, h, edge, completed, sequences[plateIndex]);
   $('plateTitle').textContent = (sheet.isStock ? 'Depo plakası ' : 'Plaka ') + (sheet.no || plateIndex + 1) +
     (sheet.isStock && sheet.stockLabel ? ' · ' + sheet.stockLabel : '') + ' · ' + w + ' × ' + h + ' cm';
+  var cutCount = sheet.placed.filter(function (part) { return completed.has(part.uniqueInstanceId); }).length;
+  $('partProgress').textContent = cutCount + ' / ' + sheet.placed.length + ' parça kesildi';
   $('counter').textContent = (plateIndex + 1) + ' / ' + data.savedSheets.length;
   $('prev').disabled = plateIndex === 0;
   $('next').disabled = plateIndex >= data.savedSheets.length - 1;
-  $('detail').textContent = 'Ölçüyü görmek için parçaya dokun.';
+  $('detail').textContent = 'Ölçüyü görmek veya kesim durumunu değiştirmek için parçaya dokun.';
   $('board').hidden = false;
 }
+function closePart() {
+  selectedPart = null;
+  $('partOverlay').hidden = true;
+}
+function openPart(hit) {
+  var part = hit.part;
+  var id = part.uniqueInstanceId;
+  var done = completed.has(id);
+  selectedPart = { id: id, markCut: !done };
+  $('partName').textContent = part.name + (hit.seq ? ' · ' + hit.seq : '');
+  $('partSize').textContent = part.w + ' × ' + part.h + ' cm (haritadaki yön)';
+  $('partState').textContent = done ? 'Durum: Kesildi' : 'Durum: Bekliyor';
+  $('partAction').textContent = done ? 'Bekliyor olarak işaretle' : 'Kesildi olarak işaretle';
+  $('partAction').className = done ? 'secondary' : '';
+  $('partAction').disabled = id == null;
+  $('partMessage').textContent = id == null ? 'Bu eski kayıtta parça kimliği yok. Planı yeniden hesaplayıp gönder.' : '';
+  $('partOverlay').hidden = false;
+  $('partAction').focus();
+}
+function layoutOf(plan) {
+  return JSON.stringify([plan.sw, plan.sh, plan.edge, plan.kerf, plan.savedSheets]);
+}
+async function saveCutStatus(project, selection, displayedLayout) {
+  var path = '/' + encodeURIComponent(project);
+  for (var attempt = 0; attempt < 3; attempt++) {
+    var doc = await readCloud(path);
+    var plan = savedPlan(doc);
+    if (!plan || layoutOf(plan) !== displayedLayout) return { changed: true, plan: plan };
+    var marked = new Set(plan.completedParts || []);
+    if (marked.has(selection.id) === selection.markCut) return { plan: plan };
+    if (!doc.updateTime) throw new Error('Bulut kaydının sürümü okunamadı. Tekrar dene.');
+    if (selection.markCut) marked.add(selection.id); else marked.delete(selection.id);
+    plan.completedParts = Array.from(marked);
+    var fields = {
+      payload: { stringValue: JSON.stringify(plan) },
+      rev: { integerValue: String((Number(field(doc, 'rev', 'integerValue') || field(doc, 'rev', 'doubleValue')) || 0) + 1) },
+      opId: { stringValue: 'p_ipad_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2) }
+    };
+    var query = '?updateMask.fieldPaths=payload&updateMask.fieldPaths=rev&updateMask.fieldPaths=opId' +
+      '&currentDocument.updateTime=' + encodeURIComponent(doc.updateTime);
+    try {
+      await cloudRequest('PATCH', path + query, JSON.stringify({ fields: fields }));
+      return { plan: plan };
+    } catch (error) {
+      if (error.status !== 409 && error.code !== 'FAILED_PRECONDITION') throw error;
+    }
+  }
+  throw new Error('Proje başka cihazda güncelleniyor. Biraz bekleyip tekrar dene.');
+}
 $('map').onclick = function (event) {
+  if (busy) return;
   var canvas = $('map'), rect = canvas.getBoundingClientRect();
   var x = (event.clientX - rect.left) * canvas.width / rect.width;
   var y = (event.clientY - rect.top) * canvas.height / rect.height;
   var hit = hits.find(function (item) { return x >= item.x && x <= item.x + item.w && y >= item.y && y <= item.y + item.h; });
-  if (!hit) return;
-  var p = hit.part;
-  $('detail').textContent = p.name + ' · ' + p.w + ' × ' + p.h + ' cm (haritadaki yön)' +
-    (hit.seq ? ' · ' + hit.seq : '') + (hit.done ? ' · Kesildi' : '');
+  if (hit) openPart(hit);
+};
+$('partClose').onclick = function () { if (!busy) closePart(); };
+$('partOverlay').onclick = function (event) {
+  if (!busy && event.target === $('partOverlay')) closePart();
+};
+$('partAction').onclick = function () {
+  var selection = selectedPart;
+  if (busy || !selection || selection.id == null) return;
+  run(async function () {
+    $('partAction').disabled = true;
+    $('partClose').disabled = true;
+    $('partMessage').textContent = '';
+    var label = $('partAction').textContent;
+    $('partAction').textContent = 'Buluta kaydediliyor…';
+    try {
+      var result = await saveCutStatus(activeProject, selection, layoutOf(data));
+      closePart();
+      if (result.plan) applyPlan(result.plan);
+      else $('board').hidden = true;
+      show(result.changed
+        ? 'Kesim planı başka cihazda değişti. Güncel haritada parçayı tekrar seç.'
+        : (selection.markCut ? 'Parça kesildi olarak kaydedildi.' : 'Parça bekliyor olarak kaydedildi.'), result.changed);
+    } catch (error) {
+      var message = error.status === 403 ? 'Kesim durumunu kaydetmek için bulut yazma izni gerekiyor.' : error.message;
+      if (selectedPart) $('partMessage').textContent = message;
+      else show(message, true);
+    } finally {
+      $('partAction').textContent = label;
+      $('partAction').disabled = false;
+      $('partClose').disabled = false;
+    }
+  });
 };
 $('prev').onclick = function () { if (plateIndex > 0) { plateIndex--; showPlate(); } };
 $('next').onclick = function () { if (plateIndex < data.savedSheets.length - 1) { plateIndex++; showPlate(); } };
@@ -484,7 +601,10 @@ $('refresh').onclick = function () {
 };
 $('logout').onclick = function () { signOut(true); };
 window.addEventListener('hashchange', function () {
-  if (session) run(function () { plateIndex = 0; return listProjects(projectFromLink()); });
+  if (session && !busy) {
+    closePart();
+    run(function () { plateIndex = 0; return listProjects(projectFromLink()); });
+  }
 });
 $('login').onsubmit = function (event) {
   event.preventDefault();
