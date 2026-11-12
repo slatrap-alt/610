@@ -6,7 +6,7 @@
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; base-uri 'none'; form-action 'none'">
 <meta name="theme-color" content="#121c27">
-<title>Acanlar Kesim · iPad Harita v2.0.4</title>
+<title>Acanlar Kesim · iPad Harita v2.0.5</title>
 <style>
 [hidden]{display:none!important}
 *{box-sizing:border-box}
@@ -33,6 +33,18 @@ button:disabled{opacity:.48;cursor:default}
 .toolbar{display:flex;align-items:flex-end;flex-wrap:wrap}
 .toolbar .project{flex:1 1 230px;margin:0 8px 7px 0}
 .toolbar button{margin:0 8px 7px 0}
+#jobProgress{margin-top:10px}
+#progressTitle{margin:0 0 9px;color:#435569;font-size:15px}
+.metrics{display:flex;margin:0 -4px}
+.metric{flex:1;min-width:0;margin:0 4px;padding:12px 8px;border-radius:9px;background:#edf4f9;text-align:center}
+.metric span{display:block;font-size:14px;color:#435569}
+.metric strong{display:block;font-size:30px;margin-top:5px}
+.metric.cut{background:#e5f5eb;color:#14623d}
+.metric.left{background:#fff2d9;color:#785207}
+#jobProgressBar{height:8px;background:#dce6ed;border-radius:6px;overflow:hidden;margin-top:12px}
+#jobProgressFill{height:100%;width:0;background:#167248}
+#progressText{margin:7px 0 0;color:#435569;font-size:14px}
+#unplacedNote{margin:8px 0 0;color:#ab2525;font-size:15px;font-weight:bold}
 #viewToggle{white-space:nowrap}
 #jobList{margin-top:10px}
 #jobList h2{font-size:23px;margin:0 0 6px}
@@ -89,6 +101,17 @@ button:disabled{opacity:.48;cursor:default}
       <button id="logout" class="secondary" type="button">Çıkış</button>
     </div>
     <p class="hint">Telefondan yeni bir harita gönderdiğinde Son kaydı aç düğmesine dokun.</p>
+  </section>
+  <section id="jobProgress" class="card" aria-label="İşin kesim ilerlemesi" hidden>
+    <p id="progressTitle">İşin tamamı</p>
+    <div class="metrics">
+      <div class="metric"><span>Toplam parça</span><strong id="totalParts">0</strong></div>
+      <div class="metric cut"><span>Kesilen</span><strong id="cutParts">0</strong></div>
+      <div class="metric left"><span>Kalan</span><strong id="remainingParts">0</strong></div>
+    </div>
+    <div id="jobProgressBar" role="progressbar" aria-label="Kesim ilerlemesi" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="jobProgressFill"></div></div>
+    <p id="progressText" aria-live="polite"></p>
+    <p id="unplacedNote" hidden></p>
   </section>
   <section id="board" class="card" hidden>
     <nav class="nav" aria-label="Plakalar">
@@ -392,6 +415,7 @@ async function cloudRequest(method, suffix, body) {
 }
 function readCloud(suffix) { return cloudRequest('GET', suffix); }
 function hideProjectViews() {
+  $('jobProgress').hidden = true;
   $('board').hidden = true;
   $('jobList').hidden = true;
   $('viewToggle').hidden = true;
@@ -604,7 +628,40 @@ function renderJobList() {
   $('jobScroll').hidden = count === 0;
 }
 
+function updateJobProgress() {
+  var placed = 0, cut = 0, seen = new Set();
+  data.savedSheets.forEach(function (sheet) {
+    (sheet.placed || []).forEach(function (part) {
+      var id = part.uniqueInstanceId;
+      if (id != null && seen.has(id)) return;
+      if (id != null) seen.add(id);
+      placed++;
+      if (id != null && completed.has(id)) cut++;
+    });
+  });
+  var requested = (Array.isArray(data.parts) ? data.parts : []).reduce(function (sum, part) {
+    if (!part || !(parseNum(part.w) > 0 && parseNum(part.h) > 0)) return sum;
+    return sum + Math.max(1, Math.round(parseNum(part.q) || 1));
+  }, 0);
+  var total = Math.max(requested, placed);
+  var remaining = total - cut, unplaced = total - placed;
+  var percent = total ? Math.round(cut / total * 100) : 0;
+  $('progressTitle').textContent = 'İşin tamamı · ' + data.savedSheets.length + ' plaka';
+  $('totalParts').textContent = total;
+  $('cutParts').textContent = cut;
+  $('remainingParts').textContent = remaining;
+  $('jobProgressFill').style.width = percent + '%';
+  $('jobProgressBar').setAttribute('aria-valuenow', String(percent));
+  $('progressText').textContent = remaining === 0 && total > 0
+    ? '✓ Bu işteki tüm parçalar kesildi.'
+    : cut + ' / ' + total + ' parça kesildi · %' + percent;
+  $('unplacedNote').textContent = unplaced + ' parça plana yerleşmedi. Bu parçalar kalan sayısına dahil.';
+  $('unplacedNote').hidden = unplaced === 0;
+  $('jobProgress').hidden = false;
+}
+
 function showProjectView() {
+  updateJobProgress();
   var toggle = $('viewToggle');
   toggle.hidden = false;
   toggle.textContent = listView ? 'Kesim Haritası' : 'Kesim Listesi';
@@ -637,7 +694,8 @@ function showPlate() {
   $('plateTitle').textContent = (sheet.isStock ? 'Depo plakası ' : 'Plaka ') + (sheet.no || plateIndex + 1) +
     (sheet.isStock && sheet.stockLabel ? ' · ' + sheet.stockLabel : '') + ' · ' + w + ' × ' + h + ' cm';
   var cutCount = sheet.placed.filter(function (part) { return completed.has(part.uniqueInstanceId); }).length;
-  $('partProgress').textContent = cutCount + ' / ' + sheet.placed.length + ' parça kesildi';
+  $('partProgress').textContent = 'Bu plaka · Toplam ' + sheet.placed.length +
+    ' · Kesilen ' + cutCount + ' · Kalan ' + (sheet.placed.length - cutCount);
   $('counter').textContent = (plateIndex + 1) + ' / ' + data.savedSheets.length;
   $('prev').disabled = plateIndex === 0;
   $('next').disabled = plateIndex >= data.savedSheets.length - 1;
