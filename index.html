@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0d1117">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<title>Acanlar Mobilya — Plaka Optimizasyonu v2.0.7</title>
+<title>Acanlar Mobilya — Plaka Optimizasyonu v2.0.8</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -629,7 +629,7 @@ body.dark-mode .notice{background:#3b2a08;border-color:#7a5a12;color:#fcd34d}
       <polygon points="250,40 360,200 320,200 250,95 210,155 225,178 240,155" fill="#ffffff"/>
     </svg>
     <h2>ACANLAR MOBİLYA</h2>
-    <div class="splash-sub">Plaka Optimizasyon Sistemi v2.0.7</div>
+    <div class="splash-sub">Plaka Optimizasyon Sistemi v2.0.8</div>
     <div class="splash-spinner"></div>
   </div>
 </div>
@@ -732,7 +732,7 @@ body.dark-mode .notice{background:#3b2a08;border-color:#7a5a12;color:#fcd34d}
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA</h1>
-      <div class="author">Mesut ACAN — v2.0.7</div>
+      <div class="author">Mesut ACAN — v2.0.8</div>
     </div>
   </div>
   <div class="header-btns no-print">
@@ -2576,7 +2576,27 @@ function dupPart(i) {
   const c = JSON.parse(JSON.stringify(parts[i])); c.id = Date.now() + Math.random();
   parts.splice(i + 1, 0, c); renderParts(); commitParts();
 }
-function toggleBand(i, key) { parts[i][key] = !parts[i][key]; renderParts(); commitParts(); updateTotalBandsAndCosts(); }
+function toggleBand(i, key) {
+  parts[i][key] = !parts[i][key];
+  renderParts();
+  commitParts();
+  updateTotalBandsAndCosts();
+  if (window.innerWidth <= 900) {
+    const button = document.querySelector('#partCards .part-card:nth-child(' + (i + 1) + ') [data-band="' + key + '"]');
+    if (button) button.focus();
+  }
+}
+
+function handlePartEntryEnter(event) {
+  if (event.key !== 'Enter' || event.isComposing) return;
+  event.preventDefault();
+  if (event.repeat) return;
+  const field = event.currentTarget;
+  if (field.tagName === 'INPUT' || field.tagName === 'SELECT') {
+    field.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+  addPart();
+}
 
 function btOptions(sel) {
   return BAND_TYPES.map(t => `<option value="${t.k}" ${(sel || '0.8') === t.k ? 'selected' : ''}>${t.label.replace(' mm', '')}</option>`).join('');
@@ -2611,13 +2631,13 @@ function renderParts() {
         <div class="part-card-field"><label>Adet</label><input type="number" min="1" inputmode="numeric" value="${p.q || 1}" data-i="${i}" data-k="q"></div>
       </div>
       <div class="part-card-bands">
-        <button class="band-btn ${p.b1 ? 'active' : ''}" onclick="toggleBand(${i}, 'b1')">Boy1</button>
-        <button class="band-btn ${p.b2 ? 'active' : ''}" onclick="toggleBand(${i}, 'b2')">Boy2</button>
-        <button class="band-btn ${p.e1 ? 'active' : ''}" onclick="toggleBand(${i}, 'e1')">En1</button>
-        <button class="band-btn ${p.e2 ? 'active' : ''}" onclick="toggleBand(${i}, 'e2')">En2</button>
+        <button class="band-btn ${p.b1 ? 'active' : ''}" data-band="b1" onclick="toggleBand(${i}, 'b1')">Boy1</button>
+        <button class="band-btn ${p.b2 ? 'active' : ''}" data-band="b2" onclick="toggleBand(${i}, 'b2')">Boy2</button>
+        <button class="band-btn ${p.e1 ? 'active' : ''}" data-band="e1" onclick="toggleBand(${i}, 'e1')">En1</button>
+        <button class="band-btn ${p.e2 ? 'active' : ''}" data-band="e2" onclick="toggleBand(${i}, 'e2')">En2</button>
       </div>
       <div class="part-card-extra">
-        <button class="band-btn rot ${p.rot !== false ? 'active' : ''}" onclick="toggleBand(${i}, 'rot')" title="Plakada döndürülebilir">↻ Döndür</button>
+        <button class="band-btn rot ${p.rot !== false ? 'active' : ''}" data-band="rot" onclick="toggleBand(${i}, 'rot')" title="Plakada döndürülebilir">↻ Döndür</button>
         <label class="bt-label">Bant <select data-i="${i}" data-k="bt">${btOptions(p.bt)}</select> mm</label>
       </div>
     </div>`).join('');
@@ -2630,9 +2650,9 @@ function renderParts() {
       commitParts();
       updateTotalBandsAndCosts();
     });
-    if (el.tagName === 'INPUT' && el.type !== 'checkbox') {
-      el.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addPart(); } });
-    }
+  });
+  document.querySelectorAll('#parts input, #parts select, #partCards input, #partCards select, #partCards [data-band]').forEach(el => {
+    el.addEventListener('keydown', handlePartEntryEnter);
   });
   updateTotalBandsAndCosts();
 }
