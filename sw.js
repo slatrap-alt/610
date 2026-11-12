@@ -1,5 +1,5 @@
 /* Acanlar Kesim — çevrimdışı önbellek (index.html ile aynı klasöre koy) */
-const CACHE = 'acanlar-kesim-v2.0.6';
+const CACHE = 'acanlar-kesim-v2.0.7';
 self.addEventListener('install', e => { self.skipWaiting(); e.waitUntil(caches.open(CACHE).then(c => c.addAll(['./']).catch(() => {}))); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(k => Promise.all(k.filter(x => x !== CACHE).map(x => caches.delete(x)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', e => {

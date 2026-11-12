@@ -6,7 +6,7 @@
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; base-uri 'none'; form-action 'none'">
 <meta name="theme-color" content="#121c27">
-<title>Acanlar Kesim · iPad Harita v2.0.6</title>
+<title>Acanlar Kesim · iPad Harita v2.0.7</title>
 <style>
 [hidden]{display:none!important}
 *{box-sizing:border-box}
@@ -54,6 +54,42 @@ button:disabled{opacity:.48;cursor:default}
 .list-tools input[type=checkbox]{width:20px;height:20px;vertical-align:middle}
 #filterHint{font-size:14px;color:#435569;margin:6px 0 0}
 #jobTable .plate-link{display:block;font-size:14px;padding:6px 9px;margin:0 0 5px;min-height:42px;text-align:left;white-space:nowrap}
+#workTools{display:flex;flex-wrap:wrap;position:sticky;top:0;z-index:3;margin-top:10px;padding:8px}
+#workTools button{margin:3px;min-height:48px}
+.rotation-tools{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.rotation-tools button{margin:3px}
+#rotationLabel{min-width:48px;font-weight:bold}
+#fencePanel{margin-top:10px}
+#fencePanel h2{font-size:21px;margin:0 0 8px}
+#fenceMeasures{display:flex;flex-wrap:wrap;margin:0 -4px}
+.fence-measure{flex:1 1 130px;max-width:220px;margin:4px;padding:12px;background:#edf4f9;color:#183f56;border:2px solid #b4c9d7;text-align:center}
+.fence-measure strong,.fence-measure span{display:block}
+.fence-measure strong{font-size:26px;margin-bottom:5px}
+.fence-measure span{font-size:14px}
+.fence-measure.finished{background:#edf1f3;color:#5b6b75}
+.fence-measure.selected{border-color:#b45309;background:#fff2d9}
+#fenceNote,#fenceSelection{font-size:14px;color:#435569}
+.machine header,.machine #controls{display:none}
+.machine main{max-width:none;padding:8px}
+.machine #jobProgress{display:flex;align-items:center;flex-wrap:wrap;padding:8px}
+.machine #progressTitle,.machine #jobProgressBar,.machine #progressText,.machine #legend{display:none}
+.machine #nextPending{margin:0 10px 0 0}
+.machine .metrics{flex:1;min-width:230px}
+.machine .metric{padding:5px}
+.machine .metric strong{font-size:24px;margin:2px 0 0}
+.machine #unplacedNote{width:100%}
+.machine #board{padding:8px}
+.machine #map{max-height:calc(100vh - 310px);max-width:100%;width:auto;height:auto}
+.machine #detail{margin:6px 0}
+.machine #plateTitle{font-size:18px}
+.machine #partProgress{font-size:16px;font-weight:bold}
+@media (min-width:900px){
+ .machine #cutWorkspace{display:flex;align-items:flex-start}
+ .machine #board{flex:1;min-width:0}
+ .machine #fencePanel{flex:0 0 260px;width:260px;margin-left:8px;max-height:calc(100vh - 170px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+ .machine .fence-measure{flex-basis:95px}
+}
+@media (max-height:500px){.machine #map{max-height:none}}
 #viewToggle{white-space:nowrap}
 #jobList{margin-top:10px}
 #jobList h2{font-size:23px;margin:0 0 6px}
@@ -77,7 +113,7 @@ button:disabled{opacity:.48;cursor:default}
 #map{display:block;width:auto;max-width:100%;height:auto;margin:0 auto;background:#fff}
 #detail{padding:9px;min-height:40px;background:#edf4f9;border-radius:8px}
 #partProgress{margin:5px 0;color:#435569;font-size:15px}
-#partOverlay{position:fixed;z-index:1;top:0;right:0;bottom:0;left:0;background:rgba(18,28,39,.64);display:flex;align-items:center;justify-content:center;padding:14px}
+#partOverlay{position:fixed;z-index:20;top:0;right:0;bottom:0;left:0;background:rgba(18,28,39,.64);display:flex;align-items:center;justify-content:center;padding:14px}
 #partPanel{width:100%;max-width:370px;padding:20px;text-align:left}
 #partPanel h2{font-size:22px;margin:0 0 8px;overflow-wrap:break-word}
 #partPanel p{margin:8px 0}
@@ -105,11 +141,15 @@ button:disabled{opacity:.48;cursor:default}
   <section id="controls" class="card" hidden>
     <div class="toolbar">
       <div class="project"><label for="projects">Buluttaki proje</label><select id="projects"></select></div>
-      <button id="viewToggle" type="button" aria-controls="board jobList" hidden>Kesim Listesi</button>
       <button id="refresh" class="secondary" type="button">Son kaydı aç</button>
       <button id="logout" class="secondary" type="button">Çıkış</button>
     </div>
     <p class="hint">Telefondan yeni bir harita gönderdiğinde Son kaydı aç düğmesine dokun.</p>
+  </section>
+  <section id="workTools" class="card" aria-label="Makine ekranı araçları" hidden>
+    <button id="machineToggle" type="button" aria-pressed="false">Makine modu</button>
+    <button id="viewToggle" type="button" aria-controls="board jobList" hidden>Kesim Listesi</button>
+    <button id="fenceToggle" class="secondary" type="button" aria-expanded="false" aria-controls="fencePanel">Siper Ölçüleri</button>
   </section>
   <section id="jobProgress" class="card" aria-label="İşin kesim ilerlemesi" hidden>
     <button id="nextPending" type="button">Sıradaki bitmemiş plaka ›</button>
@@ -123,18 +163,33 @@ button:disabled{opacity:.48;cursor:default}
     <p id="progressText" aria-live="polite"></p>
     <p id="unplacedNote" hidden></p>
   </section>
+  <div id="cutWorkspace" hidden>
   <section id="board" class="card" hidden>
     <nav class="nav" aria-label="Plakalar">
       <button id="prev" type="button">‹ Önceki</button>
       <b id="counter"></b>
       <button id="next" type="button">Sonraki ›</button>
     </nav>
+    <div class="rotation-tools" aria-label="Harita yönü">
+      <button id="rotateLeft" class="secondary" type="button" aria-label="Haritayı 90 derece sola döndür">↶ 90°</button>
+      <span id="rotationLabel">0°</span>
+      <button id="rotateRight" class="secondary" type="button" aria-label="Haritayı 90 derece sağa döndür">90° ↷</button>
+      <button id="rotateReset" class="secondary" type="button">Sıfırla</button>
+    </div>
     <h2 id="plateTitle"></h2>
     <p id="partProgress" aria-live="polite"></p>
     <canvas id="map" aria-label="Plaka kesim haritası"></canvas>
     <p id="detail" role="status">Ölçüyü görmek veya kesim durumunu değiştirmek için parçaya dokun.</p>
     <p id="legend">Ölçüler cm · Kalın mavi çizgi: kenar bandı · Yeşil parça: kesildi</p>
   </section>
+  <section id="fencePanel" class="card" aria-labelledby="fenceTitle" hidden>
+    <h2 id="fenceTitle">Siper Ölçüleri</h2>
+    <p id="fenceNote">Açık plakadaki parçaların bitmiş kenar ölçüleri, cm. Bıçak payı ve kesim çizgisi için haritayı kontrol et.</p>
+    <p id="fenceSelection"></p>
+    <div id="fenceMeasures"></div>
+    <p id="fenceEmpty" hidden>Bu plakada parça yok.</p>
+  </section>
+  </div>
   <section id="jobList" class="card" aria-labelledby="jobListTitle" hidden>
     <h2 id="jobListTitle">Kesim Listesi</h2>
     <p id="jobListMeta"></p>
@@ -371,6 +426,7 @@ var storageKey = 'acanlar-cut-ipad-session-v1';
 var session = null, remembered = false, busy = false;
 var data = null, activeProject = '', plateIndex = 0, hits = [], sequences = [], completed = new Set();
 var selectedPart = null, listView = false, highlightedPart = null;
+var rotation = 0, machineMode = false, fenceOpen = false, selectedFence = null;
 
 function show(text, error) {
   $('status').textContent = text || '';
@@ -434,7 +490,9 @@ async function cloudRequest(method, suffix, body) {
 }
 function readCloud(suffix) { return cloudRequest('GET', suffix); }
 function hideProjectViews() {
-  $('jobProgress').hidden = true;
+  setMachineMode(false);
+  $('workTools').hidden = true;
+  $('cutWorkspace').hidden = true;  $('jobProgress').hidden = true;
   $('board').hidden = true;
   $('jobList').hidden = true;
   $('viewToggle').hidden = true;
@@ -443,6 +501,10 @@ function hideProjectViews() {
 }
 function signOut(clearStatus) {
   closePart();
+  rotation = 0;
+  fenceOpen = false;
+  selectedFence = null;
+  $('fenceMeasures').textContent = '';
   activeProject = '';
   session = null;
   remembered = false;
@@ -468,13 +530,13 @@ function signOut(clearStatus) {
 async function run(action, fallback) {
   if (busy) return;
   busy = true;
-  ['loginButton', 'refresh', 'logout', 'projects', 'viewToggle', 'partSearch', 'clearSearch', 'pendingOnly'].forEach(function (id) { $(id).disabled = true; });
+  ['loginButton', 'refresh', 'logout', 'projects', 'viewToggle', 'partSearch', 'clearSearch', 'pendingOnly', 'machineToggle', 'fenceToggle', 'rotateLeft', 'rotateRight', 'rotateReset'].forEach(function (id) { $(id).disabled = true; });
   try { await action(); }
   catch (error) {
     if (error.status === 403) show('Bulut projeleri için erişim izni alınamadı. Aynı atölye hesabını kontrol et.', true);
     else show(fallback && error.status === 400 ? fallback : error.message, true);
   } finally {
-    ['loginButton', 'refresh', 'logout', 'projects', 'viewToggle', 'partSearch', 'clearSearch', 'pendingOnly'].forEach(function (id) { $(id).disabled = false; });
+    ['loginButton', 'refresh', 'logout', 'projects', 'viewToggle', 'partSearch', 'clearSearch', 'pendingOnly', 'machineToggle', 'fenceToggle', 'rotateLeft', 'rotateRight', 'rotateReset'].forEach(function (id) { $(id).disabled = false; });
     busy = false;
     updateNextPendingButton();
   }
@@ -532,6 +594,8 @@ async function loadProject(id, reset) {
     return;
   }
   if (activeProject !== id) {
+    rotation = 0;
+    selectedFence = null;
     $('partSearch').value = '';
     $('pendingOnly').checked = false;
   }
@@ -564,6 +628,118 @@ function applyPlan(plan) {
   data = plan;
   showProjectView();
 }
+function setMachineMode(enabled) {
+  machineMode = enabled;
+  document.body.classList.toggle('machine', enabled);
+  $('machineToggle').textContent = enabled ? 'Normal ekrana dön' : 'Makine modu';
+  $('machineToggle').setAttribute('aria-pressed', String(enabled));
+}
+$('machineToggle').onclick = function () {
+  if (busy || !data) return;
+  setMachineMode(!machineMode);
+  listView = false;
+  showProjectView();
+  $('workTools').scrollIntoView();
+};
+$('fenceToggle').onclick = function () {
+  if (busy || !data) return;
+  fenceOpen = !fenceOpen;
+  if (fenceOpen) listView = false;
+  showProjectView();
+  if (fenceOpen && !machineMode) $('fencePanel').scrollIntoView();
+};
+function turnMap(step) {
+  if (busy || !data) return;
+  rotation = (rotation + step + 4) % 4;
+  showPlate();
+}
+$('rotateLeft').onclick = function () { turnMap(-1); };
+$('rotateRight').onclick = function () { turnMap(1); };
+$('rotateReset').onclick = function () {
+  if (busy || !data) return;
+  rotation = 0;
+  showPlate();
+};
+
+function rotatedHit(hit, width, height, quarterTurns) {
+  var result = Object.assign({}, hit);
+  if (quarterTurns === 1) {
+    result.x = height - hit.y - hit.h; result.y = hit.x;
+    result.w = hit.h; result.h = hit.w;
+  } else if (quarterTurns === 2) {
+    result.x = width - hit.x - hit.w; result.y = height - hit.y - hit.h;
+  } else if (quarterTurns === 3) {
+    result.x = hit.y; result.y = width - hit.x - hit.w;
+    result.w = hit.h; result.h = hit.w;
+  }
+  return result;
+}
+function drawMap(canvas, sheet, width, height, edge, done, seq) {
+  if (rotation === 0) return drawIpadPlate(canvas, sheet, width, height, edge, done, seq);
+  var source = document.createElement('canvas');
+  var originalHits = drawIpadPlate(source, sheet, width, height, edge, done, seq);
+  canvas.width = rotation % 2 ? source.height : source.width;
+  canvas.height = rotation % 2 ? source.width : source.height;
+  var ctx = canvas.getContext('2d');
+  ctx.save();
+  if (rotation === 1) ctx.translate(source.height, 0);
+  else if (rotation === 2) ctx.translate(source.width, source.height);
+  else ctx.translate(0, source.width);
+  ctx.rotate(rotation * Math.PI / 2);
+  ctx.drawImage(source, 0, 0);
+  ctx.restore();
+  return originalHits.map(function (hit) { return rotatedHit(hit, source.width, source.height, rotation); });
+}
+
+function fenceGroups(sheet, done) {
+  var groups = Object.create(null);
+  (sheet.placed || []).forEach(function (part) {
+    var values = [Number(part.w), Number(part.h)];
+    // A square contributes one piece to its measure.
+    if (values[0] === values[1]) values.pop();
+    values.forEach(function (value) {
+      if (!(value > 0 && isFinite(value))) return;
+      var key = String(value);
+      if (!groups[key]) groups[key] = { measure: value, total: 0, remaining: 0 };
+      groups[key].total++;
+      if (part.uniqueInstanceId == null || !done.has(part.uniqueInstanceId)) groups[key].remaining++;
+    });
+  });
+  return Object.keys(groups).map(function (key) { return groups[key]; }).sort(function (a, b) {
+    return b.total - a.total || a.measure - b.measure;
+  });
+}
+function renderFencePanel(sheet) {
+  var groups = fenceGroups(sheet, completed);
+  if (selectedFence != null && !groups.some(function (group) { return group.measure === selectedFence; })) selectedFence = null;
+  var box = $('fenceMeasures');
+  box.textContent = '';
+  groups.forEach(function (group) {
+    var button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'fence-measure' + (group.remaining === 0 ? ' finished' : '') +
+      (selectedFence === group.measure ? ' selected' : '');
+    button.setAttribute('aria-pressed', String(selectedFence === group.measure));
+    var measure = document.createElement('strong');
+    measure.textContent = String(group.measure).replace('.', ',') + ' cm';
+    var count = document.createElement('span');
+    count.textContent = group.total + ' parça · Kalan ' + group.remaining;
+    button.appendChild(measure);
+    button.appendChild(count);
+    button.onclick = function () {
+      if (busy) return;
+      selectedFence = selectedFence === group.measure ? null : group.measure;
+      highlightedPart = null;
+      showPlate();
+      if (!machineMode) $('board').scrollIntoView();
+    };
+    box.appendChild(button);
+  });
+  $('fenceEmpty').hidden = groups.length > 0;
+  $('fenceSelection').textContent = selectedFence == null ? 'Ölçüye dokunarak ilgili parçaları haritada vurgula.'
+    : 'Seçili ölçü · ' + String(selectedFence).replace('.', ',') + ' cm';
+}
+
 function matchesPart(row, query) {
   var text = String(query || '').toLocaleLowerCase('tr-TR').trim();
   if (!text) return true;
@@ -598,6 +774,7 @@ $('nextPending').onclick = function () {
   if (next === -1) return;
   closePart();
   highlightedPart = null;
+  selectedFence = null;
   plateIndex = next;
   listView = false;
   show('');
@@ -606,6 +783,7 @@ $('nextPending').onclick = function () {
 function openLocatedPart(location) {
   closePart();
   highlightedPart = location;
+  selectedFence = null;
   plateIndex = location.sheetIndex;
   listView = false;
   show('');
@@ -747,7 +925,10 @@ function updateJobProgress() {
 }
 
 function showProjectView() {
-  updateJobProgress();
+  $('workTools').hidden = false;
+  $('cutWorkspace').hidden = listView;
+  $('fenceToggle').setAttribute('aria-expanded', String(fenceOpen));
+  $('fencePanel').hidden = !fenceOpen;  updateJobProgress();
   updateNextPendingButton();
   var toggle = $('viewToggle');
   toggle.hidden = false;
@@ -777,7 +958,20 @@ function showPlate() {
     return;
   }
   var edge = sheet.isStock ? 0 : (parseNum(data.edge) || 0);
-  hits = drawIpadPlate($('map'), sheet, w, h, edge, completed, sequences[plateIndex]);
+  hits = drawMap($('map'), sheet, w, h, edge, completed, sequences[plateIndex]);
+  $('rotationLabel').textContent = (rotation * 90) + '°';
+  if (fenceOpen) renderFencePanel(sheet);
+  var matching = selectedFence == null ? [] : hits.filter(function (hit) {
+    return Number(hit.part.w) === selectedFence || Number(hit.part.h) === selectedFence;
+  });
+  if (matching.length) {
+    var fenceContext = $('map').getContext('2d');
+    fenceContext.save();
+    fenceContext.strokeStyle = '#b45309';
+    fenceContext.lineWidth = 8;
+    matching.forEach(function (hit) { fenceContext.strokeRect(hit.x + 3, hit.y + 3, hit.w - 6, hit.h - 6); });
+    fenceContext.restore();
+  }
   $('plateTitle').textContent = (sheet.isStock ? 'Depo plakası ' : 'Plaka ') + (sheet.no || plateIndex + 1) +
     (sheet.isStock && sheet.stockLabel ? ' · ' + sheet.stockLabel : '') + ' · ' + w + ' × ' + h + ' cm';
   var cutCount = sheet.placed.filter(function (part) { return completed.has(part.uniqueInstanceId); }).length;
@@ -796,7 +990,9 @@ function showPlate() {
     context.strokeRect(selected.x + 3, selected.y + 3, selected.w - 6, selected.h - 6);
     context.restore();
     $('detail').textContent = 'Seçili parça · ' + selected.part.name + ' · ' + selected.part.w + ' × ' + selected.part.h + ' cm';
-  } else $('detail').textContent = 'Ölçüyü görmek veya kesim durumunu değiştirmek için parçaya dokun.';
+  } else $('detail').textContent = matching.length
+    ? selectedFence + ' cm kenarı olan ' + matching.length + ' parça vurgulandı.'
+    : 'Ölçüyü görmek veya kesim durumunu değiştirmek için parçaya dokun.';
   $('board').hidden = false;
 }
 function closePart() {
@@ -888,8 +1084,8 @@ $('partAction').onclick = function () {
     }
   });
 };
-$('prev').onclick = function () { if (!busy && data && plateIndex > 0) { highlightedPart = null; plateIndex--; showPlate(); } };
-$('next').onclick = function () { if (!busy && data && plateIndex < data.savedSheets.length - 1) { highlightedPart = null; plateIndex++; showPlate(); } };
+$('prev').onclick = function () { if (!busy && data && plateIndex > 0) { highlightedPart = null; selectedFence = null; plateIndex--; showPlate(); } };
+$('next').onclick = function () { if (!busy && data && plateIndex < data.savedSheets.length - 1) { highlightedPart = null; selectedFence = null; plateIndex++; showPlate(); } };
 $('projects').onchange = function () {
   var id = $('projects').value;
   if (!id) return;
