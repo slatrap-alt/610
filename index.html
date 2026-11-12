@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0d1117">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<title>Acanlar Mobilya — Plaka Optimizasyonu v2.0.8</title>
+<title>Acanlar Mobilya — Plaka Optimizasyonu v2.0.9</title>
 <style>
 :root {
   --bg-color: #eef1f4;
@@ -629,7 +629,7 @@ body.dark-mode .notice{background:#3b2a08;border-color:#7a5a12;color:#fcd34d}
       <polygon points="250,40 360,200 320,200 250,95 210,155 225,178 240,155" fill="#ffffff"/>
     </svg>
     <h2>ACANLAR MOBİLYA</h2>
-    <div class="splash-sub">Plaka Optimizasyon Sistemi v2.0.8</div>
+    <div class="splash-sub">Plaka Optimizasyon Sistemi v2.0.9</div>
     <div class="splash-spinner"></div>
   </div>
 </div>
@@ -732,7 +732,7 @@ body.dark-mode .notice{background:#3b2a08;border-color:#7a5a12;color:#fcd34d}
     </svg>
     <div class="brand-text">
       <h1>ACANLAR MOBİLYA</h1>
-      <div class="author">Mesut ACAN — v2.0.8</div>
+      <div class="author">Mesut ACAN — v2.0.9</div>
     </div>
   </div>
   <div class="header-btns no-print">
@@ -2587,16 +2587,30 @@ function toggleBand(i, key) {
   }
 }
 
+const PART_ENTRY_FIELDS = '#parts input, #parts select, #partCards input, #partCards select, #partCards [data-band]';
+let partEnterHandled = false;
 function handlePartEntryEnter(event) {
-  if (event.key !== 'Enter' || event.isComposing) return;
+  if (event.key !== 'Enter' || event.isComposing || !event.target.closest) return false;
+  const field = event.target.closest(PART_ENTRY_FIELDS);
+  if (!field) return false;
   event.preventDefault();
-  if (event.repeat) return;
-  const field = event.currentTarget;
+  if (event.repeat) return true;
   if (field.tagName === 'INPUT' || field.tagName === 'SELECT') {
     field.dispatchEvent(new Event('change', { bubbles: true }));
   }
   addPart();
+  return true;
 }
+document.addEventListener('keydown', event => {
+  if (event.key === 'Enter') partEnterHandled = handlePartEntryEnter(event);
+}, true);
+// Native select menus can consume keydown and deliver Enter only on keyup.
+document.addEventListener('keyup', event => {
+  if (event.key !== 'Enter') return;
+  if (!partEnterHandled && event.target.matches &&
+      event.target.matches('#parts select, #partCards select')) handlePartEntryEnter(event);
+  partEnterHandled = false;
+}, true);
 
 function btOptions(sel) {
   return BAND_TYPES.map(t => `<option value="${t.k}" ${(sel || '0.8') === t.k ? 'selected' : ''}>${t.label.replace(' mm', '')}</option>`).join('');
@@ -2650,9 +2664,6 @@ function renderParts() {
       commitParts();
       updateTotalBandsAndCosts();
     });
-  });
-  document.querySelectorAll('#parts input, #parts select, #partCards input, #partCards select, #partCards [data-band]').forEach(el => {
-    el.addEventListener('keydown', handlePartEntryEnter);
   });
   updateTotalBandsAndCosts();
 }
@@ -3288,7 +3299,7 @@ function installApp() {
   deferredInstall.userChoice.finally(() => { deferredInstall = null; const b = document.getElementById('btnInstall'); if (b) b.style.display = 'none'; });
 }
 if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && location.origin !== 'http://127.0.0.1:8765') {
-  window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => { }); });
+  window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(registration => registration.update()).catch(() => { }); });
 }
 
 qrReadParam();
