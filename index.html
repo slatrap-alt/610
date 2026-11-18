@@ -2358,6 +2358,10 @@ function loadStockWastesFromStorage() {
 function saveStockWastesToStorage() {
   try { localStorage.setItem('acanlar_stock_wastes', JSON.stringify(stockWastes)); } catch (e) { }
   renderStockWasteList();
+  if(cutUser&&cutDB&&cutOffcutReady&&!cutOffcutApplying){
+    cutDB.collection('acanlar_stock_offcuts').doc(cutUser.uid).set({items:stockWastes,updatedAt:firebase.firestore.FieldValue.serverTimestamp()})
+      .catch(e=>{const el=document.getElementById('sharedStockCloud');if(el)el.textContent='Fire deposu buluta kaydedilemedi';console.error(e)});
+  }
 }
 function addManualStock() {
   const w = parseNum(document.getElementById('stockW').value);
@@ -3346,7 +3350,7 @@ updateTotalBandsAndCosts();
 /* ================================================================
    ORTAK PLAKA STOK ENTEGRASYONU — stok uygulamasıyla aynı Firestore
    ================================================================ */
-let cutStockStop=null, cutStockCards=[], cutStockLots=[], cutStockSelectedId="", cutStockResultCardId="", cutStockOperationId="";
+let cutStockStop=null, cutStockCards=[], cutStockLots=[], cutStockSelectedId="", cutStockResultCardId="", cutStockOperationId="", cutOffcutReady=false, cutOffcutApplying=false;
 function cutStockCount(cardId){return cutStockLots.filter(l=>l.cardId===cardId).reduce((n,l)=>n+(Number(l.remaining)||0),0)}
 function cutStockCardLabel(c){return [c.type,c.decor,c.brand,c.thickness?c.thickness+" mm":""].filter(Boolean).join(" · ")}
 function cutStockParseSize(raw){
@@ -3363,7 +3367,22 @@ function cutStockSubscribe(uid){
   const render=()=>{if(ready.cards&&ready.lots)cutStockRender()};
   const a=cardsRef.onSnapshot(doc=>{cutStockCards=doc.exists&&Array.isArray(doc.data().items)?doc.data().items:[];ready.cards=true;render()},e=>{cutEl("sharedStockCloud").textContent="Stok kartları okunamadı";cutEl("sharedStockCloud").title=e.message});
   const b=lotsRef.onSnapshot(doc=>{cutStockLots=doc.exists&&Array.isArray(doc.data().items)?doc.data().items:[];ready.lots=true;render()},e=>{cutEl("sharedStockCloud").textContent="LOT bilgisi okunamadı";cutEl("sharedStockCloud").title=e.message});
-  cutStockStop=()=>{a();b()};
+  const offcutRef=cutDB.collection("acanlar_stock_offcuts").doc(uid);
+  cutOffcutReady=false;
+  const d=offcutRef.onSnapshot(async doc=>{
+    const remote=doc.exists&&Array.isArray(doc.data().items)?doc.data().items:[];
+    if(!cutOffcutReady){
+      cutOffcutReady=true;
+      if(!remote.length&&stockWastes.length){
+        try{await offcutRef.set({items:stockWastes,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});cutEl("sharedStockCloud").textContent="☁ Ortak depo canlı bağlı · fireler aktarıldı"}catch(e){cutEl("sharedStockCloud").textContent="Fire deposu buluta aktarılamadı"}
+      }else{
+        cutOffcutApplying=true;stockWastes=remote;try{localStorage.setItem("acanlar_stock_wastes",JSON.stringify(stockWastes))}catch(e){}renderStockWasteList();cutOffcutApplying=false;
+      }
+    }else if(!cutOffcutApplying){
+      cutOffcutApplying=true;stockWastes=remote;try{localStorage.setItem("acanlar_stock_wastes",JSON.stringify(stockWastes))}catch(e){}renderStockWasteList();cutOffcutApplying=false;
+    }
+  },e=>{cutEl("sharedStockCloud").textContent="Fire deposu eşitlenemedi";cutEl("sharedStockCloud").title=e.message});
+  cutStockStop=()=>{a();b();d()};
 }
 function cutStockRender(){
   const select=cutEl("sharedStockSelect"),info=cutEl("sharedStockInfo"),cloud=cutEl("sharedStockCloud");
