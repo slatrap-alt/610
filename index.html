@@ -2191,7 +2191,7 @@ function cutStartCloud() {
     const app=firebase.initializeApp({apiKey:'AIzaSyB3Pfgk5Z8x4c95BqfPcnNZHNYQ01pQpSU',authDomain:'oykum-6de70.firebaseapp.com',projectId:'oykum-6de70',appId:'1:908914397464:web:63bcd5f48fcce81cf2ce6d'},'acanlar-cut');
     cutAuth=app.auth(); cutDB=app.firestore();
     cutAuth.onAuthStateChanged(u=>{
-      cutEpoch++; if(cutStop) cutStop(); cutStop=null; cutUser=u; if(cutStockStop) cutStockStop(); cutStockStop=null; cutStockCards=[]; cutStockLots=[]; cutStockSelectedId="";
+      cutEpoch++; if(cutStop) cutStop(); cutStop=null; cutUser=u; if(cutStockStop) cutStockStop(); cutStockStop=null; cutStockCards=[]; cutStockLots=[]; cutStockSelectedId=""; cutStockResultCardId="";
       cutRecords=u?cutRead(u.uid):{};
       cutEl('cutAccountButton').textContent='☁ Bulut';
       renderSavedProjectsList();
@@ -2551,9 +2551,10 @@ function applyResult(res, job, items, lb) {
   usedStockIds = stk.map(s => s.stockId);
   depotSavedForCurrent = false;
   cutStockOperationId="CUT-"+Date.now()+"-"+Math.random().toString(36).slice(2,8);
+  cutStockResultCardId=cutStockSelectedId;
   recountSheets();
   const stockCommit=cutEl("sharedStockCommitWrap");
-  if(stockCommit){const stockQty=std.length;stockCommit.hidden=!(cutStockSelectedId&&stockQty>0);cutEl("sharedStockCommitTitle").textContent="Kesim planı hazır · "+stockQty+" plaka kullanılacak";cutEl("sharedStockCommitInfo").textContent="Kesimi tamamladığında onay vererek bu plakaları ortak depodan düşebilirsin.";const stockBtn=cutEl("btnCommitSharedStock");stockBtn.disabled=false;stockBtn.textContent="✓ Kesimi tamamla · stoktan düş";}
+  if(stockCommit){const stockQty=std.length;const stockCard=cutStockCards.find(x=>x.id===cutStockResultCardId);const stockAvailable=stockCard?cutStockCount(stockCard.id):0;stockCommit.hidden=!(cutStockResultCardId&&stockQty>0);cutEl("sharedStockCommitTitle").textContent="Kesim planı hazır · "+stockQty+" plaka kullanılacak";cutEl("sharedStockCommitInfo").textContent=stockCard?("Depoda "+stockAvailable+" plaka var. "+(stockAvailable>=stockQty?"Kesimi tamamladığında stoktan düşebilirsin.":"⚠️ Stok yetersiz; "+(stockQty-stockAvailable)+" plaka eksik.")):"Ortak depodan malzeme seçilmedi.";const stockBtn=cutEl("btnCommitSharedStock");stockBtn.disabled=false;stockBtn.textContent="✓ Kesimi tamamla · stoktan düş";}
 
   const sig = engSig({ sheets: sheets });
   if (job.seed > 0 && sig === lastSig) toast('Bu iş için aynı kalitede başka bir yerleşim bulunamadı.', 'warn');
@@ -3345,7 +3346,7 @@ updateTotalBandsAndCosts();
 /* ================================================================
    ORTAK PLAKA STOK ENTEGRASYONU — stok uygulamasıyla aynı Firestore
    ================================================================ */
-let cutStockStop=null, cutStockCards=[], cutStockLots=[], cutStockSelectedId="", cutStockOperationId="";
+let cutStockStop=null, cutStockCards=[], cutStockLots=[], cutStockSelectedId="", cutStockResultCardId="", cutStockOperationId="";
 function cutStockCount(cardId){return cutStockLots.filter(l=>l.cardId===cardId).reduce((n,l)=>n+(Number(l.remaining)||0),0)}
 function cutStockCardLabel(c){return [c.type,c.decor,c.brand,c.thickness?c.thickness+" mm":""].filter(Boolean).join(" · ")}
 function cutStockParseSize(raw){
@@ -3380,6 +3381,7 @@ function cutStockRender(){
 function cutStockSelectChanged(){
   const id=cutEl("sharedStockSelect").value;
   cutStockSelectedId=id;
+  if(lastActiveSheets.length){const sb=cutEl("staleBanner");if(sb)sb.style.display="flex";const cw=cutEl("sharedStockCommitWrap");if(cw)cw.hidden=true;}
   const c=cutStockCards.find(x=>x.id===id);
   if(!c){cutStockRender();return}
   const size=cutStockParseSize(c.size);
@@ -3397,7 +3399,8 @@ async function commitSharedStock(){
   if(!lastActiveSheets.length||cutEl("staleBanner").style.display==="flex"){toast("Önce güncel kesim optimizasyonunu hesapla.","warn");return}
   const qty=lastActiveSheets.filter(s=>!s.isStock).length;
   if(!qty){toast("Bu optimizasyonda ortak depodan düşülecek standart plaka yok.","warn");return}
-  const card=cutStockCards.find(c=>c.id===cutStockSelectedId);
+  if(cutStockResultCardId!==cutStockSelectedId){toast("Malzeme seçimi optimizasyon sonrasında değişmiş. Önce yeniden optimize et.","warn");return}
+  const card=cutStockCards.find(c=>c.id===cutStockResultCardId);
   if(!card){toast("Seçilen stok kartı artık depoda bulunmuyor. Listeyi yenile.","warn");return}
   const lotsRef=cutDB.collection("acanlar_stock_lots").doc(cutUser.uid);
   const movesRef=cutDB.collection("acanlar_stock_movements").doc(cutUser.uid);
