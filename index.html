@@ -3373,8 +3373,10 @@ function cutStockSubscribe(uid){
     const remote=doc.exists&&Array.isArray(doc.data().items)?doc.data().items:[];
     if(!cutOffcutReady){
       cutOffcutReady=true;
-      if(!remote.length&&stockWastes.length){
-        try{await offcutRef.set({items:stockWastes,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});cutEl("sharedStockCloud").textContent="☁ Ortak depo canlı bağlı · fireler aktarıldı"}catch(e){cutEl("sharedStockCloud").textContent="Fire deposu buluta aktarılamadı"}
+      const local=stockWastes.slice(),merged=remote.slice(),known=new Set(remote.map(x=>String(x.id)));
+      local.forEach(x=>{if(!known.has(String(x.id)))merged.push(x)});
+      if(merged.length!==remote.length){
+        try{stockWastes=merged;await offcutRef.set({items:merged,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});try{localStorage.setItem("acanlar_stock_wastes",JSON.stringify(stockWastes))}catch(e){}renderStockWasteList();cutEl("sharedStockCloud").textContent="☁ Ortak depo canlı bağlı · fireler birleştirildi"}catch(e){cutEl("sharedStockCloud").textContent="Fire deposu buluta aktarılamadı"}
       }else{
         cutOffcutApplying=true;stockWastes=remote;try{localStorage.setItem("acanlar_stock_wastes",JSON.stringify(stockWastes))}catch(e){}renderStockWasteList();cutOffcutApplying=false;
       }
