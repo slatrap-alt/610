@@ -3346,7 +3346,8 @@ updateTotalBandsAndCosts();
 <dialog id="cutLogin"><form onsubmit="window.cutLoginSubmit(event)"><h2>☁ Atölye hesabına bağlan</h2><p class="muted">Atölye programındaki mevcut hesabını kullan.</p><label for="cutEmail">E-posta</label><input id="cutEmail" type="email" autocomplete="username" required><label for="cutPassword">Şifre</label><input id="cutPassword" type="password" autocomplete="current-password" required><p id="cutLoginError" role="alert"></p><div class="cut-cloud-actions"><button id="cutLoginButton" class="btn-action save" type="submit">Bağlan</button><button class="btn-action load" type="button" onclick="document.getElementById('cutLogin').close()">Vazgeç</button></div></form></dialog>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js" defer onerror="cutStatus('Bulut bağlantısı yüklenemedi. İnterneti kontrol et; cihaz kayıtları açık.',true)"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js" defer></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js" defer onload="cutStartCloud()" onerror="cutStatus('Bulut bağlantısı yüklenemedi. Cihaz kayıtları açık.',true)">
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js" defer onload="cutStartCloud()" onerror="cutStatus('Bulut bağlantısı yüklenemedi. Cihaz kayıtları açık.',true)"></script>
+<script>
 /* ================================================================
    ORTAK PLAKA STOK ENTEGRASYONU — stok uygulamasıyla aynı Firestore
    ================================================================ */
@@ -3457,7 +3458,6 @@ async function commitSharedStock(){
     toast(result.already?"Bu kesimin stok düşümü daha önce yapılmış.":"Kesim tamamlandı; "+qty+" plaka stoktan düşüldü.","ok");
   }catch(e){toast(e.message||"Stok güncellenemedi.","err");btn.disabled=false;btn.textContent="✓ Kesimi tamamla · stoktan düş"}
 }
-
 </script>
 </body>
 </html>
