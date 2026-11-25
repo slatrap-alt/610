@@ -632,6 +632,16 @@ body.dark-mode .notice{background:#3b2a08;border-color:#7a5a12;color:#fcd34d}
 .shared-stock-commit button:disabled{opacity:.55;cursor:wait}
 @media(max-width:600px){.brand-logo-img{width:43px;height:43px}.shared-stock-commit{align-items:stretch;flex-direction:column}.shared-stock-commit button{white-space:normal}}
 
+
+/* QR modu: sadece parça penceresi görünür */
+body.qr-mode header, body.qr-mode .portal-bar, body.qr-mode main, body.qr-mode footer, body.qr-mode .fab-calc, body.qr-mode #loadingOverlay, body.qr-mode #appSplash { display:none !important; }
+body.qr-mode { background:#0f172a; }
+#qrDone{display:none;position:fixed;inset:0;background:#0f172a;color:#fff;z-index:999990;align-items:center;justify-content:center;flex-direction:column;gap:14px;text-align:center;padding:20px}
+body.qr-mode.qr-closed #qrDone{display:flex}
+#qrDone .qd-ico{font-size:54px}
+#qrDone .qd-t{font-size:18px;font-weight:900}
+#qrDone .qd-s{font-size:13px;color:#94a3b8}
+#qrDone button{background:#0284c7;color:#fff;border:none;border-radius:10px;padding:12px 22px;font-size:14px;font-weight:bold;cursor:pointer}
 </style>
 </head>
 <body>
@@ -659,6 +669,7 @@ body.dark-mode .notice{background:#3b2a08;border-color:#7a5a12;color:#fcd34d}
   </div>
 </div>
 
+<div id="qrDone"><div class="qd-ico" id="qdIco">✅</div><div class="qd-t" id="qdTitle">İşlem tamamlandı</div><div class="qd-s" id="qdSub">Bu sayfayı kapatabilirsiniz.</div><button id="qdBtn" onclick="qrReopen()">Parçayı tekrar aç</button></div>
 <div id="labelPrintArea"></div>
 <div id="quotePrintArea"></div>
 <div id="toastBox" aria-live="polite"></div>
@@ -946,7 +957,7 @@ body.dark-mode .notice{background:#3b2a08;border-color:#7a5a12;color:#fcd34d}
 
 <div class="card">
 <h2>📁 Kayıtlı Kesim Projeleri</h2>
-<div class="cut-cloud-actions"><button class="btn-action save" onclick="cutAccount()">☁ Bulut hesabı</button><button class="btn-action load" onclick="cutFlush()">↻ Yeniden eşitle</button></div>
+<div class="cut-cloud-actions"><button class="btn-action save" onclick="cutAccount()">☁ Bulut hesabı</button><button class="btn-action load" onclick="cutResync()">↻ Buluttan yeniden çek</button></div>
 <p class="muted">Atölye programındaki e-posta ve şifrenle giriş yap. Kaydettiğin projeler aynı hesapla diğer cihazlarda görünür.</p>
 <div class="row">
   <input id="saveLocalName" type="text" placeholder="Proje Adı Girin (Örn: Mutfak Kapaklar)">
@@ -1737,7 +1748,28 @@ function sheetTitle(s, idx) {
   return s.isStock ? ('Depo plakası ' + (s.no || (idx + 1))) : ('Plaka ' + (s.no || (idx + 1)));
 }
 
+let qrLast = null;
+function qrReopen() {
+  if (!qrLast) return;
+  document.body.classList.remove('qr-closed');
+  openPartPopup(qrLast.part, qrLast.si);
+}
+function qrShowDone(cut) {
+  const n = qrLast ? qrLast.part.name : '';
+  document.getElementById('qdIco').textContent = cut === true ? '✅' : (cut === false ? '⏳' : '👋');
+  document.getElementById('qdTitle').textContent = cut === true ? '[ ' + n + ' ] kesildi olarak işaretlendi' : (cut === false ? '[ ' + n + ' ] bekliyor olarak işaretlendi' : 'Pencere kapatıldı');
+  document.getElementById('qdBtn').style.display = 'inline-block';
+  document.body.classList.add('qr-closed');
+}
+function qrShowError(msg) {
+  qrLast = null;
+  document.getElementById('qdIco').textContent = '⚠️';
+  document.getElementById('qdTitle').textContent = msg;
+  document.getElementById('qdBtn').style.display = 'none';
+  document.body.classList.add('qr-closed');
+}
 function openPartPopup(part, sheetIdx) {
+  if (document.body.classList.contains('qr-mode')) qrLast = { part: part, si: sheetIdx, cut: null };
   activeSelectedPartForPopup = part;
   activeSelectedSheetIndex = sheetIdx;
   const s = lastActiveSheets[sheetIdx];
@@ -1765,6 +1797,7 @@ function openPartPopup(part, sheetIdx) {
 function setCutStatusFromPopup(isCut) {
   if (!activeSelectedPartForPopup) return;
   const uId = activeSelectedPartForPopup.uniqueInstanceId;
+  if (qrLast) qrLast.cut = isCut;
   if (isCut) completedUniquePartIds.add(uId); else completedUniquePartIds.delete(uId);
   closePartPopup();
   refreshCutViews();
@@ -1777,6 +1810,7 @@ function refreshCutViews() {
 }
 function closePartPopup() {
   document.getElementById('partPopupModal').style.display = 'none';
+  if (document.body.classList.contains('qr-mode') && qrLast) qrShowDone(qrLast.cut);
   activeSelectedPartForPopup = null;
   activeSelectedSheetIndex = null;
 }
@@ -2048,7 +2082,7 @@ async function saveProjectToLocalStorage(ipadName) {
 }
 function loadProjectFromLocalStorage(key) {
   const data = cutUser ? cutRecords[key]?.data : getSavedProjectsFromStorage()[key];
-  if(!data) return;
+  if(!data) { toast('Bu kaydın bulut verisi okunamadı.','err'); return; }
   currentCloudId = cutUser ? key : null;
   cutApplyProject(cutClone(data),cutUser ? cutRecords[key].name : key);
   cutEl('saveLocalName').value=cutUser ? cutRecords[key].name : key;
@@ -2079,7 +2113,7 @@ function renderSavedProjectsList() {
     const label=document.createElement('div'); label.style.minWidth='0'; label.style.overflowWrap='anywhere';
     const strong=document.createElement('b'); strong.textContent=name;
     const small=document.createElement('div'); small.className='muted';
-    small.textContent=(data?.parts?.length||0)+' Kalem · '+(pending?'⏳ Buluta gönderilecek':cutUser?'☁ Bulut kopyası':'Cihaz kaydı');
+    small.textContent=(cutUser&&!data)?'⚠ Bulut verisi okunamadı':(data?.parts?.length||0)+' Kalem · '+(pending?'⏳ Buluta gönderilecek':cutUser?'☁ Bulut kopyası':'Cihaz kaydı');
     label.append(strong,small); const actions=document.createElement('div'); actions.className='project-btn-group';
     [['📂 Yükle','load-proj',()=>loadProjectFromLocalStorage(key)],['Sil','del-proj',()=>deleteProjectFromLocalStorage(key)]].forEach(([text,cls,fn])=>{
       const b=document.createElement('button'); b.className='btn-mini '+cls; b.textContent=text; b.onclick=fn; actions.append(b);
@@ -2139,8 +2173,41 @@ async function cutFlush() {
   finally { cutSending=false; }
 }
 function cutFromRemote(id, remote) {
-  return {id,name:remote.name,data:remote.deleted?null:JSON.parse(remote.payload),deleted:!!remote.deleted,
+  let data=null, broken=false;
+  if(!remote.deleted) {
+    try { data=JSON.parse(remote.payload); } catch(e) { data=null; }
+    if(!data || typeof data!=='object') { data=null; broken=true; }
+  }
+  return {id,name:remote.name||'(adsız proje)',data,broken,deleted:!!remote.deleted,
     baseRev:remote.rev||0,pending:false,opId:remote.opId,updated:remote.updated||0,importToken:remote.importToken||null};
+}
+function cutApplySnap(snap, uid, epoch) {
+  if(epoch!==cutEpoch || !cutUser || cutUser.uid!==uid) return;
+  for(const doc of snap.docs) {
+    try {
+      const current=cutRecords[doc.id];
+      if(current?.pending) continue;
+      cutRecords[doc.id]=cutFromRemote(doc.id,doc.data());
+    } catch(e) { console.warn('Kayıt okunamadı',doc.id,e); }
+  }
+  let note='';
+  try { cutPersist(uid,cutRecords); } catch(e) { note=' (cihaz belleği dolu, kayıtlar yalnızca bu oturumda görünür)'; }
+  renderSavedProjectsList();
+  try { liveRefreshFromCloud(); qrTryResolve(); } catch(e) { console.warn(e); }
+  const all=Object.values(cutRecords).filter(r=>!r.deleted);
+  const bad=all.filter(r=>r.broken).length;
+  if(!Object.values(cutRecords).some(r=>r.pending))
+    cutStatus((navigator.onLine===false?'Çevrimdışı · ':'☁ ')+all.length+' proje listelendi'+(bad?' · '+bad+' kaydın verisi okunamadı':'')+note, bad>0);
+  void cutFlush();
+}
+async function cutResync() {
+  if(!cutUser || !cutDB) { cutEl('cutLogin').showModal(); return; }
+  const uid=cutUser.uid, epoch=cutEpoch;
+  cutStatus('☁ Bulut projeleri alınıyor…');
+  try {
+    const snap=await cutDB.collection('acanlar_cut_projects').doc(uid).collection('items').get({source:'server'});
+    cutApplySnap(snap,uid,epoch);
+  } catch(e) { cutStatus(cutError(e),true); }
 }
 async function cutImportLocal() {
   if(!cutUser) return;
@@ -2203,22 +2270,10 @@ function cutStartCloud() {
       cutRecords=u?cutRead(u.uid):{};
       cutEl('cutAccountButton').textContent='☁ Bulut';
       renderSavedProjectsList();
-      if(!u) { cutStockRender(); currentCloudId=null; if(pendingQr) toast('QR ile parçayı açmak için önce ☁ Bulut düğmesinden giriş yap.','warn'); return cutStatus('Cihaz kayıtları açık. Her yerden erişmek için atölye hesabına bağlan.'); }
+      if(!u) { cutStockRender(); currentCloudId=null; if(pendingQr){ try{ cutEl('cutLogin').showModal(); }catch(e){} } return cutStatus('Cihaz kayıtları açık. Her yerden erişmek için atölye hesabına bağlan.'); }
       cutStatus('☁ Bulut projeleri alınıyor…'); cutStockSubscribe(u.uid);
       const epoch=cutEpoch;
-      cutStop=cutDB.collection('acanlar_cut_projects').doc(u.uid).collection('items').onSnapshot(snap=>{
-        if(epoch!==cutEpoch) return;
-        try {
-          for(const doc of snap.docs) {
-            const current=cutRecords[doc.id], remote=doc.data();
-            if(current?.pending) continue;
-            if(!current || (remote.rev||0)>=(current.baseRev||0)) cutRecords[doc.id]=cutFromRemote(doc.id,remote);
-          }
-          cutPersist(u.uid,cutRecords); renderSavedProjectsList(); liveRefreshFromCloud(); qrTryResolve();
-          if(!Object.values(cutRecords).some(r=>r.pending)) cutStatus(navigator.onLine===false?'Çevrimdışı · Bu cihazdaki hesap kopyası açık.':'☁ Bulut projeleri güncel.');
-          void cutFlush();
-        } catch(e) { cutStatus('Bazı kayıtlar okunamadı veya cihaza yazılamadı: '+e.message,true); }
-      },e=>cutStatus(cutError(e),true));
+      cutStop=cutDB.collection('acanlar_cut_projects').doc(u.uid).collection('items').onSnapshot(snap=>cutApplySnap(snap,u.uid,epoch),e=>cutStatus(cutError(e),true));
       void cutFlush();
     });
   } catch(e) { cutStatus('Bulut yüklenemedi. Cihaz kayıtları kullanılabilir.',true); }
@@ -2314,6 +2369,7 @@ function qrReadParam() {
     if (q && q.includes('~')) {
       const i = q.indexOf('~');
       pendingQr = { prefix: q.slice(0, i), uid: q.slice(i + 1), t0: Date.now() };
+      document.body.classList.add('qr-mode');
       history.replaceState(null, '', location.pathname + location.hash);
     }
   } catch (e) { }
@@ -2323,7 +2379,7 @@ function qrTryResolve() {
   if (!pendingQr || !cutUser) return;
   const id = Object.keys(cutRecords).find(k => !cutRecords[k].deleted && cutRecords[k].data && k.replace(/^p_/, '').startsWith(pendingQr.prefix));
   if (!id) {
-    if (Date.now() - pendingQr.t0 > 9000) { toast('QR koduna ait proje bu hesapta bulunamadı.', 'err'); pendingQr = null; }
+    if (Date.now() - pendingQr.t0 > 9000) { pendingQr = null; qrShowError('QR koduna ait parça bu hesapta bulunamadı'); }
     return;
   }
   const uid = pendingQr.uid; pendingQr = null;
@@ -2334,8 +2390,7 @@ function qrTryResolve() {
     const idx = lastActiveSheets[si].placed.indexOf(found);
     found.seqStr = found.seqStr || null;
     openPartPopup(found, si);
-    toast(`QR: ${found.name} · ${sheetTitle(lastActiveSheets[si], si)} · parça ${idx + 1}`, 'ok');
-  } else toast('Bu QR etiketi projenin güncel planında yok. Plan değişmiş olabilir; etiketleri yeniden yazdır.', 'warn');
+  } else qrShowError('Bu etiket güncel planda yok');
 }
 setInterval(() => { if (pendingQr) qrTryResolve(); }, 1500);
 
